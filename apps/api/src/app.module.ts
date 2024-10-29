@@ -1,10 +1,35 @@
 import { Module } from '@nestjs/common';
-import { AppController } from '@/app.controller';
-import { AppService } from '@/app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import {TypeOrmModule, TypeOrmModuleAsyncOptions} from '@nestjs/typeorm';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env']
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('POSTGRES_HOST'),
+        port: +configService.get('POSTGRES_PORT'),
+        username: configService.get('POSTGRES_USER'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database: configService.get('POSTGRES_DATABASE'),
+        entities: [],
+        synchronize: true,
+        extra: {
+          ssl: configService.get('POSTGRES_SSL') === 'true',
+        }
+      }),
+      inject: [ConfigService],
+    } as TypeOrmModuleAsyncOptions),
+    RedisModule
+  ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule { }
+export class AppModule {
+}
