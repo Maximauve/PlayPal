@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {TypeOrmModule, TypeOrmModuleAsyncOptions} from '@nestjs/typeorm';
 import { RedisModule } from './redis/redis.module';
+import { UsersModule } from './user/user.module';
+import { User } from './user/user.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { RedisModule } from './redis/redis.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [],
+        entities: [User],
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -26,7 +28,8 @@ import { RedisModule } from './redis/redis.module';
       }),
       inject: [ConfigService],
     } as TypeOrmModuleAsyncOptions),
-    RedisModule
+    RedisModule,
+    UsersModule
   ],
   controllers: [],
   providers: [],
