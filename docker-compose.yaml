@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:12.3
+    restart: unless-stopped
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    networks:
+      - play_pal
+
+  redis:
+    image: redis:6.0.5
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    networks:
+      - play_pal
+
+networks:
+  play_pal:
+    name: play_pal
