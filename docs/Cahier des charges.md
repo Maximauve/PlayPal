@@ -13,6 +13,7 @@
 		- [3.1 Architecture](#31-architecture)
 		- [3.2 Base de Données](#32-base-de-données)
 		- [3.3 Choix Technologiques](#33-choix-technologiques)
+	- [Cadre du projet](#cadre-du-projet)
 
 ## 1. Objectifs du projet
 
@@ -72,10 +73,21 @@
 
 ### 3.2 Base de Données
 
-/* A définir */
+Schéma de la base de données :
+
+![db image scheme](./img/QuickDBD_Playpal.png)
+
+Technologies utilisées :
+
+- PostgreSQL : Stockage des données
+- Redis : Stockage des sessions et des données temporaires
 
 ### 3.3 Choix Technologiques
 
 - **Backend** : NestJS, TypeScript, PostgreSQL, Redis, BullMQ
 - **Frontend** : React
 - **Déploiement** : Docker
+
+## Cadre du projet
+
+Le site web vise un commerce B2C, nous offrons le service de gestion de stock de jeux de société pour les ludothèques, bars à jeux, médiathèques, etc. Les utilisateurs peuvent s'inscrire, ajouter des jeux à leur collection, proposer des jeux en prêt, emprunter des jeux, etc. Les administrateurs peuvent gérer les utilisateurs, les jeux, les prêts, etc. Les rapports hebdomadaires sont générés automatiquement pour suivre l'utilisation des jeux. Les notifications sont envoyées pour rappeler aux utilisateurs de rendre les jeux empruntés, informer de la disponibilité des jeux souhaités, etc.
