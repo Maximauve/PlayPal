@@ -1,0 +1,17 @@
+# ---- IDE ----
+.idea/
+.vscode/
+
+# ---- Node ----
+node_modules/
+*.log
+
+# ---- Build ----
+dist/
+
+# ---- OS ----
+.DS_Store
+
+# ---- Misc ----
+*.local
+.env

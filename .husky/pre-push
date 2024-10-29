@@ -1,0 +1,1 @@
+sh .husky/scripts/no-pacakge-lock.sh
