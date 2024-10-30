@@ -19,14 +19,14 @@ async function bootstrap() {
 
   app.connectMicroservice(microserviceOptions);
 
-  // const config = new DocumentBuilder()
-  //   .setTitle('Playpal')
-  //   .setDescription('The playpal API description')
-  //   .setVersion('1.0')
-  //   .addTag('users')
-  //   .build();
-  // const documentFactory = () => SwaggerModule.createDocument(app, config);
-  // SwaggerModule.setup('swagger', app, documentFactory);
+  const config = new DocumentBuilder()
+    .setTitle('Playpal')
+    .setDescription('The playpal API description')
+    .setVersion('1.0')
+    .addTag('users')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, documentFactory);
 
   await app.startAllMicroservices();
   await app.listen(process.env.NEST_PORT || 3000);
