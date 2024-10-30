@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, MinLength} from "class-validator";
+import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 
 export class CreatedUserDto {
   @IsNotEmpty({ message: "Le nom d'utilisateur ne peut pas être vide" })
