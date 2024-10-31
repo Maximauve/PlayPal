@@ -7,6 +7,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RedisService } from "@/redis/service/redis.service";
 import { TranslationService } from '@/translation/translation.service';
 import { type CreatedUserDto } from '@/user/dto/user.dto';
@@ -20,11 +21,17 @@ export class UserController {
   constructor(private userService: UserService, private readonly redisService: RedisService, private readonly translationService: TranslationService) { }
 
   @Get("/")
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Returns all users' })
   @ApiResponse({
     status: 200,
     description: 'Returns all users',
     type: User,
     isArray: true
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized'
   })
   async GetAll(): Promise<User[]> {
     return this.userService.getAll();

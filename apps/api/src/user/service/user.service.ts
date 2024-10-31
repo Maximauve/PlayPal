@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { type Repository } from "typeorm";
 
-import { type CreatedUserDto } from "@/user/dto/user.dto";
+import { type RegisterDto } from "@/auth/dto/register.dto";
 import { User } from "@/user/user.entity";
 
 @Injectable()
@@ -16,12 +16,23 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  async create(user: CreatedUserDto): Promise<User> {
+  async create(user: RegisterDto): Promise<User> {
     const newUser = this.usersRepository.create(user);
     return this.usersRepository.save(newUser);
   }
 
-  async checkUnknownUser(user: CreatedUserDto): Promise<boolean> {
+  async findOneEmail(email: string): Promise<User | null> {
+    const user = await this.usersRepository
+      .createQueryBuilder("user")
+      .where("user.email = :email", { email: email })
+      .getOne();
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async checkUnknownUser(user: RegisterDto): Promise<boolean> {
     const unknownUser = await this.usersRepository
       .createQueryBuilder("user")
       .where("user.username= :username", { username: user.username })

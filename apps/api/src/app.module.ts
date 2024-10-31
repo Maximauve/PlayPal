@@ -6,6 +6,7 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 // eslint-disable-next-line unicorn/import-style
 import * as path from 'node:path';
 
+import { AuthModule } from '@/auth/auth.module';
 import { RedisModule } from '@/redis/redis.module';
 import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
@@ -49,7 +50,8 @@ import { UsersModule } from '@/user/user.module';
       ],
     }),
     RedisModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
