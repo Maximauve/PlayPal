@@ -2,6 +2,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   {
     rules: {
       '@typescript-eslint/array-type': 'off',

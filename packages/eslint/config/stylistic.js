@@ -1,9 +1,15 @@
-import stylisticPlugin from '@stylistic/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(stylisticPlugin.configs['disable-legacy'], {
+export default tseslint.config({
   plugins: {
-    '@stylistic/js': stylisticPlugin,
+    '@stylistic': stylistic
   },
-  rules: {},
+  rules: {
+    '@stylistic/brace-style': "error",
+    '@stylistic/curly-newline': ["error", {
+      minElements: 1,
+    }],
+    '@stylistic/indent': ["warn", 2],
+  }
 });

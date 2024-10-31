@@ -17,7 +17,7 @@ import { User } from '@/user/user.entity';
 @Controller('users')
 export class UserController {
 
-  constructor(private userService: UserService, private readonly redisService: RedisService, private readonly translationService: TranslationService) {}
+  constructor(private userService: UserService, private readonly redisService: RedisService, private readonly translationService: TranslationService) { }
 
   @Get("/")
   @ApiResponse({
@@ -37,7 +37,9 @@ export class UserController {
   @ApiResponse({ status: 409, description: 'User already exist.' })
   @ApiResponse({ status: 201, description: 'User created', type: User })
   async SignUp(@Body() body: CreatedUserDto): Promise<{}> {
-    if (await this.userService.checkUnknownUser(body)) throw new HttpException(await this.translationService.translate('error.USER_EXIST'), 409);
+    if (await this.userService.checkUnknownUser(body)) {
+      throw new HttpException(await this.translationService.translate('error.USER_EXIST'), 409);
+    }
     body.password = await hashPassword(body.password);
     return this.userService.create(body);
   }

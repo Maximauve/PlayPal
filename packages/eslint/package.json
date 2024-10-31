@@ -11,7 +11,7 @@
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.11.1",
-    "@stylistic/eslint-plugin": "^2.8.0",
+    "@stylistic/eslint-plugin": "^2.10.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.7.2",
     "eslint": "9.11.1",

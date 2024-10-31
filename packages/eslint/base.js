@@ -15,9 +15,9 @@ export default tseslint.config(
   ...unicornConfig,
   ...promiseConfig,
   ...unusedImports,
-  ...stylisticConfig,
   ...perfectionistConfig,
   ...baseConfig,
+  ...stylisticConfig,
   {
     ignores: [
       '**/dist/',
@@ -45,7 +45,6 @@ export default tseslint.config(
     },
 
     rules: {
-      semi: ['warn', 'always'],
       '@typescript-eslint/no-invalid-this': 'off',
       '@typescript-eslint/quotes': 'off',
       'sonarjs/function-return-type': 'off',

@@ -27,7 +27,9 @@ export class UserService {
       .where("user.username= :username", { username: user.username })
       .orWhere("user.email= :email", { email: user.email })
       .getOne();
-    if (unknownUser == null) return false;
+    if (unknownUser == null) {
+      return false;
+    }
     return true;
   }
 }

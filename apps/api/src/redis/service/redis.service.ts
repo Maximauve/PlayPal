@@ -20,7 +20,9 @@ export class RedisService {
   }
 
   async hset(key: string, fieldAndValues: string[]): Promise<void> {
-    if (fieldAndValues.length % 2 !== 0) throw new Error("The number of arguments must be even.");
+    if (fieldAndValues.length % 2 !== 0) {
+      throw new Error("The number of arguments must be even.");
+    }
     await this.redisClient.hset(key, ...fieldAndValues);
   }
 
@@ -28,7 +30,7 @@ export class RedisService {
     return this.redisClient.hget(key, field);
   }
 
-  async hgetall(key: string): Promise<{ [key: string]: string }> {
+  async hgetall(key: string): Promise<Record<string, string>> {
     return this.redisClient.hgetall(key);
   }
 
