@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 
 import { AppModule } from '@/app.module';
 
@@ -8,6 +9,7 @@ import { AppModule } from '@/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
+  // REDIS
   const microserviceOptions: MicroserviceOptions = {
     transport: Transport.REDIS,
     options: {
@@ -20,6 +22,7 @@ async function bootstrap() {
 
   app.connectMicroservice(microserviceOptions);
 
+  // SWAGGER
   const config = new DocumentBuilder()
     .setTitle('Playpal')
     .setDescription('The playpal API description')
@@ -28,6 +31,14 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
+
+  // I18N
+  app.useGlobalPipes(new I18nValidationPipe());
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({
+      detailedErrors: false,
+    }),
+  );
 
   await app.startAllMicroservices();
   await app.listen(process.env.NEST_PORT || 3000);

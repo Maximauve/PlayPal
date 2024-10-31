@@ -1,15 +1,18 @@
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { i18nValidationMessage } from "nestjs-i18n";
+
+import { I18nTranslations } from "@/generated/i18n.generated";
 
 export class CreatedUserDto {
-  @IsNotEmpty({ message: "Le nom d'utilisateur ne peut pas être vide" })
-  @MinLength(3, { message: "Le mot de passe doit contenir au moins 6 caractères" })
+  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
+  @MinLength(3, { message: i18nValidationMessage<I18nTranslations>('validation.MIN') })
   username: string;
 
-  @IsNotEmpty({ message: "L'email ne peut pas être vide" })
-  @IsEmail({}, { message: "L'email doit être une adresse email valide" })
+  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
+  @IsEmail({}, { message: i18nValidationMessage<I18nTranslations>('validation.INVALID_EMAIL') })
   email: string;
 
-  @IsNotEmpty({ message: "Le mot de passe ne peut pas être vide" })
-  @MinLength(6, { message: "Le mot de passe doit contenir au moins 6 caractères" })
+  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
+  @MinLength(6, { message: i18nValidationMessage<I18nTranslations>('validation.MIN') })
   password: string;
 }
