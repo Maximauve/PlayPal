@@ -19,6 +19,9 @@
   },
   "scripts": {
     "postinstall": "node ./.dev/postinstall.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:api": "cd apps/api && nest start --watch",
+    "dev:frontend": "cd apps/frontend && vite",
+    "up": "docker-compose up -d"
   }
 }
