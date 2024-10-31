@@ -2,9 +2,9 @@ import { Body, Controller, Get, HttpException, Post, UsePipes, ValidationPipe } 
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
-import { type RedisService } from "@/redis/service/redis.service";
+import { RedisService } from "@/redis/service/redis.service";
 import { type CreatedUserDto } from '@/user/dto/user.dto';
-import { type UserService } from '@/user/service/user.service';
+import { UserService } from '@/user/service/user.service';
 import { User } from '@/user/user.entity';
 
 @ApiTags('users')
