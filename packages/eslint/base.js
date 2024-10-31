@@ -11,13 +11,23 @@ import perfectionistConfig from './config/perfectionist.js';
 
 export default tseslint.config(
   ...jsonConfig,
-  ...baseConfig,
   ...typescriptConfig,
   ...unicornConfig,
   ...promiseConfig,
   ...unusedImports,
   ...stylisticConfig,
   ...perfectionistConfig,
+  ...baseConfig,
+  {
+    ignores: [
+      '**/dist/',
+      '**/build/',
+      '**/logs/',
+      'tsconfig.**',
+      '**/test/',
+      "**/eslint.config.**"
+    ],
+  },
   {
     languageOptions: {
       globals: {
@@ -25,10 +35,11 @@ export default tseslint.config(
       },
 
       ecmaVersion: 5,
-      sourceType: 'commonjs',
+      sourceType: 'module',
 
       parserOptions: {
         project: true,
+        projectService: true,
         extraFileExtensions: ['.json'],
       },
     },
@@ -39,12 +50,9 @@ export default tseslint.config(
       '@typescript-eslint/quotes': 'off',
       'sonarjs/function-return-type': 'off',
     },
-    ignores: [
-      '**/dist/',
-      '**/build/',
-      '**/logs/',
-      'tsconfig.**',
-      '**/eslint.config.mjs',
-    ],
+  },
+  {
+    files: ['**/*.js', '**/*.json'],
+    ...tseslint.configs.disableTypeChecked,
   },
 );

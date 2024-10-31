@@ -18,6 +18,10 @@
     "typescript": "^5.1.3"
   },
   "scripts": {
-    "postinstall": "node ./.dev/postinstall.js"
+    "postinstall": "node ./.dev/postinstall.js",
+    "prepare": "husky",
+    "dev:api": "cd apps/api && nest start --watch",
+    "dev:frontend": "cd apps/frontend && vite",
+    "up": "docker-compose up -d"
   }
 }

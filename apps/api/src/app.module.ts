@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {TypeOrmModule, TypeOrmModuleAsyncOptions} from '@nestjs/typeorm';
-import { RedisModule } from './redis/redis.module';
-import { UsersModule } from './user/user.module';
-import { User } from './user/user.entity';
+import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+
+import { RedisModule } from '@/redis/redis.module';
+import { User } from '@/user/user.entity';
+import { UsersModule } from '@/user/user.module';
 
 @Module({
   imports: [

@@ -8,7 +8,6 @@ export default tseslint.config(js.configs.recommended, {
       ...globals.node,
     },
   },
-
   rules: {
     'no-await-in-loop': 1,
     'prefer-const': 'error',
@@ -37,6 +36,22 @@ export default tseslint.config(js.configs.recommended, {
     eqeqeq: ['error', 'smart'],
     camelcase: 'off',
     semi: ['error', 'always'],
+    'object-curly-spacing': ['warn', 'always'],
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['./*'],
+            message: 'relative import is not allowed. Use absolute imports with @/'
+          },
+          {
+            group: ['../*'],
+            message: 'relative import is not allowed. Use absolute imports with @/'
+          }
+        ],
+      },
+    ],
 
     // Handled by perfectionist
     'sort-imports': 'off',

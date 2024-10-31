@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import {MicroserviceOptions, Transport} from "@nestjs/microservices";
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { type MicroserviceOptions, Transport } from "@nestjs/microservices";
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from '@/app.module';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,  { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const microserviceOptions: MicroserviceOptions = {
     transport: Transport.REDIS,

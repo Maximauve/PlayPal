@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { forwardRef } from '@nestjs/common/utils';
-import { UserService } from './service/user.service';
-import { UserController } from './controller/user.controller';
-import { User } from './user.entity';
-import {RedisModule} from "../redis/redis.module";
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { RedisModule } from "@/redis/redis.module";
+import { UserController } from '@/user/controller/user.controller';
+import { UserService } from '@/user/service/user.service';
+import { User } from '@/user/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), forwardRef(() => RedisModule)],
@@ -12,4 +13,4 @@ import {RedisModule} from "../redis/redis.module";
   providers: [UserService],
   exports: [UserService],
 })
-export class UsersModule {}
+export class UsersModule { }

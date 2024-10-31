@@ -16,6 +16,7 @@ export default tseslint.config(pluginUnicorn.configs['flat/recommended'], {
     'unicorn/no-array-callback-reference': 'off',
     'unicorn/consistent-function-scoping': 'off',
     'unicorn/no-useless-undefined': 'off',
+    'unicorn/empty-brace-spaces': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
       {

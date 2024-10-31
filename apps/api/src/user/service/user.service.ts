@@ -1,18 +1,19 @@
-import { Repository } from "typeorm";
-import { User } from "../user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { CreatedUserDto } from "../dto/user.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { type Repository } from "typeorm";
+
+import { type CreatedUserDto } from "@/user/dto/user.dto";
+import { User } from "@/user/user.entity";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async getAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return this.usersRepository.find();
   }
 
   async create(user: CreatedUserDto): Promise<User> {
@@ -21,11 +22,11 @@ export class UserService {
   }
 
   async checkUnknownUser(user: CreatedUserDto): Promise<boolean> {
-    let unknownUser = await this.usersRepository
+    const unknownUser = await this.usersRepository
       .createQueryBuilder("user")
-      .where("user.username= :username", {username: user.username})
-      .orWhere("user.email= :email", {email: user.email})
-      .getOne()
+      .where("user.username= :username", { username: user.username })
+      .orWhere("user.email= :email", { email: user.email })
+      .getOne();
     if (unknownUser == null) return false;
     return true;
   }

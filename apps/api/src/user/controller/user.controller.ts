@@ -1,20 +1,18 @@
 import { Body, Controller, Get, HttpException, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { UserService } from '../service/user.service';
-import { RedisService } from "../../redis/service/redis.service";
-import { User } from '../user.entity';
-import { CreatedUserDto } from '../dto/user.dto';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
+
+import { RedisService } from "@/redis/service/redis.service";
+import { type CreatedUserDto } from '@/user/dto/user.dto';
+import { UserService } from '@/user/service/user.service';
+import { User } from '@/user/user.entity';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
 
-  constructor(private userService: UserService, private readonly redisService: RedisService) {}
+  constructor(private userService: UserService, private readonly redisService: RedisService) { }
+
 
   @Get("/")
   @ApiResponse({
@@ -24,7 +22,7 @@ export class UserController {
     isArray: true
   })
   async GetAll(): Promise<User[]> {
-    return await this.userService.getAll();
+    return this.userService.getAll();
   }
 
   @UsePipes(ValidationPipe)
@@ -41,5 +39,5 @@ export class UserController {
 }
 
 async function hashPassword(plaintextPassword: string) {
-  return await bcrypt.hash(plaintextPassword, 10);
+  return bcrypt.hash(plaintextPassword, 10);
 }

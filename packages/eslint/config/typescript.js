@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
     rules: {
       '@typescript-eslint/array-type': 'off',
@@ -70,7 +70,7 @@ export default tseslint.config(
         },
         {
           selector: 'function',
-          format: ['PascalCase'],
+          format: ['camelCase', 'PascalCase'],
         },
         {
           selector: 'parameter',
