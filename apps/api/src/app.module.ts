@@ -36,7 +36,6 @@ import { UsersModule } from '@/user/user.module';
     I18nModule.forRoot({
       fallbackLanguage: 'fr',
       fallbacks: {
-        'en-*': 'en',
         'fr-*': 'fr'
       },
       loaderOptions: {

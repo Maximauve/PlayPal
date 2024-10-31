@@ -1,7 +1,0 @@
-{
-  "NOT_EMPTY": "{property} cannot be empty",
-  "INVALID_EMAIL": "email is invalid",
-  "INVALID_BOOLEAN": "{property} is not a boolean",
-  "MIN": "{property} needs to be at least {constraints.0} characters",
-  "MAX": "{property} needs to be less than {constraints.0} characters"
-}
