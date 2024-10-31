@@ -25,7 +25,7 @@ export default tseslint.config(
       '**/logs/',
       'tsconfig.**',
       '**/test/',
-      "**/eslint.config.js"
+      "**/eslint.config.**"
     ],
   },
   {
