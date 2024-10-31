@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AuthController } from './controller/auth.controller';
 import { AuthService } from './services/auth.service';
 import { UsersModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
@@ -15,6 +16,7 @@ import { forwardRef } from '@nestjs/common/utils';
         signOptions: { expiresIn: '2629800s' },
       }),
     ],
+    controllers: [AuthController], 
     providers: [AuthService, JwtStrategy],
     exports: [AuthService, JwtStrategy],
   })
