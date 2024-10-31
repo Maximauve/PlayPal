@@ -35,7 +35,8 @@ export default tseslint.config(js.configs.recommended, {
     ],
     eqeqeq: ['error', 'smart'],
     camelcase: 'off',
-    semi: ['error', 'always'],
+    semi: ['warn', 'always'],
+    curly: ['error', 'all'],
     'object-curly-spacing': ['warn', 'always'],
     'no-restricted-imports': [
       'error',

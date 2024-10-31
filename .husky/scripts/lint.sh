@@ -21,3 +21,5 @@ if [ $FAILURE -ne 0 ]; then
 	echo "${BOLD}${RED}Linting failed. Aborting...${RESET}"
 	exit $FAILURE
 fi
+
+git add .
