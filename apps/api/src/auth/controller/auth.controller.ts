@@ -1,6 +1,7 @@
-import { Body, Controller, HttpException, HttpStatus, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Post, UseFilters } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
+import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
 import { LoginDto } from '@/auth/dto/login.dto';
 import { LoginResponse } from '@/auth/dto/loginResponse';
@@ -15,8 +16,8 @@ import { User } from '@/user/user.entity';
 export class AuthController {
   constructor(private readonly authService: AuthService, private readonly userService: UserService, private readonly translationService: TranslationService) {}
     
-  @UsePipes(ValidationPipe)
   @Post('/login')
+  @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @ApiResponse({ status: 401, description: 'Unauthorized - Incorrect email or password.' })
@@ -32,13 +33,14 @@ export class AuthController {
     return this.authService.login(user);
   }
 
-  @UsePipes(ValidationPipe)
   @Post('/register')
+  @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Register user' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @ApiResponse({ status: 409, description: 'User already exist.' })
   @ApiResponse({ status: 201, description: 'User created', type: User })
   async SignUp(@Body() body: RegisterDto): Promise<{}> {
+    console.log(body);
     if (await this.userService.checkUnknownUser(body)) {
       throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.CONFLICT);
     }

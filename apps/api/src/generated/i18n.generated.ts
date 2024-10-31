@@ -7,6 +7,8 @@ import { Path } from "nestjs-i18n";
 export type I18nTranslations = {
     "error": {
         "USER_EXIST": string;
+        "USER_CANT_CREATE": string;
+        "PASSWORD_INCORRECT": string;
     };
     "user": {
         "HELLO": string;

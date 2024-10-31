@@ -23,5 +23,9 @@
     "dev:api": "cd apps/api && nest start --watch",
     "dev:frontend": "cd apps/frontend && vite",
     "up": "docker-compose up -d"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.1.0",
+    "pactum": "^3.7.3"
   }
 }
