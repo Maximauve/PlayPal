@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 //* See i18n-nest doc : https://nestjs-i18n.com/guides/type-safety
 // eslint-disable-next-line unicorn/import-style
 import * as path from 'node:path';
 
+import { AuthModule } from '@/auth/auth.module';
+import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { RedisModule } from '@/redis/redis.module';
+import { TranslationService } from '@/translation/translation.service';
 import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
 
@@ -49,9 +53,13 @@ import { UsersModule } from '@/user/user.module';
       ],
     }),
     RedisModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [],
-  providers: [],
+  providers: [TranslationService, {
+    provide: APP_FILTER,
+    useClass: AuthExceptionFilter,
+  }],
 })
 export class AppModule {}
