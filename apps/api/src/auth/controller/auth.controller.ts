@@ -1,5 +1,5 @@
 import { Body, Controller, HttpException, HttpStatus, Post, UseFilters } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
@@ -9,7 +9,6 @@ import { RegisterDto } from '@/auth/dto/register.dto';
 import { AuthService } from '@/auth/service/auth.service';
 import { TranslationService } from '@/translation/translation.service';
 import { UserService } from '@/user/service/user.service';
-import { User } from '@/user/user.entity';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -19,13 +18,13 @@ export class AuthController {
   @Post('/login')
   @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Login user' })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Incorrect email or password.' })
-  @ApiResponse({ status: 200, description: 'User logged in successfully', type: LoginResponse })
-  async Login(@Body() body: LoginDto) {
+  @ApiBadRequestResponse()
+  @ApiUnauthorizedResponse()
+  @ApiOkResponse({ type: LoginResponse })
+  async login(@Body() body: LoginDto): Promise<{ accessToken: string }> {
     const user = await this.userService.findOneEmail(body.email);
     if (!user) {
-      throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.UNAUTHORIZED);
+      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
     if (!await comparePassword(body.password, user.password)) {
       throw new HttpException(await this.translationService.translate('error.PASSWORD_INCORRECT'), HttpStatus.UNAUTHORIZED);
@@ -36,11 +35,10 @@ export class AuthController {
   @Post('/register')
   @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Register user' })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  @ApiResponse({ status: 409, description: 'User already exist.' })
-  @ApiResponse({ status: 201, description: 'User created', type: User })
-  async SignUp(@Body() body: RegisterDto): Promise<{}> {
-    console.log(body);
+  @ApiInternalServerErrorResponse()
+  @ApiConflictResponse()
+  @ApiCreatedResponse({ type: LoginResponse })
+  async register(@Body() body: RegisterDto): Promise<{ accessToken: string }> {
     if (await this.userService.checkUnknownUser(body)) {
       throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.CONFLICT);
     }
