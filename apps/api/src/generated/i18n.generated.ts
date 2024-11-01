@@ -11,6 +11,7 @@ export type I18nTranslations = {
         "USER_NOT_FOUND": string;
         "USER_NOT_ADMIN": string;
         "PASSWORD_INCORRECT": string;
+        "UNAUTHORIZED": string;
         "ID_INVALID": string;
     };
     "user": {
