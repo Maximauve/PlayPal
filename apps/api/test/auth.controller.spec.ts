@@ -67,7 +67,7 @@ describe('AuthController', () => {
       expect(result).toEqual({ accessToken: 'test-token' });
     });
 
-    it('should throw UnauthorizedException for non-existent user', async () => {
+    it('should throw NotFoundExeption for non-existent user', async () => {
       const loginDto: LoginDto = {
         email: 'nonexistent@example.com',
         password: 'password123',
@@ -77,7 +77,7 @@ describe('AuthController', () => {
 
       await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
       await expect(authController.login(loginDto)).rejects.toMatchObject({
-        status: HttpStatus.UNAUTHORIZED,
+        status: HttpStatus.NOT_FOUND,
       });
     });
 
