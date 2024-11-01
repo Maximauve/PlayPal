@@ -1,5 +1,8 @@
 {
   "USER_EXIST": "L'utilisateur existe déjà",
   "USER_CANT_CREATE": "L'utilisateur n'a pas pu être créé",
-  "PASSWORD_INCORRECT": "Mot de passe incorrect"
+  "USER_NOT_FOUND": "L'utilisateur n'existe pas",
+  "USER_NOT_ADMIN": "L'utilisateur n'est pas administrateur",
+  "PASSWORD_INCORRECT": "Mot de passe incorrect",
+  "ID_INVALID": "L'id est invalide"
 }

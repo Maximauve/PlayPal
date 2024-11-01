@@ -8,7 +8,10 @@ export type I18nTranslations = {
     "error": {
         "USER_EXIST": string;
         "USER_CANT_CREATE": string;
+        "USER_NOT_FOUND": string;
+        "USER_NOT_ADMIN": string;
         "PASSWORD_INCORRECT": string;
+        "ID_INVALID": string;
     };
     "user": {
         "HELLO": string;
