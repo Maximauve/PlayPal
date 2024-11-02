@@ -3,7 +3,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
+<<<<<<< HEAD
 import { GameUpdatedDto } from "@/game/dto/gameUpdated.dto";
+=======
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
 import { Game } from "@/game/game.entity";
 import { TranslationService } from "@/translation/translation.service";
 
@@ -15,6 +18,7 @@ export class GameService {
   ) { }
 
   async getAll(): Promise<Game[]> {
+<<<<<<< HEAD
     return this.gamesRepository.find({
       relations: {
         rating: true,
@@ -24,11 +28,21 @@ export class GameService {
   }
 
   async create(game: GameDto): Promise<Game | null> {
+=======
+    return this.gamesRepository.find();
+  }
+
+  async create(game: Game): Promise<Game> {
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
     const newGame = this.gamesRepository.create(game);
     return this.gamesRepository.save(newGame);
   }
 
+<<<<<<< HEAD
   async update(gameId: string, game: GameUpdatedDto): Promise<void> {
+=======
+  async update(gameId: string, game: GameDto): Promise<void> {
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
     const query = await this.gamesRepository
       .createQueryBuilder()
       .update(Game)
@@ -56,11 +70,16 @@ export class GameService {
   }
 
   async findOneGame(gameId: string): Promise<Game | null> {
+<<<<<<< HEAD
     const game = await this.gamesRepository
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
+=======
+    const game = await this.gamesRepository.createQueryBuilder("game")
+      .where("game.id = :id", { id: gameId })
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
       .getOne();
     if (!game) {
       return null;
@@ -72,8 +91,11 @@ export class GameService {
     const game = await this.gamesRepository
       .createQueryBuilder("game")
       .where("game.name = :name", { name })
+<<<<<<< HEAD
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
+=======
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
       .getOne();
     if (!game) {
       return null;

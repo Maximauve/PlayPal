@@ -29,6 +29,7 @@ export class Game {
 
   @Column({ type: 'int' })
   minYear: number;
+<<<<<<< HEAD
 
   @OneToMany(() => Rating, rating => rating.game)
   rating?: Rating[];
