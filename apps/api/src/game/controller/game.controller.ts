@@ -10,7 +10,6 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { Game } from "@/game/game.entity";
@@ -18,7 +17,6 @@ import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
 import { TranslationService } from '@/translation/translation.service';
 
-@UseGuards(JwtAuthGuard)
 @ApiTags('games')
 @Controller('games')
 export class GameController {
@@ -29,10 +27,10 @@ export class GameController {
   @ApiOkResponse({ type: Game, isArray: true })
   @ApiUnauthorizedResponse()
 
-  @Get('')
+  @Get("/")
   @ApiOperation({ summary: "Get all games" })
   @ApiOkResponse({ type: Game, isArray: true })
-  @ApiUnauthorizedResponse()
+  @ApiUnauthorizedResponse({ description: "Unauthorized" })
   async getAll() {
     return this.gamesService.getAll();
   }
