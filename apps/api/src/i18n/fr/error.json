@@ -5,5 +5,6 @@
   "USER_NOT_ADMIN": "L'utilisateur n'est pas administrateur",
   "PASSWORD_INCORRECT": "Mot de passe incorrect",
   "UNAUTHORIZED": "Tu n'est pas connecté",
-  "ID_INVALID": "L'id est invalide"
+  "ID_INVALID": "L'id est invalide",
+  "GAME_NOT_FOUND": "Le jeu n'existe pas"
 }
