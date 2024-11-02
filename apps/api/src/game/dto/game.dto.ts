@@ -6,7 +6,10 @@ import { I18nTranslations } from "@/generated/i18n.generated";
 export class GameDto {
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   name: string;
+<<<<<<< HEAD
   
+=======
+>>>>>>> db782ed (feat(api/games): WIP add games crud)
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   description: string;
 
