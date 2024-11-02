@@ -1,4 +1,6 @@
-type Game = {
+import { type Tag } from "./tag.interface";
+
+export type Game = {
     id: number;
     name: string;
     description: string;

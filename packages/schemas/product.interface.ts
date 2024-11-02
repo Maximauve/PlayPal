@@ -1,4 +1,6 @@
-enum State {
+import { type Game } from "./game.interface";
+
+export enum State {
     NEW = 'NEUF',
     USED = 'ABIME',
     BROKEN = 'CASSE',
@@ -6,7 +8,7 @@ enum State {
     TO_BUY = 'A_RACHETER',
 }
 
-type Product = {
+export type Product = {
     id: number;
     game: Game;
     state: State;
