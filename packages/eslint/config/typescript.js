@@ -20,6 +20,8 @@ export default tseslint.config(
       '@typescript-eslint/ban-types': 'off',
       '@typescript-eslint/no-triple-slash-reference': 'off',
       '@typescript-eslint/no-empty-interface': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
       '@typescript-eslint/quotes': ['error', 'single'],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
