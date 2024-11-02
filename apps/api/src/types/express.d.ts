@@ -1,9 +1,9 @@
-import { type JwtPayload } from '@/auth/dto/jwtPayload';
+import { type JwtPayload } from '@playpal/schemas/jwt.interface';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload; 
+      user?: JwtPayload;
     }
   }
 }

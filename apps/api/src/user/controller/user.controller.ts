@@ -9,13 +9,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
+import { type JwtPayload } from '@playpal/schemas/jwt.interface';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RedisService } from "@/redis/service/redis.service";
 import { TranslationService } from '@/translation/translation.service';
-import { UserPayload } from '@/types/UserPayload';
 import { UpdatedUsersDto } from '@/user/dto/updateUser.dto';
 import { Role } from '@/user/role.enum';
 import { UserService } from '@/user/service/user.service';
@@ -43,7 +43,7 @@ export class UserController {
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
   async getMe(@Req() request: Request): Promise<User> {
-    const requestUser: UserPayload = request?.user as UserPayload;
+    const requestUser: JwtPayload = request?.user as JwtPayload;
     if (!requestUser) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }

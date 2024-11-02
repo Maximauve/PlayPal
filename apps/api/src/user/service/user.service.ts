@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { type JwtPayload } from '@playpal/schemas/jwt.interface';
 import { Request } from "express";
 import { type Repository } from "typeorm";
 
 import { type RegisterDto } from "@/auth/dto/register.dto";
 import { TranslationService } from "@/translation/translation.service";
-import { UserPayload } from "@/types/UserPayload";
 import { UpdatedUsersDto } from "@/user/dto/updateUser.dto";
 import { User } from "@/user/user.entity";
 
@@ -75,7 +75,7 @@ export class UserService {
   }
 
   async getUserConnected(request: Request): Promise<User | null> {
-    const requestUser: UserPayload = request?.user as UserPayload;
+    const requestUser: JwtPayload = request?.user as JwtPayload;
     if (!requestUser) {
       return null;
     }
