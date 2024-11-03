@@ -1,14 +1,16 @@
-enum State {
-    NEW = 'NEUF',
-    USED = 'ABIME',
-    BROKEN = 'CASSE',
-    TO_BE_REPAIRED = 'A_REPARER',
-    TO_BUY = 'A_RACHETER',
+import { type Game } from "./game.interface";
+
+export enum State {
+  NEW = 'NEUF',
+  USED = 'ABIME',
+  BROKEN = 'CASSE',
+  TO_BE_REPAIRED = 'A_REPARER',
+  TO_BUY = 'A_RACHETER',
 }
 
-type Product = {
-    id: number;
-    game: Game;
-    state: State;
-    available: boolean;
+export type Product = {
+  id: number;
+  game: Game;
+  state: State;
+  available: boolean;
 }

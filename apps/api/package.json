@@ -56,22 +56,27 @@
 		"tsconfig-paths": "^4.2.0"
 	},
 	"workspaceDependencies": {
-		"@playpal/eslint": "*"
+		"@playpal/eslint": "*",
+		"@playpal/schemas": "*"
 	},
-  "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": ".",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
+	"jest": {
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"ts"
+		],
+		"rootDir": ".",
+		"testRegex": ".*\\.spec\\.ts$",
+		"transform": {
+			"^.+\\.(t|j)s$": "ts-jest"
+		},
+		"collectCoverageFrom": [
+			"**/*.(t|j)s"
+		],
+		"coverageDirectory": "../coverage",
+		"testEnvironment": "node",
 		"moduleNameMapper": {
 			"^@/(.*)$": "<rootDir>/src/$1"
 		}
-  }
+	}
 }

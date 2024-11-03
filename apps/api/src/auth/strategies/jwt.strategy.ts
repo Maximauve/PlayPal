@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { type JwtPayload } from '@playpal/schemas/jwt.interface';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-
-import { JwtPayload } from '@/auth/dto/jwtPayload';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
