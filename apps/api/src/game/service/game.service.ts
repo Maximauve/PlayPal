@@ -4,9 +4,13 @@ import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { GameUpdatedDto } from "@/game/dto/gameUpdated.dto";
 =======
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+import { GameUpdatedDto } from "@/game/dto/gameUpdated.dto";
+>>>>>>> 2c1d836 (feat(game): finish game and add TU)
 import { Game } from "@/game/game.entity";
 import { TranslationService } from "@/translation/translation.service";
 
@@ -32,17 +36,25 @@ export class GameService {
     return this.gamesRepository.find();
   }
 
+<<<<<<< HEAD
   async create(game: Game): Promise<Game> {
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+  async create(game: GameDto): Promise<Game | null> {
+>>>>>>> 2c1d836 (feat(game): finish game and add TU)
     const newGame = this.gamesRepository.create(game);
     return this.gamesRepository.save(newGame);
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   async update(gameId: string, game: GameUpdatedDto): Promise<void> {
 =======
   async update(gameId: string, game: GameDto): Promise<void> {
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+  async update(gameId: string, game: GameUpdatedDto): Promise<void> {
+>>>>>>> 2c1d836 (feat(game): finish game and add TU)
     const query = await this.gamesRepository
       .createQueryBuilder()
       .update(Game)
@@ -71,6 +83,7 @@ export class GameService {
 
   async findOneGame(gameId: string): Promise<Game | null> {
 <<<<<<< HEAD
+<<<<<<< HEAD
     const game = await this.gamesRepository
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
@@ -78,6 +91,10 @@ export class GameService {
       .leftJoinAndSelect("game.product", "product")
 =======
     const game = await this.gamesRepository.createQueryBuilder("game")
+=======
+    const game = await this.gamesRepository
+      .createQueryBuilder("game")
+>>>>>>> 2c1d836 (feat(game): finish game and add TU)
       .where("game.id = :id", { id: gameId })
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
       .getOne();

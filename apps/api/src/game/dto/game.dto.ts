@@ -7,9 +7,13 @@ export class GameDto {
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   name: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 =======
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+  
+>>>>>>> 2c1d836 (feat(game): finish game and add TU)
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   description: string;
 
