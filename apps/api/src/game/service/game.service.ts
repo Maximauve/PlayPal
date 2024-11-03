@@ -51,7 +51,8 @@ export class GameService {
   }
 
   async findOneGame(gameId: string): Promise<Game | null> {
-    const game = await this.gamesRepository.createQueryBuilder("game")
+    const game = await this.gamesRepository
+      .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .getOne();
     if (!game) {
