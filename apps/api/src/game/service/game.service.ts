@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
+import { GameUpdatedDto } from "@/game/dto/gameUpdated.dto";
 import { Game } from "@/game/game.entity";
 import { TranslationService } from "@/translation/translation.service";
 
@@ -17,12 +18,12 @@ export class GameService {
     return this.gamesRepository.find();
   }
 
-  async create(game: Game): Promise<Game> {
+  async create(game: GameDto): Promise<Game | null> {
     const newGame = this.gamesRepository.create(game);
     return this.gamesRepository.save(newGame);
   }
 
-  async update(gameId: string, game: GameDto): Promise<void> {
+  async update(gameId: string, game: GameUpdatedDto): Promise<void> {
     const query = await this.gamesRepository
       .createQueryBuilder()
       .update(Game)
@@ -50,7 +51,8 @@ export class GameService {
   }
 
   async findOneGame(gameId: string): Promise<Game | null> {
-    const game = await this.gamesRepository.createQueryBuilder("game")
+    const game = await this.gamesRepository
+      .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .getOne();
     if (!game) {

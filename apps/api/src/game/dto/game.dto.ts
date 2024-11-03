@@ -6,6 +6,7 @@ import { I18nTranslations } from "@/generated/i18n.generated";
 export class GameDto {
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   name: string;
+  
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   description: string;
 

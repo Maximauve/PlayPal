@@ -13,6 +13,8 @@ export type I18nTranslations = {
         "PASSWORD_INCORRECT": string;
         "UNAUTHORIZED": string;
         "ID_INVALID": string;
+        "GAME_NOT_FOUND": string;
+        "GAME_CANT_CREATE": string;
     };
     "user": {
         "HELLO": string;

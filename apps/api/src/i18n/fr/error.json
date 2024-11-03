@@ -6,5 +6,6 @@
   "PASSWORD_INCORRECT": "Mot de passe incorrect",
   "UNAUTHORIZED": "Tu n'est pas connecté",
   "ID_INVALID": "L'id est invalide",
-  "GAME_NOT_FOUND": "Le jeu n'existe pas"
+  "GAME_NOT_FOUND": "Le jeu n'existe pas",
+  "GAME_CANT_CREATE": "Le jeu n'a pas pu être créé"
 }
