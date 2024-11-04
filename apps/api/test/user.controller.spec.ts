@@ -22,7 +22,8 @@ describe('UserController', () => {
       username: "John doe",
       creationDate: new Date(),
       role: Role.Customer,
-      password: 'hashedpassword1'
+      password: 'hashedpassword1',
+      rating: []
     },
     {
       id: "3f78f9c0-4a5d-437b-8db2-531ac1d9e0b3",
@@ -30,7 +31,8 @@ describe('UserController', () => {
       username: "John doe",
       creationDate: new Date(),
       role: Role.Admin,
-      password: 'hashedpassword2'
+      password: 'hashedpassword2',
+      rating: []
     }
   ];
 

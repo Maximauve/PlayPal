@@ -18,7 +18,11 @@ export class UserService {
   ) { }
 
   async getAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      relations: {
+        rating: true
+      }
+    });
   }
 
   async create(user: RegisterDto): Promise<User | null> {
@@ -32,7 +36,7 @@ export class UserService {
       .update(User)
       .set(user)
       .where("id = :id", { id: userId })
-      .execute();
+      .execute(); 
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
@@ -53,20 +57,18 @@ export class UserService {
   }
 
   async findOneEmail(email: string): Promise<User | null> {
-    const user = await this.usersRepository
+    return this.usersRepository
       .createQueryBuilder("user")
       .where("user.email = :email", { email: email })
+      .leftJoinAndSelect("user.rating", "rating")
       .getOne();
-    if (!user) {
-      return null;
-    }
-    return user;
   }
 
   async findOneUser(id: string): Promise<User | null> {
     const user = await this.usersRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: id })
+      .leftJoinAndSelect("user.rating", "rating")
       .getOne();
     if (!user) {
       return null;

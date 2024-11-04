@@ -11,6 +11,8 @@ import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { Game } from '@/game/game.entity';
 import { GameModule } from '@/game/game.module';
+import { Rating } from '@/rating/rating.entity';
+import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
 import { TranslationService } from '@/translation/translation.service';
 import { User } from '@/user/user.entity';
@@ -31,7 +33,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [User, Game],
+        entities: [User, Game, Rating],
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -57,7 +59,8 @@ import { UsersModule } from '@/user/user.module';
     RedisModule,
     UsersModule,
     AuthModule,
-    GameModule
+    GameModule,
+    RatingModule
   ],
   controllers: [],
   providers: [TranslationService, {

@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { Rating } from '@/rating/rating.entity';
 import { Role } from '@/user/role.enum';
 
 @Entity()
@@ -21,4 +22,7 @@ export class User {
 
   @CreateDateColumn()
   creationDate: Date;
+
+  @OneToMany(() => Rating, rating => rating.user)
+  rating: Rating[];
 }

@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Rating } from '@/rating/rating.entity';
 
 @Entity()
 export class Game {
@@ -25,4 +27,7 @@ export class Game {
 
   @Column({ type: 'int' })
   minYear: number;
+
+  @OneToMany(() => Rating, rating => rating.game)
+  rating: Rating[];
 }
