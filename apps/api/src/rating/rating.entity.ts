@@ -17,9 +17,13 @@ export class Rating {
   @CreateDateColumn()
   creationDate: Date;
 
-  @ManyToOne(() => User, user => user.rating)
+  @ManyToOne(() => User, user => user.rating, {
+    cascade: true
+  })
   user: User;
 
-  @ManyToOne(() => Game, game => game.rating)
+  @ManyToOne(() => Game, game => game.rating, {
+    cascade: true
+  })
   game: Game;
 }

@@ -10,7 +10,6 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { type JwtPayload } from '@playpal/schemas/jwt.interface';
-import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
@@ -20,6 +19,8 @@ import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { Role } from '@/user/role.enum';
 import { UserService } from '@/user/service/user.service';
 import { User } from '@/user/user.entity';
+import hashPassword from '@/utils/auth.variable';
+import { uuidRegex } from '@/utils/regex.variable';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('users')
@@ -122,10 +123,4 @@ export class UserController {
     }
     return this.userService.delete(id);
   }
-}
-
-export const uuidRegex = /^[\dA-Fa-f]{8}(?:-[\dA-Fa-f]{4}){3}-[\dA-Fa-f]{12}$/;
-
-async function hashPassword(plaintextPassword: string) {
-  return bcrypt.hash(plaintextPassword, 10);
 }

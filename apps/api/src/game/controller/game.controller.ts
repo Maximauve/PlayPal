@@ -18,6 +18,7 @@ import { Game } from "@/game/game.entity";
 import { GameService } from "@/game/service/game.service";
 import { TranslationService } from '@/translation/translation.service';
 import { UserService } from '@/user/service/user.service';
+import { uuidRegex } from '@/utils/regex.variable';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('games')
@@ -43,6 +44,9 @@ export class GameController {
     const me = await this.usersService.getUserConnected(request);
     if (!me) {
       throw new UnauthorizedException();
+    }
+    if (!uuidRegex.test(id)) {
+      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
     }
     const game: Game | null = await this.gamesService.findOneGame(id);
     if (!game) {
@@ -79,6 +83,9 @@ export class GameController {
     if (!me) {
       throw new UnauthorizedException();
     }
+    if (!uuidRegex.test(id)) {
+      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
+    }
     await this.gamesService.update(id, body);
     const game = await this.gamesService.findOneGame(id);
     if (!game) {
@@ -97,6 +104,9 @@ export class GameController {
     const me = await this.usersService.getUserConnected(request);
     if (!me) {
       throw new UnauthorizedException();
+    }
+    if (!uuidRegex.test(id)) {
+      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
     }
     return this.gamesService.delete(id);
   }
