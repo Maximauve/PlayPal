@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
 import { Tag } from '@/tag/tag.entity';
+=======
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Rating } from '@/rating/rating.entity';
+>>>>>>> 7acf450 (feat(api/rating): WIP CRUD rating)
 
 @Entity()
 export class Game {
