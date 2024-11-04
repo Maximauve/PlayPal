@@ -8,7 +8,7 @@ export class RatingDto {
   comment: string;
 
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
-  @Min(1, { message: i18nValidationMessage<I18nTranslations>('validation.MIN_NUMBER') })
-  @Max(5, { message: i18nValidationMessage<I18nTranslations>('validation.MAX_NUMBER') })
+  @Min(0, { message: i18nValidationMessage<I18nTranslations>('validation.MIN_NUMBER') })
+  @Max(6, { message: i18nValidationMessage<I18nTranslations>('validation.MAX_NUMBER') })
   note: number;
 }
