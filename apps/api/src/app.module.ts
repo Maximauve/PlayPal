@@ -40,11 +40,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-<<<<<<< HEAD
         entities: [User, Game, Rating, Product, Loan],
-=======
-        entities: [User, Game, Rating],
->>>>>>> 89b1c43 (feat(api/rating): WIP CRUD rating)
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
