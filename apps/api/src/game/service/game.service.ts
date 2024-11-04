@@ -23,10 +23,16 @@ export class GameService {
 
   async getAll(): Promise<Game[]> {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return this.gamesRepository.find({
       relations: {
         rating: true,
         product: true
+=======
+    return this.gamesRepository.find({
+      relations: {
+        rating: true
+>>>>>>> 89b9679 (feat(api/rating): WIP CRUD rating)
       }
     });
   }
@@ -88,6 +94,7 @@ export class GameService {
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .leftJoinAndSelect("game.rating", "rating")
+<<<<<<< HEAD
       .leftJoinAndSelect("game.product", "product")
 =======
     const game = await this.gamesRepository.createQueryBuilder("game")
@@ -97,6 +104,8 @@ export class GameService {
 >>>>>>> 2c1d836 (feat(game): finish game and add TU)
       .where("game.id = :id", { id: gameId })
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+>>>>>>> 89b9679 (feat(api/rating): WIP CRUD rating)
       .getOne();
     if (!game) {
       return null;
@@ -109,10 +118,14 @@ export class GameService {
       .createQueryBuilder("game")
       .where("game.name = :name", { name })
 <<<<<<< HEAD
+<<<<<<< HEAD
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
 =======
 >>>>>>> db782ed (feat(api/games): WIP add games crud)
+=======
+      .leftJoinAndSelect("game.rating", "rating")
+>>>>>>> 89b9679 (feat(api/rating): WIP CRUD rating)
       .getOne();
     if (!game) {
       return null;
