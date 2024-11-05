@@ -14,5 +14,10 @@
   "RATING_ALREADY_EXIST": "La note existe déjà",
   "PRODUCT_CANT_CREATE": "Le produit n'a pas pu être créé",
   "PRODUCT_NOT_FOUND": "Le produit n'existe pas",
-  "LOAN_NOT_FOUND": "Le prêt n'existe pas"
+  "LOAN_NOT_FOUND": "Le prêt n'existe pas",
+  "TAG_EXIST": "Le tag existe déjà",
+  "TAG_NOT_FOUND": "Le tag n'existe pas",
+  "TAG_CANT_CREATE": "Le tag n'a pas pu être créé",
+  "TAG_CANT_DELETE": "Le tag n'a pas pu être supprimé",
+  "TAG_CANT_UPDATE": "Le tag n'a pas pu être mis à jour"
 }
