@@ -3,7 +3,7 @@ import { UserController } from '@/user/controller/user.controller';
 import { UserService } from '@/user/service/user.service';
 import { RedisService } from '@/redis/service/redis.service';
 import { TranslationService } from '@/translation/translation.service';
-import { UpdatedUsersDto } from '@/user/dto/updateUser.dto';
+import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { User } from '@/user/user.entity';
 import { Role } from '@/user/role.enum';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -122,7 +122,7 @@ describe('UserController', () => {
         user: { id: "3f78f9c0-4a5d-437b-8db2-531ac1d9e0b3", role: Role.Admin }
       } as any;
 
-      const updateDto: UpdatedUsersDto = {
+      const updateDto: UserUpdatedDto = {
         email: 'updated@example.com',
         username: 'Updated',
         role: Role.Admin
@@ -145,7 +145,7 @@ describe('UserController', () => {
         user: { id: "8a1f0b74-123e-4b97-9db3-0281a63c2072", role: Role.Customer }
       } as any;
 
-      const updateDto: UpdatedUsersDto = {
+      const updateDto: UserUpdatedDto = {
         email: 'updated@example.com',
         username: 'Updated'
       };
@@ -167,7 +167,7 @@ describe('UserController', () => {
         user: { id: "8a1f0b74-123e-4b97-9db3-0281a63c2072", role: Role.Customer }
       } as any;
 
-      const updateDto: UpdatedUsersDto = {
+      const updateDto: UserUpdatedDto = {
         email: 'updated@example.com'
       };
 
@@ -184,7 +184,7 @@ describe('UserController', () => {
         user: { id: "8a1f0b74-123e-4b97-9db3-0281a63c2072", role: Role.Admin }
       } as any;
       const password = 'newpassword123'
-      const updateDto: UpdatedUsersDto = {
+      const updateDto: UserUpdatedDto = {
         password: password
       };
 

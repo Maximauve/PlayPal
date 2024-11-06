@@ -29,12 +29,15 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('users')
     .addTag('auth')
+    .addTag('games')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
 
   // I18N
-  app.useGlobalPipes(new I18nValidationPipe());
+  app.useGlobalPipes(new I18nValidationPipe({
+    whitelist: true
+  }));
   app.useGlobalFilters(
     new I18nValidationExceptionFilter({
       detailedErrors: false,

@@ -4,7 +4,7 @@ import { IsOptional } from "class-validator";
 import { RegisterDto } from "@/auth/dto/register.dto";
 import { Role } from "@/user/role.enum";
 
-export class UpdatedUsersDto extends PartialType(RegisterDto) {
+export class UserUpdatedDto extends PartialType(RegisterDto) {
   @IsOptional()
   role?: Role;
 }

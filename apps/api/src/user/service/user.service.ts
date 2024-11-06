@@ -6,7 +6,7 @@ import { type Repository } from "typeorm";
 
 import { type RegisterDto } from "@/auth/dto/register.dto";
 import { TranslationService } from "@/translation/translation.service";
-import { UpdatedUsersDto } from "@/user/dto/updateUser.dto";
+import { UserUpdatedDto } from "@/user/dto/userUpdated";
 import { User } from "@/user/user.entity";
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UserService {
     return this.usersRepository.save(newUser);
   }
 
-  async update(userId: string, user: UpdatedUsersDto): Promise<void> {
+  async update(userId: string, user: UserUpdatedDto): Promise<void> {
     const query = await this.usersRepository
       .createQueryBuilder()
       .update(User)
@@ -86,11 +86,11 @@ export class UserService {
     return user;
   }
 
-  async checkUnknownUser(user: RegisterDto | UpdatedUsersDto, userId?: string): Promise<boolean> {
+  async checkUnknownUser(user: RegisterDto | UserUpdatedDto, userId?: string): Promise<boolean> {
     const unknownUser = await this.usersRepository
       .createQueryBuilder("user")
-      .where("user.username= :username", { username: user.username })
-      .orWhere("user.email= :email", { email: user.email })
+      .where("user.username = :username", { username: user.username })
+      .orWhere("user.email = :email", { email: user.email })
       .getOne();
     if (unknownUser == null || (userId ? userId === unknownUser.id : false)) {
       return false;

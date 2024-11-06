@@ -1,7 +1,6 @@
-import { Body, Controller, HttpException, HttpStatus, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
-import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
 import { LoginDto } from '@/auth/dto/login.dto';
 import { LoginResponse } from '@/auth/dto/loginResponse';
@@ -16,7 +15,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService, private readonly userService: UserService, private readonly translationService: TranslationService) {}
     
   @Post('/login')
-  @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Login user' })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
@@ -33,7 +31,6 @@ export class AuthController {
   }
 
   @Post('/register')
-  @UseFilters(new I18nValidationExceptionFilter())
   @ApiOperation({ summary: 'Register user' })
   @ApiInternalServerErrorResponse()
   @ApiConflictResponse()

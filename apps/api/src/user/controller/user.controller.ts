@@ -16,11 +16,12 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RedisService } from "@/redis/service/redis.service";
 import { TranslationService } from '@/translation/translation.service';
-import { UpdatedUsersDto } from '@/user/dto/updateUser.dto';
+import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { Role } from '@/user/role.enum';
 import { UserService } from '@/user/service/user.service';
 import { User } from '@/user/user.entity';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('users')
 @Controller('users')
 export class UserController {
@@ -28,7 +29,6 @@ export class UserController {
   constructor(private userService: UserService, private readonly redisService: RedisService, private readonly translationService: TranslationService) { }
 
   @Get("/")
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Returns all users' })
   @ApiOkResponse({ type: User, isArray: true })
   @ApiUnauthorizedResponse()
@@ -37,7 +37,6 @@ export class UserController {
   }
 
   @Get('/me')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Return my user informations' })
   @ApiOkResponse({ type: User })
   @ApiUnauthorizedResponse()
@@ -55,7 +54,6 @@ export class UserController {
   }
 
   @Get("/:id")
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Return a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse({ type: User })
@@ -70,7 +68,6 @@ export class UserController {
   }
 
   @Put('/:id')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse({ type: User })
@@ -78,7 +75,7 @@ export class UserController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiConflictResponse()
-  async update(@Req() request: Request, @Param('id') id: string, @Body() body: UpdatedUsersDto): Promise<User> {
+  async update(@Req() request: Request, @Param('id') id: string, @Body() body: UserUpdatedDto): Promise<User> {
     const me = await this.userService.getUserConnected(request);
     if (!me) {
       throw new UnauthorizedException();
@@ -107,7 +104,6 @@ export class UserController {
   }
 
   @Delete('/:id')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse()

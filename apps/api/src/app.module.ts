@@ -9,6 +9,8 @@ import * as path from 'node:path';
 
 import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
+import { Game } from '@/game/game.entity';
+import { GameModule } from '@/game/game.module';
 import { RedisModule } from '@/redis/redis.module';
 import { TranslationService } from '@/translation/translation.service';
 import { User } from '@/user/user.entity';
@@ -29,7 +31,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [User],
+        entities: [User, Game],
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -54,7 +56,8 @@ import { UsersModule } from '@/user/user.module';
     }),
     RedisModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    GameModule
   ],
   controllers: [],
   providers: [TranslationService, {
