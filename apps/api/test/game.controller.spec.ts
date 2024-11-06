@@ -24,7 +24,8 @@ describe('GameController', () => {
       maxPlayers: 8,
       duration: "45",
       difficulty: 3,
-      minYear: 10
+      minYear: 10,
+      rating: []
     },
     {
       id: "109ebba9-9823-45bf-88b5-889c621d58f9",
@@ -34,7 +35,8 @@ describe('GameController', () => {
       maxPlayers: 8,
       duration: "35",
       difficulty: 1,
-      minYear: 3
+      minYear: 3,
+      rating: []
     }
   ];
 
@@ -105,9 +107,9 @@ describe('GameController', () => {
     it('should throw exception if game not found', async () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
 
-      await expect(gameController.getOneGame(mockRequest, '999'))
+      await expect(gameController.getOneGame(mockRequest, 'fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
         .rejects.toThrow(HttpException);
-      await expect(gameController.getOneGame(mockRequest, '999'))
+      await expect(gameController.getOneGame(mockRequest, 'fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
         .rejects.toMatchObject({
           status: HttpStatus.NOT_FOUND,
         });

@@ -15,6 +15,10 @@ export type I18nTranslations = {
         "ID_INVALID": string;
         "GAME_NOT_FOUND": string;
         "GAME_CANT_CREATE": string;
+        "RATING_NOT_FOUND": string;
+        "RATING_CANT_CREATE": string;
+        "RATING_CANT_UPDATED": string;
+        "RATING_ALREADY_EXIST": string;
     };
     "user": {
         "HELLO": string;
@@ -25,6 +29,9 @@ export type I18nTranslations = {
         "INVALID_BOOLEAN": string;
         "MIN": string;
         "MAX": string;
+        "MIN_NUMBER": string;
+        "MAX_NUMBER": string;
+        "NOT_STRING": string;
     };
 };
 /* prettier-ignore */

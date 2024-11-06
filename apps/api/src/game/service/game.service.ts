@@ -15,7 +15,11 @@ export class GameService {
   ) { }
 
   async getAll(): Promise<Game[]> {
-    return this.gamesRepository.find();
+    return this.gamesRepository.find({
+      relations: {
+        rating: true
+      }
+    });
   }
 
   async create(game: GameDto): Promise<Game | null> {
@@ -54,6 +58,7 @@ export class GameService {
     const game = await this.gamesRepository
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
+      .leftJoinAndSelect("game.rating", "rating")
       .getOne();
     if (!game) {
       return null;
@@ -65,6 +70,7 @@ export class GameService {
     const game = await this.gamesRepository
       .createQueryBuilder("game")
       .where("game.name = :name", { name })
+      .leftJoinAndSelect("game.rating", "rating")
       .getOne();
     if (!game) {
       return null;

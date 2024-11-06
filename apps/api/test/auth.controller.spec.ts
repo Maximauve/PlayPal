@@ -57,6 +57,7 @@ describe('AuthController', () => {
         role: Role.Customer,
         email: 'test@example.com',
         password: await bcrypt.hash('password123', 10),
+        rating: []
       };
 
       jest.spyOn(mockUserService, 'findOneEmail').mockResolvedValue(mockUser);
@@ -94,6 +95,7 @@ describe('AuthController', () => {
         username: "oui",
         email: 'test@example.com',
         password: await bcrypt.hash('correctpassword', 10),
+        rating: []
       };
 
       jest.spyOn(mockUserService, 'findOneEmail').mockResolvedValue(mockUser);
@@ -118,7 +120,8 @@ describe('AuthController', () => {
         ...registerDto,
         password: await bcrypt.hash(registerDto.password, 10),
         role: Role.Customer,
-        creationDate: new Date()
+        creationDate: new Date(),
+        rating: []
       };
 
       jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(false);

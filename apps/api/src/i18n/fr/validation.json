@@ -3,5 +3,8 @@
   "INVALID_EMAIL": "l'email n'est pas valide",
   "INVALID_BOOLEAN": "{property} n'est pas un boolean",
   "MIN": "{property} doit contenir au minimum {constraints.0} caractères",
-  "MAX": "{property} doit contenir au maximum {constraints.0} caractères"
+  "MAX": "{property} doit contenir au maximum {constraints.0} caractères",
+  "MIN_NUMBER": "{property} doit être plus petit que {constraints.0}",
+  "MAX_NUMBER": "{property} doit être plus grand que {constraints.0}",
+  "NOT_STRING": "{property} n'est pas un string"
 }
