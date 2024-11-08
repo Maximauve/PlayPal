@@ -67,7 +67,6 @@ describe('RatingController', () => {
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-      findOneRating: jest.fn().mockResolvedValue(mockRatings[0])
     };
 
     mockUserService = {
@@ -174,7 +173,7 @@ describe('RatingController', () => {
       const updatedRatingDto: RatingUpdatedDto = { note: 4, comment: 'Updated comment' };
 
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockRatingService, 'findOneRating').mockResolvedValue(mockRatings[0]);
+      jest.spyOn(mockRatingService, 'getRating').mockResolvedValue(mockRatings[0]);
       jest.spyOn(mockRatingService, 'update').mockResolvedValue(undefined);
 
       const result = await ratingController.updateRating(mockRequest, "6bd7ba90-d2d6-4f81-9f09-7d1f23346a1c", "a2345678-1234-5678-9abc-123456789abc", updatedRatingDto);
@@ -186,7 +185,7 @@ describe('RatingController', () => {
       const updatedRatingDto: RatingUpdatedDto = { note: 4, comment: 'Updated comment' };
 
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockRatingService, 'findOneRating').mockResolvedValue(null);
+      jest.spyOn(mockRatingService, 'getRating').mockResolvedValue(null);
 
       await expect(ratingController.updateRating(mockRequest, "6bd7ba90-d2d6-4f81-9f09-7d1f23346a1c", "cacd3df4-2d89-4bcb-9b21-d7c86c93a6b2", updatedRatingDto)).rejects.toThrow(HttpException);
       await expect(ratingController.updateRating(mockRequest, "6bd7ba90-d2d6-4f81-9f09-7d1f23346a1c", "cacd3df4-2d89-4bcb-9b21-d7c86c93a6b2", updatedRatingDto)).rejects.toMatchObject({

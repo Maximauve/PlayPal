@@ -32,6 +32,8 @@ export type I18nTranslations = {
         "MIN_NUMBER": string;
         "MAX_NUMBER": string;
         "NOT_STRING": string;
+        "IS_STATE": string;
+        "NOT_BOOLEAN": string;
     };
 };
 /* prettier-ignore */

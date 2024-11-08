@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
 
 @Entity()
@@ -29,5 +30,8 @@ export class Game {
   minYear: number;
 
   @OneToMany(() => Rating, rating => rating.game)
-  rating: Rating[];
+  rating?: Rating[];
+
+  @OneToMany(() => Product, product => product.game)
+  product?: Product[];
 }
