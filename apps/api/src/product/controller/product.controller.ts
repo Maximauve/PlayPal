@@ -15,7 +15,7 @@ import { uuidRegex } from "@/utils/regex.variable";
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('product')
-@Controller('game/:gameId/product')
+@Controller('games/:gameId/product')
 export class ProductController {
   constructor(private readonly usersService: UserService, private readonly gameService: GameService, private readonly translationsService: TranslationService, private readonly productService: ProductService) { }
 
@@ -86,7 +86,11 @@ export class ProductController {
     if (!game) {
       throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    const product = await this.productService.create(gameId, me.id, body);
+    const newBody = {
+      state: body.state,
+      available: false
+    };
+    const product = await this.productService.create(gameId, me.id, newBody);
     if (!product) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -107,7 +111,7 @@ export class ProductController {
     if (!me) {
       throw new UnauthorizedException();
     }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId)) {
+    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId) || !uuidRegex.test(body.userId)) {
       throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
     }
     const game = await this.gameService.findOneGame(gameId);
@@ -174,7 +178,7 @@ export class ProductController {
       throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
     await this.productService.update(productId, body);
-    const product = await this.productService.getProduct(gameId, me.id);
+    const product = await this.productService.getProduct(gameId, productId);
     if (!product) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }

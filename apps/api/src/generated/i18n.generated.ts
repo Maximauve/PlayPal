@@ -19,6 +19,8 @@ export type I18nTranslations = {
         "RATING_CANT_CREATE": string;
         "RATING_CANT_UPDATED": string;
         "RATING_ALREADY_EXIST": string;
+        "PRODUCT_CANT_CREATE": string;
+        "PRODUCT_NOT_FOUND": string;
     };
     "user": {
         "HELLO": string;

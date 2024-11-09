@@ -87,7 +87,7 @@ export class RatingService {
       .delete()
       .from(Rating)
       .where("rating.id = :id", { id: ratingId })
-      .andWhere("rating.gameId = :gameId", { gameId: gameId })
+      .andWhere('rating."gameId" = :gameId', { gameId: gameId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
