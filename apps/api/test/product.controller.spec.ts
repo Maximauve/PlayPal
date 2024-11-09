@@ -46,7 +46,6 @@ describe('ProductController', () => {
     role: Role.Customer,
     creationDate: new Date()
   };
-
   const mockProducts: Product[] = [mockProduct];
 
   beforeEach(async () => {

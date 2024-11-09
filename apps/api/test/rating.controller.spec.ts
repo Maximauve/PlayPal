@@ -165,6 +165,17 @@ describe('RatingController', () => {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     });
+
+    it('should throw HttpException with 500 status if rating cannot be created', async () => {
+      const mockRequest = {} as Request;
+      const body = { note: 5, comment: 'Incredible!' };
+      jest.spyOn(mockRatingService, 'create').mockResolvedValue(null);
+
+      await expect(ratingController.createRating(mockRequest, validGameId, body)).rejects.toThrow(HttpException);
+      await expect(ratingController.createRating(mockRequest, validGameId, body)).rejects.toMatchObject({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    });
   });
 
   describe('updateRating', () => {
