@@ -11,11 +11,8 @@ import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { Game } from '@/game/game.entity';
 import { GameModule } from '@/game/game.module';
-<<<<<<< HEAD
 import { Loan } from '@/loan/loan.entity';
 import { LoanModule } from '@/loan/loan.module';
-=======
->>>>>>> f10c5e8 (feat(api/product): add test for product and fix test rating)
 import { Product } from '@/product/product.entity';
 import { ProductModule } from '@/product/product.module';
 import { Rating } from '@/rating/rating.entity';
@@ -41,11 +38,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-<<<<<<< HEAD
         entities: [User, Game, Rating, Product, Loan],
-=======
-        entities: [User, Game, Rating, Product],
->>>>>>> f10c5e8 (feat(api/product): add test for product and fix test rating)
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',

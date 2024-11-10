@@ -17,7 +17,8 @@ export class GameService {
   async getAll(): Promise<Game[]> {
     return this.gamesRepository.find({
       relations: {
-        rating: true
+        rating: true,
+        product: true
       }
     });
   }
@@ -59,6 +60,7 @@ export class GameService {
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .leftJoinAndSelect("game.rating", "rating")
+      .leftJoinAndSelect("game.product", "product")
       .getOne();
     if (!game) {
       return null;
@@ -71,6 +73,7 @@ export class GameService {
       .createQueryBuilder("game")
       .where("game.name = :name", { name })
       .leftJoinAndSelect("game.rating", "rating")
+      .leftJoinAndSelect("game.product", "product")
       .getOne();
     if (!game) {
       return null;
