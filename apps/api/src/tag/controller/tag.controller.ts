@@ -25,11 +25,12 @@ export class TagController {
     private readonly translationService: TranslationService
   ) { }
 
-  @Get('')
-  @ApiOperation({ summary: 'Get all tags' })
+  @Get("")
+  @ApiOperation({ summary: 'Get all game\'s tags' })
   @ApiOkResponse({ type: Tag, isArray: true })
   @ApiUnauthorizedResponse()
-  async getAll(): Promise<Tag[]> {
+  @ApiNotFoundResponse()
+  async getAllTags(): Promise<Tag[]> {
     return this.tagService.getAll();
   }
 
