@@ -20,6 +20,7 @@ export class ProductController {
   constructor(private readonly usersService: UserService, private readonly gameService: GameService, private readonly translationsService: TranslationService, private readonly productService: ProductService) { }
 
   @Get('')
+  @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiOperation({ summary: "Get all product of a game" })
   @ApiOkResponse({ type: Product, isArray: true })
   @ApiUnauthorizedResponse()
@@ -164,6 +165,7 @@ export class ProductController {
   @ApiOperation({ summary: "Update a product" })
   @ApiOkResponse({ type: Product })
   @ApiUnauthorizedResponse()
+  @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   async updateProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string, @Body() body: ProductUpdatedDto): Promise<Product> {
     const me = await this.usersService.getUserConnected(request);
@@ -188,9 +190,10 @@ export class ProductController {
   @Delete("/:productId")
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
-  @ApiOperation({ summary: "Update a product" })
+  @ApiOperation({ summary: "Delete a product" })
   @ApiOkResponse({ type: Product })
   @ApiUnauthorizedResponse()
+  @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   async deleteProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string): Promise<void> {
     const me = await this.usersService.getUserConnected(request);

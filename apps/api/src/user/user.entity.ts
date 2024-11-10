@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { Loan } from '@/loan/loan.entity';
 import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
 import { Role } from '@/user/role.enum';
@@ -29,4 +30,7 @@ export class User {
 
   @OneToMany(() => Product, product => product.user)
   product?: Product[];
+
+  @OneToMany(() => Loan, loan => loan.user)
+  loan?: Loan[];
 }

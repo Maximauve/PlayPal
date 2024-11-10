@@ -36,6 +36,7 @@ export type I18nTranslations = {
         "NOT_STRING": string;
         "IS_STATE": string;
         "NOT_BOOLEAN": string;
+        "NOT_DATE": string;
     };
 };
 /* prettier-ignore */

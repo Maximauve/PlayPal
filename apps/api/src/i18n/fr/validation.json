@@ -7,6 +7,7 @@
   "MIN_NUMBER": "{property} doit être plus petit que {constraints.0}",
   "MAX_NUMBER": "{property} doit être plus grand que {constraints.0}",
   "NOT_STRING": "{property} n'est pas un string",
-  "IS_STATE": "{property} doit être BROKEN, DAMAGED, FAIR, GOOD, LIKE_NEW, NEW",
-  "NOT_BOOLEAN": "{property} doit être un boolean"
+  "IS_STATE": "${property} doit être BROKEN, DAMAGED, FAIR, GOOD, LIKE_NEW, NEW",
+  "NOT_BOOLEAN": "${property} doit être un boolean",
+  "NOT_DATE": "${property} doit être une date"
 }

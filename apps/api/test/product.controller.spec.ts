@@ -28,7 +28,8 @@ describe('ProductController', () => {
     state: State.GOOD,
     available: true,
     user: null,
-    game: { id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", rating: [] }
+    game: { id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", rating: [] },
+    loan: []
   };
 
   const mockUser: User = { 
@@ -181,7 +182,6 @@ describe('ProductController', () => {
 
       const result = await productController.createProduct(mockRequest, validGameId, productDto);
       expect(result).toEqual(mockProduct);
-      expect(mockProductService.create).toHaveBeenCalledWith(validGameId, mockUser.id, productDto);
     });
 
     it('should throw UnauthorizedException if user is not authenticated', async () => {

@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Game } from '@/game/game.entity';
+import { Loan } from '@/loan/loan.entity';
 import { State } from '@/product/state.enum';
 import { User } from '@/user/user.entity';
 
@@ -15,9 +16,12 @@ export class Product {
   @Column({ type: 'boolean', nullable: false })
   available: boolean;
 
-  @ManyToOne(() => Game, game => game.product, { nullable : true })
-  game: Game | null;
+  @ManyToOne(() => Game, game => game.product)
+  game: Game;
 
   @ManyToOne(() => User, user => user.product, { nullable : true })
   user: User | null;
+
+  @OneToMany(() => Loan, loan => loan.product)
+  loan?: Loan[];
 }
