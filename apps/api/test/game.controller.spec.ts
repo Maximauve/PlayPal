@@ -8,12 +8,15 @@ import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Role } from '@/user/role.enum';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('GameController', () => {
   let gameController: GameController;
   let mockGameService: Partial<GameService>;
   let mockUserService: Partial<UserService>;
   let mockTranslationService: Partial<TranslationService>;
+  let mockGameRepository: Partial<Repository<Game>>;
 
   const mockGames: Game[] = [
     {
@@ -72,6 +75,7 @@ describe('GameController', () => {
         { provide: GameService, useValue: mockGameService },
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
+        { provide: getRepositoryToken(Game), useValue: mockGameRepository },
       ],
     }).compile();
 
@@ -87,29 +91,21 @@ describe('GameController', () => {
   });
 
   describe('getOneGame', () => {
-    const mockRequest = {} as any;
 
     it('should return a specific game by ID', async () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGames[0]);
 
-      const result = await gameController.getOneGame(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      const result = await gameController.getOneGame("568931ed-d87e-4bf1-b477-2f1aea83e3da");
       expect(result).toEqual(mockGames[0]);
       expect(mockGameService.findOneGame).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-    });
-
-    it('should throw unauthorized exception if user not connected', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(null);
-
-      await expect(gameController.getOneGame(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da"))
-        .rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw exception if game not found', async () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
 
-      await expect(gameController.getOneGame(mockRequest, 'fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
+      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
         .rejects.toThrow(HttpException);
-      await expect(gameController.getOneGame(mockRequest, 'fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
+      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
         .rejects.toMatchObject({
           status: HttpStatus.NOT_FOUND,
         });
@@ -117,7 +113,6 @@ describe('GameController', () => {
   });
 
   describe('create', () => {
-    const mockRequest = {} as any;
     const createGameDto: GameDto = {
       name: "Jeu",
       description: "Un jeu amusant",
@@ -131,24 +126,17 @@ describe('GameController', () => {
     it('should create a new game successfully', async () => {
       jest.spyOn(mockGameService, 'create').mockResolvedValue(mockGames[0]);
 
-      const result = await gameController.create(mockRequest, createGameDto);
+      const result = await gameController.create(createGameDto);
       expect(result).toEqual(mockGames[0]);
       expect(mockGameService.create).toHaveBeenCalledWith(createGameDto);
-    });
-
-    it('should throw unauthorized exception if user not connected', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(null);
-
-      await expect(gameController.create(mockRequest, createGameDto))
-        .rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw exception if game creation fails', async () => {
       jest.spyOn(mockGameService, 'create').mockResolvedValue(null);
 
-      await expect(gameController.create(mockRequest, createGameDto))
+      await expect(gameController.create(createGameDto))
         .rejects.toThrow(HttpException);
-      await expect(gameController.create(mockRequest, createGameDto))
+      await expect(gameController.create(createGameDto))
         .rejects.toMatchObject({
           status: HttpStatus.INTERNAL_SERVER_ERROR,
         });
@@ -156,7 +144,6 @@ describe('GameController', () => {
   });
 
   describe('update', () => {
-    const mockRequest = {} as any;
     const updateGameDto: GameUpdatedDto = {
       description: "Description updated",
       minYear: 12
@@ -166,24 +153,17 @@ describe('GameController', () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 
-      const result = await gameController.update(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
+      const result = await gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
       expect(result).toEqual(updatedGame);
       expect(mockGameService.update).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
-    });
-
-    it('should throw unauthorized exception if user not connected', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(null);
-
-      await expect(gameController.update(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
-        .rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw exception if game not found after update', async () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
 
-      await expect(gameController.update(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
+      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
         .rejects.toThrow(HttpException);
-      await expect(gameController.update(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
+      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
         .rejects.toMatchObject({
           status: HttpStatus.NOT_FOUND,
         });
@@ -191,18 +171,9 @@ describe('GameController', () => {
   });
 
   describe('delete', () => {
-    const mockRequest = {} as any;
-
     it('should delete a game successfully', async () => {
-      await gameController.delete(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      await gameController.delete("568931ed-d87e-4bf1-b477-2f1aea83e3da");
       expect(mockGameService.delete).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-    });
-
-    it('should throw unauthorized exception if user not connected', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(null);
-
-      await expect(gameController.delete(mockRequest, "568931ed-d87e-4bf1-b477-2f1aea83e3da"))
-        .rejects.toThrow(UnauthorizedException);
     });
   });
 });
