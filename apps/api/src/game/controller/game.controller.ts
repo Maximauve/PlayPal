@@ -28,11 +28,6 @@ export class GameController {
   @ApiOperation({ summary: "Get all games" })
   @ApiOkResponse({ type: Game, isArray: true })
   @ApiUnauthorizedResponse()
-
-  @Get('')
-  @ApiOperation({ summary: "Get all games" })
-  @ApiOkResponse({ type: Game, isArray: true })
-  @ApiUnauthorizedResponse()
   async getAll() {
     return this.gamesService.getAll();
   }
@@ -64,6 +59,7 @@ export class GameController {
     }
     return game;
   }
+  
   @Put('/:gameId')
   @UseGuards(GameGuard)
   @ApiOperation({ summary: "Update a game" })
