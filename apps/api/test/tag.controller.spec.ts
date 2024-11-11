@@ -9,21 +9,25 @@ import { TagDto } from '@/tag/dto/tag.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Role } from '@/user/role.enum';
 import { TagUpdatedDto } from '@/tag/dto/tagUpdated.dto';
+import { GameService } from '@/game/service/game.service';
 
 describe('TagController', () => {
   let tagController: TagController;
   let mockTagService: Partial<TagService>;
   let mockUserService: Partial<UserService>;
+  let mockGameService: Partial<GameService>;
   let mockTranslationService: Partial<TranslationService>;
 
   const mockTags: Tag[] = [
     {
       id: "8a1f0b74-123e-4b97-9db3-0281a63c2072",
-      name: 'Coopératif'
+      name: 'Coopératif',
+      games: []
     },
     {
       id: "3f78f9c0-4a5d-437b-8db2-531ac1d9e0b3",
-      name: 'Jeux d\'ambiance'
+      name: 'Jeux d\'ambiance',
+      games: []
     }
   ];
 
@@ -33,7 +37,8 @@ describe('TagController', () => {
     username: "John doe",
     creationDate: new Date(),
     role: Role.Customer,
-    password: 'hashedpassword'
+    password: 'hashedpassword',
+    rating: []
   };
 
   beforeEach(async () => {
