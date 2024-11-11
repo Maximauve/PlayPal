@@ -74,6 +74,10 @@ export class GameController {
   async update(@Param('gameId') gameId: string, @Body() body: GameUpdatedDto): Promise<Game> {
     await this.gamesService.update(gameId, body);
     const game = await this.gamesService.findOneGame(gameId);
+    if (!game) {
+      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return game;
   }
 
   @Delete('/:gameId')

@@ -11,13 +11,10 @@ import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { Game } from '@/game/game.entity';
 import { GameModule } from '@/game/game.module';
-<<<<<<< HEAD
 import { Loan } from '@/loan/loan.entity';
 import { LoanModule } from '@/loan/loan.module';
 import { Product } from '@/product/product.entity';
 import { ProductModule } from '@/product/product.module';
-=======
->>>>>>> 89b1c43 (feat(api/rating): WIP CRUD rating)
 import { Rating } from '@/rating/rating.entity';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
