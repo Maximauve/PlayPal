@@ -34,7 +34,7 @@ describe('ProductController', () => {
     state: State.GOOD,
     available: true,
     user: null,
-    game: { id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", rating: [] },
+    game: { id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", rating: [], tags: [] },
     loan: []
   };
 

@@ -31,11 +31,11 @@ export class Game {
   minYear: number;
 
   @OneToMany(() => Rating, rating => rating.game)
-  rating?: Rating[];
+  rating: Rating[];
+
+  @ManyToMany(() => Tag, tag => tag.games)
+  tags: Tag[];
 
   @OneToMany(() => Product, product => product.game)
   product?: Product[];
-
-  @ManyToMany(() => Tag, tag => tag.games)  
-  tags?: Tag[];
 }
