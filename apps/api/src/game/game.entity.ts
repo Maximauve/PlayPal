@@ -30,6 +30,9 @@ export class Game {
   @Column({ type: 'int' })
   minYear: number;
 
+  @Column({ type: 'varchar', nullable: true })
+  image?: string;
+
   @OneToMany(() => Rating, rating => rating.game)
   rating?: Rating[];
 

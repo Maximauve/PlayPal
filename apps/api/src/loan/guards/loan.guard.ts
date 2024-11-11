@@ -38,7 +38,8 @@ export class LoanGuard implements CanActivate {
       relations: {
         product: {
           game: true
-        }
+        },
+        user: true
       }
     });
 

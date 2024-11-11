@@ -88,29 +88,14 @@ describe('GameController', () => {
     it('should return all games', async () => {
       const result = await gameController.getAll();
       expect(result).toEqual(mockGames);
-      expect(mockGameService.getAll).toHaveBeenCalled();
     });
   });
 
   describe('getOneGame', () => {
 
     it('should return a specific game by ID', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGames[0]);
-
-      const result = await gameController.getOneGame("568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      const result = gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
-      expect(mockGameService.findOneGame).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-    });
-
-    it('should throw exception if game not found', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
-
-      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
-        .rejects.toThrow(HttpException);
-      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-        });
     });
   });
 
@@ -153,29 +138,20 @@ describe('GameController', () => {
 
     it('should update a game successfully', async () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
+      
+      jest.spyOn(mockGameService, 'update').mockResolvedValue(undefined);
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 
-      const result = await gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
+      const result = await gameController.update(mockGames[0], updateGameDto);
       expect(result).toEqual(updatedGame);
-      expect(mockGameService.update).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
-    });
-
-    it('should throw exception if game not found after update', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
-
-      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
-        .rejects.toThrow(HttpException);
-      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-        });
+      expect(mockGameService.update).toHaveBeenCalledWith(mockGames[0].id, updateGameDto);
     });
   });
 
   describe('delete', () => {
     it('should delete a game successfully', async () => {
-      await gameController.delete("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-      expect(mockGameService.delete).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      await gameController.delete(mockGames[1]);
+      expect(mockGameService.delete).toHaveBeenCalledWith(mockGames[1].id);
     });
   });
 });

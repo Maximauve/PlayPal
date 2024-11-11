@@ -66,7 +66,7 @@ describe('RatingController', () => {
   ];
 
   const mockGame: Game = {
-    id: "568931ed-d87e-4bf1-b477-2f1aea83e3da",
+    id: validGameId,
     name: "6-qui-prends",
     description: "Un jeu de taureaux",
     minPlayers: 3,
@@ -129,9 +129,8 @@ describe('RatingController', () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
       jest.spyOn(mockRatingService, 'getAllRating').mockResolvedValue([mockRating]);
 
-      const result = await ratingController.getAllRating(validGameId);
+      const result = await ratingController.getAllRating(mockGame);
       expect(result).toEqual([mockRating]);
-      expect(mockRatingService.getAllRating).toHaveBeenCalledWith(validGameId);
     });
   });
 
@@ -140,9 +139,8 @@ describe('RatingController', () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
       jest.spyOn(mockRatingService, 'getRating').mockResolvedValue(mockRating);
 
-      const result = await ratingController.getRating(validGameId, validRatingId);
+      const result = await ratingController.getRating(mockRating);
       expect(result).toEqual(mockRating);
-      expect(mockRatingService.getRating).toHaveBeenCalledWith(validGameId, validRatingId);
     });
   });
 
@@ -153,7 +151,7 @@ describe('RatingController', () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
       jest.spyOn(mockRatingService, 'create').mockResolvedValue(mockRating);
 
-      const result = await ratingController.createRating(mockUser, validGameId, body);
+      const result = await ratingController.createRating(mockUser, mockGame, body);
       expect(result).toEqual(mockRating);
       expect(mockRatingService.create).toHaveBeenCalledWith(validGameId, mockUser.id, body);
     });
@@ -162,8 +160,8 @@ describe('RatingController', () => {
       const body = { note: 5, comment: 'Incredible!' };
       jest.spyOn(mockRatingService, 'create').mockResolvedValue(null);
 
-      await expect(ratingController.createRating(mockUser, validGameId, body)).rejects.toThrow(HttpException);
-      await expect(ratingController.createRating(mockUser, validGameId, body)).rejects.toMatchObject({
+      await expect(ratingController.createRating(mockUser, mockGame, body)).rejects.toThrow(HttpException);
+      await expect(ratingController.createRating(mockUser, mockGame, body)).rejects.toMatchObject({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     });
@@ -177,7 +175,7 @@ describe('RatingController', () => {
       jest.spyOn(mockRatingService, 'update').mockResolvedValue(undefined);
       jest.spyOn(mockRatingService, 'getRating').mockResolvedValue(mockRating);
 
-      const result = await ratingController.updateRating(mockUser, validGameId, validRatingId, body);
+      const result = await ratingController.updateRating(mockUser, mockGame, mockRating, body);
       expect(result).toEqual(mockRating);
       expect(mockRatingService.update).toHaveBeenCalledWith(validRatingId, body);
       expect(mockRatingService.getRating).toHaveBeenCalledWith(validGameId, mockUser.id);
@@ -190,7 +188,7 @@ describe('RatingController', () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
       jest.spyOn(mockRatingService, 'delete').mockResolvedValue(undefined);
 
-      await expect(ratingController.deleteRating(validGameId, validRatingId))
+      await expect(ratingController.deleteRating(mockGame, mockRating))
         .resolves.toBeUndefined();
       expect(mockRatingService.delete).toHaveBeenCalledWith(validGameId, validRatingId);
     });

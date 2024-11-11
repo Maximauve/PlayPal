@@ -2,42 +2,42 @@ import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Game } from "@/game/game.entity";
-import { RequestWithGame } from "@/game/types/RequestWithGame";
 import { TranslationService } from "@/translation/translation.service";
+import { RequestWithParamUser } from "@/user/types/RequestWithParamUser";
+import { User } from "@/user/user.entity";
 import { uuidRegex } from "@/utils/regex.variable";
 
 @Injectable()
-export class GameGuard implements CanActivate {
+export class UserGuard implements CanActivate {
   constructor(
-    @InjectRepository(Game)
-    private gameRepository: Repository<Game>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private readonly translationsService: TranslationService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<RequestWithGame>();
-    const gameId = request.params.gameId;
+    const request = context.switchToHttp().getRequest<RequestWithParamUser>();
+    const userId = request.params.userId;
 
-    if (!uuidRegex.test(gameId)) {
+    if (!uuidRegex.test(userId)) {
       throw new HttpException(await this.translationsService.translate("error.ID_INVALID"), HttpStatus.BAD_REQUEST);
     }
 
-    const game = await this.gameRepository.findOne({ 
-      where: { 
-        id: gameId 
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
       },
       relations: {
         rating: true,
-        product: true
+        product: true,
+        loan: true
       }
     });
-    
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    if (!user) {
+      throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
 
-    request.game = game;
+    request.user = user;
     return true;
   }
 }

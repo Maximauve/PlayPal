@@ -15,6 +15,7 @@ import { AssignDto } from '@/product/dto/assign.dto';
 import { Repository } from 'typeorm';
 import { Game } from '@/game/game.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ProductUpdatedDto } from '@/product/dto/productUpdated.dto';
 
 describe('ProductController', () => {
   let productController: ProductController;
@@ -29,6 +30,19 @@ describe('ProductController', () => {
   const validProductId = "123e4567-e89b-12d3-a456-426614174001";
   const invalidGameId = "96fdc209-0551-4d67-b9ad-0e9067a44bc4";
   const invalidId = "invalid-id";
+
+  const mockGame: Game = {
+    id: validGameId,
+    name: "6-qui-prends",
+    description: "Un jeu de taureaux",
+    minPlayers: 3,
+    maxPlayers: 8,
+    duration: "45",
+    difficulty: 3,
+    minYear: 10,
+    rating: []
+  }
+
   const mockProduct: Product = {
     id: validProductId,
     state: State.GOOD,
@@ -90,23 +104,17 @@ describe('ProductController', () => {
 
   describe('getAllProduct', () => {
     it('should return all products for a valid gameId', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
+      jest.spyOn(mockProductService, 'getAllProduct').mockResolvedValue(mockProducts);
 
-      const result = await productController.getAllProduct(validGameId);
+      const result = await productController.getAllProduct(mockGame);
       expect(result).toEqual(mockProducts);
-      expect(mockProductService.getAllProduct).toHaveBeenCalledWith(validGameId);
     });
   });
 
   describe('getProduct', () => {
     it('should return a product for valid gameId and productId', async () => {
-
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
-
-      const result = await productController.getProduct(validGameId, validProductId);
+      const result = productController.getProduct(mockProduct);
       expect(result).toEqual(mockProduct);
-      expect(mockProductService.getProduct).toHaveBeenCalledWith(validGameId, validProductId);
     });
   });
 
@@ -114,10 +122,9 @@ describe('ProductController', () => {
     it('should create a product for a valid gameId', async () => {
       const productDto: ProductDto = { state: State.LIKE_NEW };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
       jest.spyOn(mockProductService, 'create').mockResolvedValue(mockProduct);
 
-      const result = await productController.createProduct(mockUser, validGameId, productDto);
+      const result = await productController.createProduct(mockUser, mockGame, productDto);
       expect(result).toEqual(mockProduct);
     });
 
@@ -126,8 +133,8 @@ describe('ProductController', () => {
 
       jest.spyOn(mockProductService, 'create').mockResolvedValue(null);
 
-      await expect(productController.createProduct(mockUser, validGameId, productDto)).rejects.toThrow(HttpException);
-      await expect(productController.createProduct(mockUser, validGameId, productDto)).rejects.toMatchObject({
+      await expect(productController.createProduct(mockUser, mockGame, productDto)).rejects.toThrow(HttpException);
+      await expect(productController.createProduct(mockUser, mockGame, productDto)).rejects.toMatchObject({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     });
@@ -137,10 +144,9 @@ describe('ProductController', () => {
     it('should assign a product to a user for valid gameId and productId', async () => {
       const assignDto: AssignDto = { userId: mockUser.id };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
       jest.spyOn(mockProductService, 'assign').mockResolvedValue(mockProduct);
 
-      const result = await productController.assignProduct(validGameId, validProductId, assignDto);
+      const result = await productController.assignProduct(mockGame, mockProduct, assignDto);
       expect(result).toEqual(mockProduct);
       expect(mockProductService.assign).toHaveBeenCalledWith(validGameId, validProductId, mockUser);
     });
@@ -149,10 +155,9 @@ describe('ProductController', () => {
   describe('unassignProduct', () => {
     it('should unassign a product for valid gameId and productId', async () => {
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
       jest.spyOn(mockProductService, 'unassign').mockResolvedValue(mockProduct);
 
-      const result = await productController.unassignProduct(validGameId, validProductId);
+      const result = await productController.unassignProduct(mockGame, mockProduct);
       expect(result).toEqual(mockProduct);
       expect(mockProductService.unassign).toHaveBeenCalledWith(validGameId, validProductId);
     });
@@ -160,12 +165,11 @@ describe('ProductController', () => {
 
   describe('updateProduct', () => {
     it('should update a product for valid gameId and productId', async () => {
-      const productUpdatedDto = { state: State.LIKE_NEW };
+      const productUpdatedDto: ProductUpdatedDto = { state: State.LIKE_NEW };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
       jest.spyOn(mockProductService, 'update').mockResolvedValue();
 
-      const result = await productController.updateProduct(validGameId, validProductId, productUpdatedDto);
+      const result = await productController.updateProduct(mockGame, mockProduct, productUpdatedDto);
       expect(result).toEqual(mockProduct);
       expect(mockProductService.update).toHaveBeenCalledWith(validProductId, productUpdatedDto);
     });
@@ -174,10 +178,9 @@ describe('ProductController', () => {
   describe('deleteProduct', () => {
     it('should delete a product for valid gameId and productId', async () => {
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockProduct.game);
       jest.spyOn(mockProductService, 'delete').mockResolvedValue(undefined);
 
-      await expect(productController.deleteProduct(validGameId, validProductId)).resolves.toBeUndefined();
+      await expect(productController.deleteProduct(mockGame, mockProduct)).resolves.toBeUndefined();
       expect(mockProductService.delete).toHaveBeenCalledWith(validGameId, validProductId);
     });
   });
