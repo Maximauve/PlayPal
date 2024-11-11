@@ -1,19 +1,21 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, UnauthorizedException, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
-import { Request } from "express";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
 import { AssignDto } from "@/product/dto/assign.dto";
 import { ProductDto } from "@/product/dto/product.dto";
 import { ProductUpdatedDto } from "@/product/dto/productUpdated.dto";
+import { ProductGuard } from "@/product/guards/product.guard";
 import { Product } from "@/product/product.entity";
 import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
+import { CurrentUser } from "@/user/decorators/user.docarator";
 import { UserService } from "@/user/service/user.service";
-import { uuidRegex } from "@/utils/regex.variable";
+import { User } from "@/user/user.entity";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('product')
 @Controller('games/:gameId/product')
 export class ProductController {
@@ -24,22 +26,12 @@ export class ProductController {
   @ApiOperation({ summary: "Get all product of a game" })
   @ApiOkResponse({ type: Product, isArray: true })
   @ApiUnauthorizedResponse()
-  async getAllProduct(@Req() request: Request, @Param('gameId') gameId: string): Promise<Product[]> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async getAllProduct(@Param('gameId') gameId: string): Promise<Product[]> {
     return this.productService.getAllProduct(gameId);
   }
 
   @Get("/:productId")
+  @UseGuards(ProductGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Return a product" })
@@ -47,18 +39,7 @@ export class ProductController {
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string): Promise<Product> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async getProduct(@Param('gameId') gameId: string, @Param('productId') productId: string): Promise<Product> {
     const product = await this.productService.getProduct(gameId, productId);
     if (!product) {
       throw new HttpException(await this.translationsService.translate('error.PRODUCT_NOT_FOUND'), HttpStatus.NOT_FOUND);
@@ -75,23 +56,12 @@ export class ProductController {
   @ApiInternalServerErrorResponse()
   @ApiConflictResponse()
   @ApiNotFoundResponse()
-  async createProduct(@Req() request: Request, @Param('gameId') gameId: string, @Body() body: ProductDto): Promise<Product> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async createProduct(@CurrentUser() user: User, @Param('gameId') gameId: string, @Body() body: ProductDto): Promise<Product> {
     const newBody = {
       state: body.state,
       available: false
     };
-    const product = await this.productService.create(gameId, me.id, newBody);
+    const product = await this.productService.create(gameId, user.id, newBody);
     if (!product) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -100,6 +70,7 @@ export class ProductController {
 
   @UsePipes(ValidationPipe)
   @Post("/:productId/assign")
+  @UseGuards(ProductGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Assign a product to a user" })
@@ -107,18 +78,7 @@ export class ProductController {
   @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  async assignProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string, @Body() body: AssignDto): Promise<Product> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId) || !uuidRegex.test(body.userId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async assignProduct(@Param('gameId') gameId: string, @Param('productId') productId: string, @Body() body: AssignDto): Promise<Product> {
     const user = await this.usersService.findOneUser(body.userId);
     if (!user) {
       throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
@@ -131,6 +91,7 @@ export class ProductController {
   }
 
   @Post("/:productId/unassign")
+  @UseGuards(ProductGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Unassign a product to a user" })
@@ -138,18 +99,7 @@ export class ProductController {
   @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  async unassignProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string): Promise<Product> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async unassignProduct(@Param('gameId') gameId: string, @Param('productId') productId: string): Promise<Product> {
     const product = await this.productService.unassign(gameId, productId);
     if (!product) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
@@ -160,6 +110,7 @@ export class ProductController {
 
   @UsePipes(ValidationPipe)
   @Put("/:productId")
+  @UseGuards(ProductGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Update a product" })
@@ -167,18 +118,7 @@ export class ProductController {
   @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  async updateProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string, @Body() body: ProductUpdatedDto): Promise<Product> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async updateProduct(@Param('gameId') gameId: string, @Param('productId') productId: string, @Body() body: ProductUpdatedDto): Promise<Product> {
     await this.productService.update(productId, body);
     const product = await this.productService.getProduct(gameId, productId);
     if (!product) {
@@ -188,6 +128,7 @@ export class ProductController {
   }
 
   @Delete("/:productId")
+  @UseGuards(ProductGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Delete a product" })
@@ -195,18 +136,7 @@ export class ProductController {
   @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  async deleteProduct(@Req() request: Request, @Param('gameId') gameId: string, @Param('productId') productId: string): Promise<void> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(productId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async deleteProduct(@Param('gameId') gameId: string, @Param('productId') productId: string): Promise<void> {
     return this.productService.delete(gameId, productId);
   }
 }

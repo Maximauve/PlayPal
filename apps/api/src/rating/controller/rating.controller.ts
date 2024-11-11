@@ -1,18 +1,20 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
-import { Request } from "express";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
 import { RatingDto } from "@/rating/dto/rating.dto";
 import { RatingUpdatedDto } from "@/rating/dto/ratingUpdated.dto";
+import { RatingGuard } from "@/rating/guards/rating.guard";
 import { Rating } from "@/rating/rating.entity";
 import { RatingService } from "@/rating/service/rating.service";
 import { TranslationService } from "@/translation/translation.service";
+import { CurrentUser } from "@/user/decorators/user.docarator";
 import { UserService } from "@/user/service/user.service";
-import { uuidRegex } from "@/utils/regex.variable";
+import { User } from "@/user/user.entity";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('rating')
 @Controller('/games/:gameId/rating')
 export class RatingController {
@@ -25,22 +27,12 @@ export class RatingController {
   @ApiOkResponse({ type: Rating, isArray: true })
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getAllRating(@Req() request: Request, @Param('gameId') gameId: string): Promise<Rating[]> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async getAllRating(@Param('gameId') gameId: string): Promise<Rating[]> {
     return this.ratingService.getAllRating(gameId);
   }
 
   @Get("/:ratingId")
+  @UseGuards(RatingGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Return a rating" })
@@ -48,18 +40,7 @@ export class RatingController {
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getRating(@Req() request: Request, @Param('gameId') gameId: string, @Param('ratingId') ratingId: string): Promise<Rating> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(ratingId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async getRating(@Param('gameId') gameId: string, @Param('ratingId') ratingId: string): Promise<Rating> {
     const rating = await this.ratingService.getRating(gameId, ratingId);
     if (!rating) {
       throw new HttpException(await this.translationsService.translate('error.RATING_NOT_FOUND'), HttpStatus.NOT_FOUND);
@@ -75,19 +56,8 @@ export class RatingController {
   @ApiInternalServerErrorResponse()
   @ApiConflictResponse()
   @ApiNotFoundResponse()
-  async createRating(@Req() request: Request, @Param('gameId') gameId: string, @Body() body: RatingDto): Promise<Rating> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
-    const rating = await this.ratingService.create(gameId, me.id, body);
+  async createRating(@CurrentUser() user: User, @Param('gameId') gameId: string, @Body() body: RatingDto): Promise<Rating> {
+    const rating = await this.ratingService.create(gameId, user.id, body);
     if (!rating) {
       throw new HttpException(await this.translationsService.translate("error.RATING_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -95,26 +65,16 @@ export class RatingController {
   }
 
   @Put("/:ratingId")
+  @UseGuards(RatingGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Update a rating" })
   @ApiOkResponse({ type: Rating })
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async updateRating(@Req() request: Request, @Param('gameId') gameId: string, @Param('ratingId') ratingId: string, @Body() body: RatingUpdatedDto): Promise<Rating> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(ratingId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async updateRating(@CurrentUser() user: User, @Param('gameId') gameId: string, @Param('ratingId') ratingId: string, @Body() body: RatingUpdatedDto): Promise<Rating> {
     await this.ratingService.update(ratingId, body);
-    const rating = await this.ratingService.getRating(gameId, me.id);
+    const rating = await this.ratingService.getRating(gameId, user.id);
     if (!rating) {
       throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
@@ -122,24 +82,14 @@ export class RatingController {
   }
   
   @Delete("/:ratingId")
+  @UseGuards(RatingGuard)
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Update a rating" })
   @ApiOkResponse({ type: Rating })
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async deleteRating(@Req() request: Request, @Param('gameId') gameId: string, @Param('ratingId') ratingId: string): Promise<void> {
-    const me = await this.usersService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(gameId) || !uuidRegex.test(ratingId)) {
-      throw new HttpException(await this.translationsService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async deleteRating(@Param('gameId') gameId: string, @Param('ratingId') ratingId: string): Promise<void> {
     return this.ratingService.delete(gameId, ratingId);
   }
 }
