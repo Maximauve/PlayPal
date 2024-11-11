@@ -27,6 +27,7 @@ export class ProductService {
       .where("product.gameId = :id", { id: gameId })
       .leftJoinAndSelect("product.user", "user")
       .leftJoinAndSelect("product.game", "game")
+      .leftJoinAndSelect("product.loan", "loan")
       .getMany();
   }
 
@@ -35,6 +36,7 @@ export class ProductService {
       .createQueryBuilder("product")
       .leftJoinAndSelect("product.user", "user")
       .leftJoinAndSelect("product.game", "game")
+      .leftJoinAndSelect("product.loan", "loan")
       .where("product.gameId = :gameId", { gameId: gameId })
       .andWhere("product.id = :productId", { productId: productId })
       .getOne();

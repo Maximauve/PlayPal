@@ -11,6 +11,8 @@ import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { Game } from '@/game/game.entity';
 import { GameModule } from '@/game/game.module';
+import { Loan } from '@/loan/loan.entity';
+import { LoanModule } from '@/loan/loan.module';
 import { Product } from '@/product/product.entity';
 import { ProductModule } from '@/product/product.module';
 import { Rating } from '@/rating/rating.entity';
@@ -35,7 +37,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [User, Game, Rating, Product],
+        entities: [User, Game, Rating, Product, Loan],
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -63,7 +65,8 @@ import { UsersModule } from '@/user/user.module';
     AuthModule,
     GameModule,
     RatingModule,
-    ProductModule
+    ProductModule,
+    LoanModule
   ],
   controllers: [],
   providers: [TranslationService, {

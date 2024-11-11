@@ -20,7 +20,9 @@ export class UserService {
   async getAll(): Promise<User[]> {
     return this.usersRepository.find({
       relations: {
-        rating: true
+        rating: true,
+        loan: true,
+        product: true
       }
     });
   }
@@ -61,6 +63,8 @@ export class UserService {
       .createQueryBuilder("user")
       .where("user.email = :email", { email: email })
       .leftJoinAndSelect("user.rating", "rating")
+      .leftJoinAndSelect("user.loan", "loan")
+      .leftJoinAndSelect("user.product", "product")
       .getOne();
   }
 
@@ -69,6 +73,8 @@ export class UserService {
       .createQueryBuilder("user")
       .where("user.id = :id", { id: id })
       .leftJoinAndSelect("user.rating", "rating")
+      .leftJoinAndSelect("user.loan", "loan")
+      .leftJoinAndSelect("user.product", "product")
       .getOne();
     if (!user) {
       return null;
