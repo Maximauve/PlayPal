@@ -43,7 +43,8 @@ describe('RatingController', () => {
     duration: "45",
     difficulty: 3,
     minYear: 10,
-    rating: []
+    rating: [],
+    tags: []
   }
 
   const mockRating: Rating = { 
