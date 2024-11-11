@@ -33,11 +33,7 @@ export class TagService {
   }
 
   async getAll(): Promise<Tag[]> {
-    return this.tagRepository.find(
-      { relations: {
-        games: true
-      } }
-    );
+    return this.tagRepository.find();
   }
 
   async create(tag: TagDto): Promise<Tag | null> {
