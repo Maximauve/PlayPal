@@ -11,5 +11,7 @@
   "RATING_NOT_FOUND": "La note n'a pas été trouvée",
   "RATING_CANT_CREATE": "La note n'a pas pu être créée",
   "RATING_CANT_UPDATED": "La note n'a pas pu être mise à jour",
-  "RATING_ALREADY_EXIST": "La note existe déjà"
+  "RATING_ALREADY_EXIST": "La note existe déjà",
+  "PRODUCT_CANT_CREATE": "Le produit n'a pas pu être créé",
+  "PRODUCT_NOT_FOUND": "Le produit n'existe pas"
 }

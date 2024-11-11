@@ -55,7 +55,7 @@ export class RatingService {
     if (!user) {
       throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    const existingRating = await this.findOneRating(gameId, userId);
+    const existingRating = await this.getRating(gameId, userId);
     if (existingRating) {
       // user cant create note 2 times for one game
       throw new HttpException(await this.translationsService.translate("error.RATING_ALREADY_EXIST"), HttpStatus.CONFLICT);
@@ -68,7 +68,7 @@ export class RatingService {
     return this.ratingRepository.save(rating);
   }
 
-  async update(gameId: string, userId: string, ratingId: string, ratingUpdatedDto: RatingUpdatedDto): Promise<void> {
+  async update(ratingId: string, ratingUpdatedDto: RatingUpdatedDto): Promise<void> {
     const query = await this.ratingRepository
       .createQueryBuilder()
       .update(Rating)
@@ -87,21 +87,11 @@ export class RatingService {
       .delete()
       .from(Rating)
       .where("rating.id = :id", { id: ratingId })
-      .andWhere("rating.gameId = :gameId", { gameId: gameId })
+      .andWhere('rating."gameId" = :gameId', { gameId: gameId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
     return;
-  }
-
-  async findOneRating(gameId: string, userId: string): Promise<Rating | null> {
-    return this.ratingRepository
-      .createQueryBuilder("rating")
-      .leftJoinAndSelect("rating.user", "user")
-      .leftJoinAndSelect("rating.game", "game")
-      .where("rating.userId = :userId", { userId: userId })
-      .andWhere("rating.gameId = :gameId", { gameId: gameId })
-      .getOne();
   }
 }

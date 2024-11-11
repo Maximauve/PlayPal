@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Request } from "express";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
@@ -45,6 +45,7 @@ export class RatingController {
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Return a rating" })
   @ApiOkResponse({ type: Rating })
+  @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
   async getRating(@Req() request: Request, @Param('gameId') gameId: string, @Param('ratingId') ratingId: string): Promise<Rating> {
@@ -112,8 +113,8 @@ export class RatingController {
     if (!game) {
       throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    await this.ratingService.update(gameId, me.id, ratingId, body);
-    const rating = await this.ratingService.findOneRating(gameId, me.id);
+    await this.ratingService.update(ratingId, body);
+    const rating = await this.ratingService.getRating(gameId, me.id);
     if (!rating) {
       throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
