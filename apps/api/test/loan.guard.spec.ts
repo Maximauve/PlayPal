@@ -33,7 +33,8 @@ describe('LoanGuard', () => {
         maxPlayers: 5,
         minYear: 3,
         difficulty: 3,
-        duration: "35min"
+        duration: "35min",
+        tags: []
       },
       available: true,
       user: { 

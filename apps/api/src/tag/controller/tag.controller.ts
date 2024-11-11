@@ -41,11 +41,12 @@ export class TagController {
   @ApiOkResponse({ type: Tag, isArray: true })
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getAllTagsByGame(@Param('gameId') gameId: string): Promise<Tag[]> {
+  async getAllTagsByGame(@Req() request: Request, @Param('gameId') gameId: string): Promise<Tag[]> {
     const game = await this.gameService.findOneGame(gameId);
     if (!game) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
+    
     return this.tagService.getAllByGameId(gameId);
   }
 
@@ -56,6 +57,7 @@ export class TagController {
   @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
   async getOne(@Req() request: Request, @Param('tagId') tagId: string): Promise<Tag | null> {
+
     const tag = await this.tagService.getOne(tagId);
     if (!tag) {
       throw new HttpException(await this.translationService.translate('error.TAG_NOT_FOUND'), HttpStatus.NOT_FOUND);

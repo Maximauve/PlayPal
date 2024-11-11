@@ -27,7 +27,8 @@ describe('RatingGuard', () => {
       maxPlayers: 5,
       minYear: 3,
       difficulty: 3,
-      duration: "35min"
+      duration: "35min",
+      tags: []
     },
     note: 4,
     comment: "Trop cool",
