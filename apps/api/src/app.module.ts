@@ -18,6 +18,7 @@ import { ProductModule } from '@/product/product.module';
 import { Rating } from '@/rating/rating.entity';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
+import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
 import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
@@ -66,7 +67,8 @@ import { UsersModule } from '@/user/user.module';
     GameModule,
     RatingModule,
     ProductModule,
-    LoanModule
+    LoanModule,
+    TagModule
   ],
   controllers: [],
   providers: [TranslationService, {
