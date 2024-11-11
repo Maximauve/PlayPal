@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { Tag } from "@/tag/tag.entity";
 import { RequestWithTag } from "@/tag/types/RequestWithTag";
 import { TranslationService } from "@/translation/translation.service";
+import { uuidRegex } from "@/utils/regex.variable";
 
 @Injectable()
 export class TagGuard implements CanActivate {
@@ -16,6 +17,10 @@ export class TagGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithTag>();
     const tagId = request.params.tagId;
+
+    if (!uuidRegex.test(tagId)) {
+      throw new HttpException(this.translationService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
+    }
 
     const tag = await this.tagRepository.findOne({
       where: {
