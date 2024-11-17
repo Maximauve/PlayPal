@@ -3,7 +3,12 @@ import { type User } from "./user.interface";
 
 export type Wishlist = {
   id: number;
-  game: Game;
+  games: Wish[];
   user: User;
+}
+
+export type Wish = {
+  id: number;
+  game: Game;
   date: Date;
 }

@@ -18,6 +18,8 @@ import { RedisModule } from '@/redis/redis.module';
 import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
 import { UsersModule } from '@/user/user.module';
+import { Wish } from '@/wish/wish.entity';
+import { WishModule } from '@/wish/wish.module';
 
 @Module({
   imports: [
@@ -66,7 +68,9 @@ import { UsersModule } from '@/user/user.module';
     ProductModule,
     LoanModule,
     TagModule,
-    FileUploadModule
+    FileUploadModule,
+    WishModule,
+
   ],
   controllers: [],
   providers: [TranslationService, {
@@ -74,4 +78,4 @@ import { UsersModule } from '@/user/user.module';
     useClass: AuthExceptionFilter,
   }],
 })
-export class AppModule {}
+export class AppModule { }

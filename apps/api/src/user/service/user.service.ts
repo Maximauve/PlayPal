@@ -22,7 +22,8 @@ export class UserService {
       relations: {
         rating: true,
         loan: true,
-        product: true
+        product: true,
+        wish: true
       }
     });
   }
