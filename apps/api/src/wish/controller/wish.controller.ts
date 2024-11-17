@@ -4,7 +4,7 @@ import { ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundRespons
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { GameGuard } from '@/game/guards/game.guard';
 import { TranslationService } from '@/translation/translation.service';
-import { CurrentUser } from '@/user/decorators/user.docarator';
+import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 import { User } from '@/user/user.entity';
 import { WishDto } from '@/wish/dto/wish.dto';
 import { WishGuard } from '@/wish/guards/wish.guard';

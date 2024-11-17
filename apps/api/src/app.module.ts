@@ -69,8 +69,7 @@ import { WishModule } from '@/wish/wish.module';
     LoanModule,
     TagModule,
     FileUploadModule,
-    WishModule,
-
+    WishModule
   ],
   controllers: [],
   providers: [TranslationService, {
