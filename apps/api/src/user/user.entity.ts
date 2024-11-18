@@ -36,6 +36,6 @@ export class User {
   loan?: Loan[];
 
   @OneToMany(() => Wish, wish => wish.user)
-  wish: Wish[];
+  wish?: Wish[];
 }
 

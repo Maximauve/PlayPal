@@ -80,7 +80,7 @@ export class WishService {
     const existingWish = await this.getWish(userId);
     if (existingWish) {
       throw new HttpException(
-        await this.translationService.translate('Wish already exists'),
+        await this.translationService.translate("error.WISH_ALREADY_EXISTS"),
         HttpStatus.BAD_REQUEST
       );
     }
@@ -100,7 +100,7 @@ export class WishService {
       .where('id = :id', { wishId })
       .execute();
     if (query.affected === 0) {
-      throw new HttpException(await this.translationService.translate('error.Wish_NOT_FOUND'),HttpStatus.NOT_FOUND
+      throw new HttpException(await this.translationService.translate("error.WISH_NOT_FOUND"),HttpStatus.NOT_FOUND
       );
     }
     return;
@@ -115,7 +115,7 @@ export class WishService {
       .execute();
     if (query.affected === 0) {
       throw new HttpException(
-        await this.translationService.translate('error.Wish_NOT_FOUND'),
+        await this.translationService.translate('error.WISH_NOT_FOUND'),
         HttpStatus.NOT_FOUND
       );
     }

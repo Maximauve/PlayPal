@@ -56,7 +56,7 @@ export class WishController {
   async createWish(@Param('gameId') gameId: string, @CurrentUser() user: User, @Body() wishDto: WishDto): Promise<Wish> {
     const wish = await this.wishlistService.create(user.id, gameId, wishDto);
     if (!wish) {
-      throw new HttpException(await this.translationsService.translate("error.WISH_NOT_CREATED"), HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(await this.translationsService.translate("error.WISH_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return wish;
   }
@@ -79,7 +79,6 @@ export class WishController {
     }
     return wish;
   }
-
 
   @Delete('/:wishId')
   @UseGuards(WishGuard)
