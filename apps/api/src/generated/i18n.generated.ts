@@ -21,6 +21,12 @@ export type I18nTranslations = {
         "RATING_ALREADY_EXIST": string;
         "PRODUCT_CANT_CREATE": string;
         "PRODUCT_NOT_FOUND": string;
+        "LOAN_NOT_FOUND": string;
+        "TAG_EXIST": string;
+        "TAG_NOT_FOUND": string;
+        "TAG_CANT_CREATE": string;
+        "TAG_CANT_DELETE": string;
+        "TAG_CANT_UPDATE": string;
     };
     "user": {
         "HELLO": string;

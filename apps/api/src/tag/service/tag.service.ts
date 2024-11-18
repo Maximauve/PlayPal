@@ -22,7 +22,9 @@ export class TagService {
       where: {
         id: gameId
       },
-      relations: ['tags']
+      relations: {
+        tags: true
+      }
     });
 
     if (!game) {

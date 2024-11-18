@@ -129,28 +129,6 @@ describe('TagController', () => {
     });
   });
 
-  describe('getAllTagsByGame', () => {
-    it('should return all tags for a specific game', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-
-      const result = await tagController.getAllTagsByGame({} as any, mockGame.id);
-      expect(result).toEqual(mockGame.tags);
-      expect(mockGameService.findOneGame).toHaveBeenCalledWith(mockGame.id);
-    });
-
-    it('should throw an error if the game does not exist', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
-
-      await expect(tagController.getAllTagsByGame({} as any, 'unknown-id'))
-        .rejects.toThrow(HttpException);
-
-      await expect(tagController.getAllTagsByGame({} as any, 'unknown-id'))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-      });
-    });
-  });
-
   describe('create', () => {
     it('should create a new tag', async () => {
       const newTag: TagDto = {

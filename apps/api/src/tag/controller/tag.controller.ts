@@ -3,7 +3,6 @@ import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, Api
 import { Request } from "express";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
-import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
 import { TagDto } from "@/tag/dto/tag.dto";
 import { TagUpdatedDto } from "@/tag/dto/tagUpdated.dto";
@@ -14,7 +13,7 @@ import { TranslationService } from "@/translation/translation.service";
 import { UserService } from "@/user/service/user.service";
 import { uuidRegex } from "@/utils/regex.variable";
 
-@UseGuards(JwtAuthGuard, TagGuard)
+@UseGuards(JwtAuthGuard)
 @ApiTags('tags')
 @Controller('/tags')
 export class TagController {
@@ -34,22 +33,7 @@ export class TagController {
     return this.tagService.getAll();
   }
 
-  @UseGuards(GameGuard)
-  @Get("/:gameId")
-  @ApiOperation({ summary: 'Get all game\'s tags' })
-  @ApiParam({ name: 'gameId', type: 'string', required: true })
-  @ApiOkResponse({ type: Tag, isArray: true })
-  @ApiUnauthorizedResponse()
-  @ApiNotFoundResponse()
-  async getAllTagsByGame(@Req() request: Request, @Param('gameId') gameId: string): Promise<Tag[]> {
-    const game = await this.gameService.findOneGame(gameId);
-    if (!game) {
-      throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
-    
-    return this.tagService.getAllByGameId(gameId);
-  }
-
+  @UseGuards(TagGuard)
   @Get('/:tagId')
   @ApiOperation({ summary: 'Get one tag' })
   @ApiParam({ name: 'tagId', type: 'string', required: true })
@@ -79,6 +63,7 @@ export class TagController {
     return tag;
   }
   
+  @UseGuards(TagGuard)
   @Put('/:tagId')
   @ApiOperation({ summary: 'Update a tag' })
   @ApiParam({ name: 'tagId', required: true })
@@ -95,6 +80,7 @@ export class TagController {
     return tag;
   }
 
+  @UseGuards(TagGuard)
   @Delete('/:tagId')
   @ApiOperation({ summary: 'Delete a tag' })
   @ApiParam({ name: 'tagId', type: 'string', required: true })
