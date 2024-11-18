@@ -28,12 +28,14 @@ export type I18nTranslations = {
         "TAG_CANT_CREATE": string;
         "TAG_CANT_DELETE": string;
         "TAG_CANT_UPDATE": string;
+        "EXTENSION_NOT_ALLOWED": string;
     };
     "user": {
         "HELLO": string;
     };
     "validation": {
         "NOT_EMPTY": string;
+        "IS_EMPTY": string;
         "INVALID_EMAIL": string;
         "INVALID_BOOLEAN": string;
         "MIN": string;

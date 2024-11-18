@@ -38,7 +38,6 @@ export class GameService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
   async delete(gameId: string): Promise<void> {
@@ -52,7 +51,6 @@ export class GameService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
   async findOneGame(gameId: string): Promise<Game | null> {

@@ -2,21 +2,20 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Up
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
-  ApiBody,
   ApiConflictResponse,
-  ApiConsumes,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiProperty,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { Express } from 'express';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { FileUploadService } from '@/files/files.service';
+import { ParseFilePipeDocument } from '@/files/files.validator';
 import { GameRequest } from '@/game/decorators/game.decorator';
 import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
@@ -25,17 +24,12 @@ import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
 import { TranslationService } from '@/translation/translation.service';
 
-class CreateGameWithFileDto extends GameDto {
-  @ApiProperty({ type: 'string', format: 'binary' })
-  file: unknown;
-}
-
 @UseGuards(JwtAuthGuard)
 @ApiTags('games')
 @ApiUnauthorizedResponse()
 @Controller('games')
 export class GameController {
-  constructor(private readonly gamesService: GameService, private readonly translationsService: TranslationService) { }
+  constructor(private readonly gamesService: GameService, private readonly translationsService: TranslationService, private readonly fileUploadService: FileUploadService) { }
 
   @Get('')
   @ApiOperation({ summary: "Get all games" })
@@ -55,20 +49,19 @@ export class GameController {
   }
 
   @Post('')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiBody({ type: CreateGameWithFileDto })
-  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Create a game" })
   @ApiOkResponse({ type: Game })
   @ApiInternalServerErrorResponse()
+  @ApiBadRequestResponse()
   @ApiConflictResponse()
-  async create(@Body() body: GameDto,
-    @UploadedFile() file: Express.Multer.File
-  ): Promise<Game> {
-    console.log("file controller", file);
-    console.log("body", body);
+  async create(@Body() body: GameDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
     if (await this.gamesService.findOneName(body.name)) {
       throw new HttpException(await this.translationsService.translate("error.GAME_ALREADY_EXIST"), HttpStatus.CONFLICT);
+    }
+    if (file) {
+      const fileName = await this.fileUploadService.uploadFile(file);
+      body = { ...body, image: fileName };
     }
     const game = await this.gamesService.create(body);
     if (!game) {
@@ -79,11 +72,16 @@ export class GameController {
 
   @Put('/:gameId')
   @UseGuards(GameGuard)
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Update a game" })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
   @ApiOkResponse({ type: Game })
   @ApiNotFoundResponse()
-  async update(@GameRequest() game: Game, @Body() body: GameUpdatedDto): Promise<Game> {
+  async update(@GameRequest() game: Game, @Body() body: GameUpdatedDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
+    if (file) {
+      const fileName = await this.fileUploadService.uploadFile(file);
+      body = { ...body, image: fileName };
+    }
     await this.gamesService.update(game.id, body);
     const gameUpdated = await this.gamesService.findOneGame(game.id);
     if (!gameUpdated) {
@@ -99,6 +97,9 @@ export class GameController {
   @ApiOkResponse()
   @ApiBadRequestResponse()
   async delete(@GameRequest() game: Game): Promise<void> {
+    if (game.image) {
+      await this.fileUploadService.deleteFile(game.image);
+    }
     return this.gamesService.delete(game.id);
   }
 }

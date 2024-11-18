@@ -20,5 +20,6 @@
   "TAG_NOT_FOUND": "Le tag n'existe pas",
   "TAG_CANT_CREATE": "Le tag n'a pas pu être créé",
   "TAG_CANT_DELETE": "Le tag n'a pas pu être supprimé",
-  "TAG_CANT_UPDATE": "Le tag n'a pas pu être mis à jour"
+  "TAG_CANT_UPDATE": "Le tag n'a pas pu être mis à jour",
+  "EXTENSION_NOT_ALLOWED": "L'extension n'est pas prise en charge"
 }

@@ -33,7 +33,11 @@
     "test:frontend": "cd apps/frontend && yarn test"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.693.0",
     "@faker-js/faker": "^9.1.0",
+    "@nestjs/platform-express": "^10.4.8",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
     "pactum": "^3.7.3"
   }
 }

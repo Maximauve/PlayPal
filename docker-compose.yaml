@@ -23,6 +23,46 @@ services:
     networks:
       - play_pal
 
+  minio:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - s3-storage:/data
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
+      MINIO_ADDRESS: ':9000'
+      MINIO_CONSOLE_ADDRESS: ':9001'
+    command: minio server /data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 3s
+      timeout: 5s
+      retries: 3
+    networks:
+      - back
+
+  create-aws-bucket:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY};
+      /usr/bin/mc mb minio/${AWS_BUCKET} 2> /dev/null && /usr/bin/mc anonymous set public minio/${AWS_BUCKET} || echo \"Bucket minio/${AWS_BUCKET} already exists. Skipping.\";
+      exit 0;
+      "
+    networks:
+      - back
+
 networks:
   play_pal:
     name: play_pal
+  back:
+    name: back
+
+volumes:
+  s3-storage:
