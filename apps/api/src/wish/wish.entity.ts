@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Game } from "@/game/game.entity";
 import { User } from "@/user/user.entity";
