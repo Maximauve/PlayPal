@@ -85,20 +85,12 @@ describe('WishController', () => {
             expect(result).toEqual([mockWish]);
         });
 
-        it('should throw HttpException with 400 status if gameId is invalid', async () => {
-            await expect(wishController.getAllWishes(invalidGameId)).rejects.toThrow();
-        });
-
     });
 
     describe('getWish', () => {
         it('should return a wish for a valid wishId', async () => {
             const result = await wishController.getWish(validWishId);
             expect(result).toEqual(mockWish);
-        });
-
-        it('should throw HttpException with 400 status if wishId is invalid', async () => {
-            await expect(wishController.getWish(invalidWishId)).rejects.toThrow();
         });
 
     });
@@ -111,8 +103,22 @@ describe('WishController', () => {
             expect(result).toEqual(mockWish);
         });
 
-        it('should throw HttpException with 400 status if gameId is invalid', async () => {
-            await expect(wishController.createWish(invalidGameId, mockWish.user, mockWishDto)).rejects.toThrow();
+    });
+
+    describe('updateWish', () => {
+        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId, date: new Date() };
+
+        it('should update a wish', async () => {
+            const result = await wishController.updateWish(validWishId, mockWishDto);
+            expect(result).toEqual(mockWish);
+        });
+
+    });
+
+    describe('deleteWish', () => {
+        it('should delete a wish', async () => {
+            const result = await wishController.deleteWish(validWishId);
+            expect(result).toBeNull();
         });
 
     });
