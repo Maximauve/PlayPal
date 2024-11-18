@@ -13,8 +13,11 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.3.1",
     "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.1.3"
   },
   "scripts": {
@@ -25,7 +28,9 @@
     "up": "docker-compose up -d",
     "lint:api": "cd apps/api && yarn run eslint .",
     "lint:frontend": "cd apps/frontend && eslint .",
-    "lint": "yarn run lint:api && yarn run lint:frontend"
+    "lint": "yarn lint:api && yarn lint:frontend",
+    "test:api": "cd apps/api && yarn test",
+    "test:frontend": "cd apps/frontend && yarn test"
   },
   "dependencies": {
     "@faker-js/faker": "^9.1.0",

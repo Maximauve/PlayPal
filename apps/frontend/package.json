@@ -7,7 +7,8 @@
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"react": "^18.3.1",
@@ -15,15 +16,20 @@
 		"react-router-dom": "^6.27.0"
 	},
 	"devDependencies": {
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.0.1",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.3.1",
 		"@vitejs/plugin-react": "^4.3.3",
 		"autoprefixer": "^10.4.20",
 		"globals": "^15.11.0",
+		"jsdom": "^25.0.1",
 		"postcss": "^8.4.49",
 		"sass": "^1.81.0",
 		"tailwindcss": "^3.4.15",
-		"vite": "^5.4.9"
+		"ts-node": "^10.9.2",
+		"vite": "^5.4.9",
+		"vitest": "^2.1.5"
 	},
 	"workspaceDependencies": {
 		"@playpal/eslint": "*",
