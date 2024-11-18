@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
 
 test('HomePage', () => {
-	expect(true).toBe(true);
+	expect(true).toBe(false);
 });
