@@ -34,6 +34,36 @@ describe('RatingController', () => {
     role: Role.Customer,
     creationDate: new Date()
   };
+  
+  const mockRatings: Rating[] = [
+    {
+      id: "a2345678-1234-5678-9abc-123456789abc",
+      user: {
+        id: "48eab136-49bc-4fd8-bcb7-3338a3cfb729",
+        username: "John Doe",
+        password: "password",
+        email: "john.doe@email.com",
+        creationDate: new Date(),
+        role: Role.Customer,
+        rating: []
+      },
+      game: {
+        id: "6bd7ba90-d2d6-4f81-9f09-7d1f23346a1c",
+        name: "Skyjo",
+        description: "Un bon jeu",
+        maxPlayers: 5,
+        minPlayers: 2,
+        minYear: 3,
+        difficulty: 3,
+        duration: "35min",
+        rating: [],
+        tags: []
+      },
+      note: 4,
+      comment: 'Great game!',
+      creationDate: new Date()
+    },
+  ];
 
   const mockGame: Game = {
     id: "568931ed-d87e-4bf1-b477-2f1aea83e3da",
@@ -44,7 +74,8 @@ describe('RatingController', () => {
     duration: "45",
     difficulty: 3,
     minYear: 10,
-    rating: []
+    rating: [],
+    tags: []
   }
 
   const mockRating: Rating = { 

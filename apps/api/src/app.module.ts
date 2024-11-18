@@ -18,6 +18,8 @@ import { ProductModule } from '@/product/product.module';
 import { Rating } from '@/rating/rating.entity';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
+import { Tag } from '@/tag/tag.entity';
+import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
 import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
@@ -37,7 +39,7 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [User, Game, Rating, Product, Loan],
+        entities: [User, Game, Rating, Product, Loan, Tag],
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -66,7 +68,8 @@ import { UsersModule } from '@/user/user.module';
     GameModule,
     RatingModule,
     ProductModule,
-    LoanModule
+    LoanModule,
+    TagModule
   ],
   controllers: [],
   providers: [TranslationService, {
