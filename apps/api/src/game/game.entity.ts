@@ -2,6 +2,7 @@ import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 't
 
 import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
+import { Rule } from '@/rule/rule.entity';
 import { Tag } from '@/tag/tag.entity';
 import { Wish } from '@/wish/wish.entity';
 
@@ -45,4 +46,7 @@ export class Game {
 
   @ManyToMany(() => Tag, tag => tag.games)
   tags: Tag[];
+
+  @OneToMany(() => Rule, rule => rule.game)
+  rules: Rule[];
 }
