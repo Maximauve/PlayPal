@@ -15,6 +15,7 @@ export type I18nTranslations = {
         "ID_INVALID": string;
         "GAME_NOT_FOUND": string;
         "GAME_CANT_CREATE": string;
+        "GAME_ALREADY_EXIST": string;
         "RATING_NOT_FOUND": string;
         "RATING_CANT_CREATE": string;
         "RATING_CANT_UPDATED": string;

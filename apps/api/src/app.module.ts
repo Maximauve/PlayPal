@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
+import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 //* See i18n-nest doc : https://nestjs-i18n.com/guides/type-safety
@@ -61,6 +62,12 @@ import { UsersModule } from '@/user/user.module';
         { use: QueryResolver, options: ['lang', 'locale'] },
         AcceptLanguageResolver,
       ],
+    }),
+    MulterModule.register({
+      dest: path.join(process.cwd(), 'uploads'),
+      limits: {
+        fieldSize: 1000 * 1000 * 10
+      }
     }),
     RedisModule,
     UsersModule,
