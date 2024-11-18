@@ -26,6 +26,7 @@
         "src/*"
       ]
     },
+    "allowJs": true,
     "strictNullChecks": true
   },
   "include": [
@@ -34,6 +35,8 @@
     "**/*.mjs",
     "**/*.cjs",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "./tailwind.config.js",
+    "./postcss.config.js"
   ]
 }

@@ -1,11 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 
-import App from '@/App.tsx';
+import router from '@/router/router';
+import "@/assets/styles/index.scss";
 
+// Disabled eslint rule because document cannot be undefined
 // eslint-disable-next-line no-undef
 createRoot(document.querySelector('#root')!).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 );

@@ -8,6 +8,7 @@ export default [...config, {
 			projectService: true,
 			tsconfigRootDir: import.meta.dirname,
 			extraFileExtensions: ['.json'],
+			allowDefaultProject: true,
 		},
 	},
 	settings: {
