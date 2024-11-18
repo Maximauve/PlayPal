@@ -11,7 +11,10 @@ import { imageRegex } from '@/utils/regex.variable';
 export class ParseFilePipeDocument implements PipeTransform {
   constructor(private readonly translationService: TranslationService) {}
 
-  async transform(value: Express.Multer.File): Promise<Express.Multer.File> {
+  async transform(value: Express.Multer.File): Promise<Express.Multer.File | void> {
+    if (!value) {
+      return;
+    }
     const extension = extname(value.originalname).toLowerCase();
     if (!imageRegex.test(extension)) {
       throw new HttpException(await this.translationService.translate("error.EXTENSION_NOT_ALLOWED"), HttpStatus.BAD_REQUEST);

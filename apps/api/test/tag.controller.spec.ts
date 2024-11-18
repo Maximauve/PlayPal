@@ -46,7 +46,7 @@ describe('TagController', () => {
     difficulty: 3,
     minYear: 10,
     rating: [],
-    tags: [mockTags[0], mockTags[1]]
+    tags: mockTags
   };
 
   const mockUser = {
@@ -68,6 +68,7 @@ describe('TagController', () => {
       delete: jest.fn(),
       getOneByName: jest.fn(),
       getAllByGameId: jest.fn().mockResolvedValue(mockGame.tags),
+      checkIsInGame: jest.fn()
     };
 
     mockUserService = {
@@ -107,25 +108,8 @@ describe('TagController', () => {
 
   describe('getOne', () => {
     it('should return a specific tag by id', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
-      jest.spyOn(mockTagService, 'getOne').mockResolvedValue(mockTags[0]);
-
-      const result = await tagController.getOne({} as any, mockTags[0].id);
+      const result = tagController.getOne(mockTags[0]);
       expect(result).toEqual(mockTags[0]);
-      expect(mockTagService.getOne).toHaveBeenCalledWith(mockTags[0].id);
-    });
-
-    it('should throw an error if the tag does not exist', async () => {
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
-      jest.spyOn(mockTagService, 'getOne').mockResolvedValue(null);
-
-      await expect(tagController.getOne({} as any, 'unknown-id'))
-        .rejects.toThrow(HttpException);
-
-      await expect(tagController.getOne({} as any, 'unknown-id'))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-      });
     });
   });
 
@@ -135,10 +119,9 @@ describe('TagController', () => {
         name: 'Nouveau tag'
       };
 
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
       jest.spyOn(mockTagService, 'create').mockResolvedValue(mockTags[0]);
 
-      const result = await tagController.create({} as any, newTag);
+      const result = await tagController.create(newTag);
       expect(result).toEqual(mockTags[0]);
       expect(mockTagService.create).toHaveBeenCalledWith(newTag);
     });
@@ -148,13 +131,12 @@ describe('TagController', () => {
         name: 'Nouveau tag'
       };
 
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
       jest.spyOn(mockTagService, 'create').mockResolvedValue(null);
 
-      await expect(tagController.create({} as any, newTag))
+      await expect(tagController.create(newTag))
         .rejects.toThrow(HttpException);
 
-      await expect(tagController.create({} as any, newTag))
+      await expect(tagController.create(newTag))
         .rejects.toMatchObject({
           status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
@@ -163,36 +145,23 @@ describe('TagController', () => {
 
   describe('update', () => {
     it('should update a tag', async () => {
-      const updatedTag: TagUpdatedDto = {
+      const updatedDtoTag: TagUpdatedDto = {
         name: 'Tag mis à jour'
       };
 
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
+      const updatedTag: Tag = {
+        ...mockTags[0],
+        ...updatedDtoTag
+      }
+
       jest.spyOn(mockTagService, 'update').mockResolvedValue();
 
-      jest.spyOn(mockTagService, 'getOne').mockResolvedValue(mockTags[0]);
+      jest.spyOn(mockTagService, 'getOne').mockResolvedValue(updatedTag);
 
-      const result = await tagController.update({} as any, mockTags[0].id, updatedTag);
-      expect(result).toEqual(mockTags[0]);
-      expect(mockTagService.update).toHaveBeenCalledWith(mockTags[0].id, updatedTag);
+      const result = await tagController.update(mockTags[0], updatedDtoTag);
+      expect(result).toEqual(updatedTag);
+      expect(mockTagService.update).toHaveBeenCalledWith(mockTags[0].id, updatedDtoTag);
       expect(mockTagService.getOne).toHaveBeenCalledWith(mockTags[0].id);
-    });
-
-    it('should throw an error if the tag does not exist', async () => {
-      const updatedTag: TagUpdatedDto = {
-        name: 'Tag mis à jour'
-      };
-      
-      jest.spyOn(mockUserService, 'getUserConnected').mockResolvedValue(mockUser);
-      jest.spyOn(mockTagService, 'update').mockRejectedValue(new HttpException('Tag not found', HttpStatus.NOT_FOUND));
-
-      await expect(tagController.update({} as any, 'unknown-id', updatedTag))
-        .rejects.toThrow(HttpException);
-
-      await expect(tagController.update({} as any, 'unknown-id', updatedTag))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-      });
     });
   });
 
@@ -200,42 +169,18 @@ describe('TagController', () => {
     it('should delete a tag', async () => {
       jest.spyOn(mockTagService, 'delete').mockResolvedValue();
 
-      const result = await tagController.delete({} as any, mockTags[0].id);
+      const result = await tagController.delete(mockTags[0]);
       expect(result).toBeUndefined();
       expect(mockTagService.delete).toHaveBeenCalledWith(mockTags[0].id);
     });
 
-    it('should throw an error if the tag does not exist', async () => {
-      jest.spyOn(mockTagService, 'delete').mockRejectedValue(new HttpException('Tag not found', HttpStatus.NOT_FOUND));
-
-      await expect(tagController.delete({} as any, 'ae95075c-e46d-4007-a33f-4aff22d61221'))
-        .rejects.toThrow(HttpException);
-
-      await expect(tagController.delete({} as any, 'ae95075c-e46d-4007-a33f-4aff22d61221'))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-      });
-    });
-
-    it('should throw an error if the id is not valid', async () => {
-      jest.spyOn(mockTagService, 'delete').mockRejectedValue(new HttpException('Invalid id', HttpStatus.BAD_REQUEST));
-
-      await expect(tagController.delete({} as any, 'invalid-id'))
-        .rejects.toThrow(HttpException);
-
-      await expect(tagController.delete({} as any, 'invalid-id'))
-        .rejects.toMatchObject({
-          status: HttpStatus.BAD_REQUEST,
-      });
-    });
-
     it('should throw an error if the tag is used by a game', async () => {
-      jest.spyOn(mockTagService, 'delete').mockRejectedValue(new HttpException('Tag is used by a game', HttpStatus.CONFLICT));
+      jest.spyOn(mockTagService, 'delete').mockRejectedValue(new HttpException('', HttpStatus.CONFLICT));
 
-      await expect(tagController.delete({} as any, 'ae95075c-e46d-4007-a33f-4aff22d61221'))
+      await expect(tagController.delete(mockTags[0]))
         .rejects.toThrow(HttpException);
 
-      await expect(tagController.delete({} as any, 'ae95075c-e46d-4007-a33f-4aff22d61221'))
+      await expect(tagController.delete(mockTags[0]))
         .rejects.toMatchObject({
           status: HttpStatus.CONFLICT,
       });

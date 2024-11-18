@@ -5,12 +5,14 @@ import { type Repository } from "typeorm";
 import { GameDto } from "@/game/dto/game.dto";
 import { GameUpdatedDto } from "@/game/dto/gameUpdated.dto";
 import { Game } from "@/game/game.entity";
+import { TagService } from "@/tag/service/tag.service";
 import { TranslationService } from "@/translation/translation.service";
 
 export class GameService {
   constructor(
     @InjectRepository(Game)
     private gamesRepository: Repository<Game>,
+    private tagsRepository: TagService,
     private translationService: TranslationService
   ) { }
 
@@ -18,27 +20,52 @@ export class GameService {
     return this.gamesRepository.find({
       relations: {
         rating: true,
-        product: true
+        product: true,
+        tags: true
       }
     });
   }
 
   async create(game: GameDto): Promise<Game | null> {
-    const newGame = this.gamesRepository.create(game);
-    return this.gamesRepository.save(newGame);
+    const { tagIds, ...gameData } = game;
+    const newGame = this.gamesRepository.create(gameData);
+    if (tagIds && tagIds.length > 0) {
+      const tags = await this.tagsRepository.getByIds(tagIds);
+      if (tags.length !== tagIds.length) {
+        throw new HttpException(await this.translationService.translate("error.TAGS_NOT_FOUND"), HttpStatus.NOT_FOUND);
+      }
+      newGame.tags = tags;
+    }
+    const createdGame = await this.gamesRepository.save(newGame);
+    return this.findOneGame(createdGame.id); // have relations in response
   }
 
-  async update(gameId: string, game: GameUpdatedDto): Promise<void> {
-    const query = await this.gamesRepository
-      .createQueryBuilder()
-      .update(Game)
-      .set(game)
-      .where("id = :id", { id: gameId })
-      .execute();
-    if (query.affected === 0) {
+  async update(gameId: string, game: GameUpdatedDto): Promise<Game | null> {
+    const existingGame = await this.gamesRepository.findOne({ 
+      where: { 
+        id: gameId
+      }, 
+      relations: {
+        tags: true,
+        product: true,
+        rating: true
+      } 
+    });
+    if (!existingGame) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-  }
+    const { tagIds, ...gameData } = game; 
+    await this.gamesRepository.update(gameId, gameData);
+    if (tagIds) {
+      const tags = await this.tagsRepository.getByIds(tagIds);
+      if (tags.length !== tagIds.length) {
+        throw new HttpException(await this.translationService.translate("error.TAGS_NOT_FOUND"), HttpStatus.NOT_FOUND);
+      }
+      existingGame.tags = tags;
+    }
+    await this.gamesRepository.save(existingGame);
+    return this.findOneGame(gameId); // have relations in response
+  }  
 
   async delete(gameId: string): Promise<void> {
     const query = await this.gamesRepository
@@ -47,7 +74,6 @@ export class GameService {
       .from(Game)
       .where("id = :id", { id: gameId })
       .execute();
-
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
@@ -59,10 +85,8 @@ export class GameService {
       .where("game.id = :id", { id: gameId })
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
+      .leftJoinAndSelect("game.tags", "tag")
       .getOne();
-    if (!game) {
-      return null;
-    }
     return game;
   }
 

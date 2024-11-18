@@ -18,8 +18,11 @@
   "LOAN_NOT_FOUND": "Le prêt n'existe pas",
   "TAG_EXIST": "Le tag existe déjà",
   "TAG_NOT_FOUND": "Le tag n'existe pas",
+  "TAGS_NOT_FOUND": "Des tags n'ont pas été trouvés",
   "TAG_CANT_CREATE": "Le tag n'a pas pu être créé",
   "TAG_CANT_DELETE": "Le tag n'a pas pu être supprimé",
   "TAG_CANT_UPDATE": "Le tag n'a pas pu être mis à jour",
-  "EXTENSION_NOT_ALLOWED": "L'extension n'est pas prise en charge"
+  "TAG_IS_IN_GAME": "Le tag est présent dans un ou des jeux",
+  "EXTENSION_NOT_ALLOWED": "L'extension n'est pas prise en charge",
+  "MISSING_TAGS": "Des tags n'ont pas été trouvés : {missing}"
 }

@@ -10,12 +10,15 @@ import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common
 import { Role } from '@/user/role.enum';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Tag } from '@/tag/tag.entity';
+import { FileUploadService } from '@/files/files.service';
 
 describe('GameController', () => {
   let gameController: GameController;
   let mockGameService: Partial<GameService>;
   let mockUserService: Partial<UserService>;
   let mockTranslationService: Partial<TranslationService>;
+  let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
 
   const mockGames: Game[] = [
@@ -58,6 +61,7 @@ describe('GameController', () => {
     mockGameService = {
       getAll: jest.fn().mockResolvedValue(mockGames),
       findOneGame: jest.fn(),
+      findOneName: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -77,6 +81,7 @@ describe('GameController', () => {
         { provide: GameService, useValue: mockGameService },
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
+        { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
       ],
     }).compile();
@@ -107,7 +112,8 @@ describe('GameController', () => {
       maxPlayers: 4,
       duration: "35min",
       difficulty: 2,
-      minYear: 10
+      minYear: 10,
+      image: "exemple.com"
     };
 
     it('should create a new game successfully', async () => {
@@ -139,7 +145,7 @@ describe('GameController', () => {
     it('should update a game successfully', async () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
       
-      jest.spyOn(mockGameService, 'update').mockResolvedValue(undefined);
+      jest.spyOn(mockGameService, 'update').mockResolvedValue(updatedGame);
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 
       const result = await gameController.update(mockGames[0], updateGameDto);

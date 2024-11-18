@@ -39,6 +39,6 @@ export class Game {
   @OneToMany(() => Product, product => product.game)
   product?: Product[];
 
-  @ManyToMany(() => Tag, tag => tag.games)
+  @ManyToMany(() => Tag, tag => tag.games, { nullable: true })
   tags: Tag[];
 }

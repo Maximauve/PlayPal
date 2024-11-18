@@ -1,11 +1,9 @@
 import { Tag } from '@/tag/tag.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
-import { Role } from '@/user/role.enum';
 import { TagGuard } from '@/tag/guards/tag.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
-import { User } from '@/user/user.entity';
 
 describe('TagGuard', () => {
   let tagGuard: TagGuard;

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 
 import { Game } from "@/game/game.entity";
 import { TagDto } from "@/tag/dto/tag.dto";
@@ -17,7 +17,7 @@ export class TagService {
     private readonly translationService: TranslationService
   ) { }
 
-  async getAllByGameId(gameId: string): Promise<Tag[]> {
+  async getAllByGameId(gameId: string): Promise<Tag[] | undefined> {
     const game = await this.gameRepository.findOne({
       where: {
         id: gameId
@@ -44,23 +44,11 @@ export class TagService {
   }
 
   async update(tagId: string, tag: TagUpdatedDto): Promise<void> {
-    const existingTag = await this.tagRepository.findOneBy({ id: tagId });
-
-    if (!existingTag) {
-      throw new HttpException(await this.translationService.translate('error.TAG_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
-
     await this.tagRepository.update(tagId, tag);
     return;
   }
 
   async delete(tagId: string): Promise<void> {
-    const existingTag = await this.tagRepository.findOneBy({ id: tagId });
-
-    if (!existingTag) {
-      throw new HttpException(await this.translationService.translate('error.TAG_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
-
     await this.tagRepository.delete(tagId);
     return;
   }
@@ -74,9 +62,31 @@ export class TagService {
       .createQueryBuilder('tag')
       .where('tag.name = :name', { name })
       .getOne();
-    if (!tag) {
-      return null;
-    }
     return tag;
+  }
+
+  async getByIds(ids: string[]): Promise<Tag[]> {
+    const tags = await this.tagRepository.find({
+      where: {
+        id: In(ids),
+      },
+    });
+
+    if (tags.length !== ids.length) {
+      const foundIds = new Set(tags.map(tag => tag.id));
+      const missingIds = ids.filter(id => !foundIds.has(id));
+      throw new HttpException(await this.translationService.translate('error.MISSING_TAGS', { args: { missing: missingIds.join(', ') } }), HttpStatus.NOT_FOUND);
+    }
+
+    return tags;
+  }
+
+  async checkIsInGame(tagId: string): Promise<boolean> {
+    const exists = await this.tagRepository
+      .createQueryBuilder('tag')
+      .innerJoin('tag.games', 'game')
+      .where('tag.id = :tagId', { tagId })
+      .getOne();
+    return !!exists;
   }
 }
