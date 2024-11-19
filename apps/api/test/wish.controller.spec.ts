@@ -44,6 +44,7 @@ describe('WishController', () => {
             difficulty: 3,
             duration: "35min",
             tags: [],
+            rules: []
         },
         date: new Date()
     };
