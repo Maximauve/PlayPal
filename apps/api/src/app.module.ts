@@ -15,6 +15,7 @@ import { LoanModule } from '@/loan/loan.module';
 import { ProductModule } from '@/product/product.module';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
+import { RuleModule } from '@/rule/rule.module';
 import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
 import { UsersModule } from '@/user/user.module';
@@ -67,6 +68,7 @@ import { WishModule } from '@/wish/wish.module';
     ProductModule,
     LoanModule,
     TagModule,
+    RuleModule,
     FileUploadModule,
     WishModule
   ],
