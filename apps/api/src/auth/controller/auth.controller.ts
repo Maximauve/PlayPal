@@ -21,10 +21,10 @@ export class AuthController {
   async login(@Body() body: LoginDto): Promise<{ accessToken: string }> {
     const user = await this.userService.findOneEmail(body.email);
     if (!user) {
-      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
+      throw new HttpException(await this.translationService.translate('error.INVALID_CREDENTIALS'), HttpStatus.BAD_REQUEST);
     }
     if (!await comparePassword(body.password, user.password)) {
-      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND); // user does not know if email or password which not good
+      throw new HttpException(await this.translationService.translate('error.INVALID_CREDENTIALS'), HttpStatus.BAD_REQUEST); // user does not know if email or password which not good
     }
     return this.authService.login(user);
   }

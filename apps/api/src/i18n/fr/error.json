@@ -24,5 +24,6 @@
   "TAG_CANT_UPDATE": "Le tag n'a pas pu être mis à jour",
   "TAG_IS_IN_GAME": "Le tag est présent dans un ou des jeux",
   "EXTENSION_NOT_ALLOWED": "L'extension n'est pas prise en charge",
-  "MISSING_TAGS": "Des tags n'ont pas été trouvés : {missing}"
+  "MISSING_TAGS": "Des tags n'ont pas été trouvés : {missing}",
+  "INVALID_CREDENTIALS": "Les identifiants de connexion ne sont pas correct"
 }

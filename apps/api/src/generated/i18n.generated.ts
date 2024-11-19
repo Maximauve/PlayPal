@@ -32,6 +32,7 @@ export type I18nTranslations = {
         "TAG_IS_IN_GAME": string;
         "EXTENSION_NOT_ALLOWED": string;
         "MISSING_TAGS": string;
+        "INVALID_CREDENTIALS": string;
     };
     "user": {
         "HELLO": string;

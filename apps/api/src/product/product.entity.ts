@@ -13,7 +13,7 @@ export class Product {
   @Column({ type: 'varchar', nullable: false })
   state: State;
 
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ type: 'boolean', nullable: false })
   available: boolean;
 
   @ManyToOne(() => Game, game => game.product)
