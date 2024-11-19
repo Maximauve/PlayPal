@@ -44,17 +44,12 @@ export class RuleService {
       .getOne();
   }
 
-  async create(gameId: string, ruleDto: RuleDto): Promise<Rule | null> {
-    const game = await this.gameRepository
-      .createQueryBuilder("game")
-      .where("game.id = :id", { id: gameId })
-      .getOne();
-
+  async create(game: Game, ruleDto: RuleDto): Promise<Rule | null> {
     if (!game) {
       throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
     //check if already exists
-    if (await this.getRuleByYoutubeId(gameId, ruleDto.youtubeId)) {
+    if (await this.getRuleByYoutubeId(game.id, ruleDto.youtubeId)) {
       throw new HttpException(await this.translationsService.translate("error.RULE_ALREADY_EXISTS"), HttpStatus.BAD_REQUEST);
     }
 

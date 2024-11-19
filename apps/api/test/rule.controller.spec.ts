@@ -128,7 +128,7 @@ describe('RuleController', () => {
 
             const result = await ruleController.createRule(mockGame, body);
             expect(result).toEqual(mockRule);
-            expect(mockRuleService.create).toHaveBeenCalledWith(validGameId, body);
+            expect(mockRuleService.create).toHaveBeenCalledWith(mockGame, body);
         });
 
         it('should throw an HttpException with 500 status if rule cannot be created', async () => {

@@ -17,8 +17,8 @@ import { TranslationService } from "@/translation/translation.service";
 @UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('rule')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
-@ApiUnauthorizedResponse()
-@ApiNotFoundResponse()
+@ApiUnauthorizedResponse({ description: "User not connected" })
+@ApiNotFoundResponse({ description: "Game not found" })
 @Controller('/games/:gameId/rule')
 export class RuleController {
     
@@ -30,7 +30,7 @@ export class RuleController {
 
   @Get("")
   @ApiOperation({ summary: 'Returns all game\'s rules' })
-  @ApiOkResponse({ type: Rule, isArray: true })
+  @ApiOkResponse({ description: 'Rules found successfully', type: Rule, isArray: true })
   async getAllRules(@GameRequest() game: Game): Promise<Rule[]> {
     return this.ruleService.getAllRules(game.id);
   }
@@ -39,7 +39,7 @@ export class RuleController {
   @Get("/:ruleId")
   @ApiParam({ name: 'ruleId', description: 'ID of rule', required: true })
   @ApiOperation({ summary: "Return a rule" })
-  @ApiOkResponse({ type: Rule })
+  @ApiOkResponse({ description: "Rule found successfully", type: Rule })
   @ApiNotFoundResponse({ description: "Game or rule is not found" })
   getRule(@RuleRequest() rule: Rule): Rule {
     return rule;
@@ -52,7 +52,7 @@ export class RuleController {
   @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
   @ApiNotFoundResponse({ description: "Game not found" })
   async createRule(@GameRequest() game: Game, @Body() body: RuleDto): Promise<Rule> {
-    const rule = await this.ruleService.create(game.id, body);
+    const rule = await this.ruleService.create(game, body);
     if (!rule) {
       throw new HttpException(await this.translationService.translate("error.RULE_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }

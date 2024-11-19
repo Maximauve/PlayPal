@@ -48,5 +48,5 @@ export class Game {
   tags: Tag[];
 
   @OneToMany(() => Rule, rule => rule.game)
-  rules: Rule[];
+  rules?: Rule[];
 }
