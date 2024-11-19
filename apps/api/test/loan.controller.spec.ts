@@ -51,7 +51,8 @@ describe('LoanController', () => {
     difficulty: 3,
     duration: "35min",
     rating: [],
-    tags: []
+    tags: [],
+    rules: []
   };
 
   const mockProduct = {

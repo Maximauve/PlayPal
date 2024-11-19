@@ -1,10 +1,10 @@
-import { CreateDateColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Game } from "@/game/game.entity";
 import { User } from "@/user/user.entity";
 
 
-
+@Entity()
 export class Wish {
   @PrimaryGeneratedColumn('uuid')
   id: string;

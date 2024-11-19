@@ -33,6 +33,9 @@ export type I18nTranslations = {
         "EXTENSION_NOT_ALLOWED": string;
         "MISSING_TAGS": string;
         "INVALID_CREDENTIALS": string;
+        "WISH_NOT_FOUND": string;
+        "WISH_CANT_CREATE": string;
+        "WISH_CANT_DELETE": string;
     };
     "user": {
         "HELLO": string;

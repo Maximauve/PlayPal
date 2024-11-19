@@ -24,7 +24,8 @@ describe('GameGuard', () => {
     difficulty: 3,
     duration: "35min",
     rating: [],
-    tags: []
+    tags: [],
+    rules: []
   };
 
   beforeEach(async () => {

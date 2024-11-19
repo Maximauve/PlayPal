@@ -57,7 +57,8 @@ describe('RatingController', () => {
         difficulty: 3,
         duration: "35min",
         rating: [],
-        tags: []
+        tags: [],
+        rules: []
       },
       note: 4,
       comment: 'Great game!',
@@ -75,7 +76,8 @@ describe('RatingController', () => {
     difficulty: 3,
     minYear: 10,
     rating: [],
-    tags: []
+    tags: [],
+    rules: []
   }
 
   const mockRating: Rating = { 

@@ -32,7 +32,8 @@ describe('GameController', () => {
       difficulty: 3,
       minYear: 10,
       rating: [],
-      tags: []
+      tags: [],
+      rules: []
     },
     {
       id: "109ebba9-9823-45bf-88b5-889c621d58f9",
@@ -44,7 +45,8 @@ describe('GameController', () => {
       difficulty: 1,
       minYear: 3,
       rating: [],
-      tags: []
+      tags: [],
+      rules: []
     }
   ];
 

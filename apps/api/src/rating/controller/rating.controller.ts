@@ -46,12 +46,11 @@ export class RatingController {
   }
 
   @Post("")
-  @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiOperation({ summary: "Create a rating" })
   @ApiOkResponse({ description: "Rating created successfully", type: Rating })
   @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the rating" })
   @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
-  @ApiNotFoundResponse({ description: "Game or rating not found" })
+  @ApiNotFoundResponse({ description: "Game is not found" })
   async createRating(@CurrentUser() user: User, @GameRequest() game: Game, @Body() body: RatingDto): Promise<Rating> {
     const rating = await this.ratingService.create(game.id, user.id, body);
     if (!rating) {
@@ -79,9 +78,9 @@ export class RatingController {
   @Delete("/:ratingId")
   @UseGuards(RatingGuard)
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
-  @ApiOperation({ summary: "Update a rating" })
-  @ApiOkResponse({ description: "Product deleted successfully", type: Rating })
-  @ApiNotFoundResponse({ description: "Game or product is not found" })
+  @ApiOperation({ summary: "Delete a rating" })
+  @ApiOkResponse({ description: "Rating deleted successfully", type: Rating })
+  @ApiNotFoundResponse({ description: "Game or rating is not found" })
   async deleteRating(@GameRequest() game: Game, @RatingRequest() rating: Rating): Promise<void> {
     await this.ratingService.delete(game.id, rating.id);
   }
