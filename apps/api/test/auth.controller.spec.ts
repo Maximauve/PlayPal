@@ -78,7 +78,7 @@ describe('AuthController', () => {
 
       await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
       await expect(authController.login(loginDto)).rejects.toMatchObject({
-        status: HttpStatus.NOT_FOUND,
+        status: HttpStatus.BAD_REQUEST,
       });
     });
 
@@ -102,7 +102,7 @@ describe('AuthController', () => {
 
       await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
       await expect(authController.login(loginDto)).rejects.toMatchObject({
-        status: HttpStatus.NOT_FOUND,
+        status: HttpStatus.BAD_REQUEST,
       });
     });
   });
