@@ -4,6 +4,8 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInte
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { GameGuard } from '@/game/guards/game.guard';
 import { TranslationService } from '@/translation/translation.service';
+import { CurrentUser } from '@/user/decorators/currentUser.decorator';
+import { User } from '@/user/user.entity';
 import { WishRequest } from '@/wish/decorators/wish.decorator';
 import { WishDto } from '@/wish/dto/wish.dto';
 import { WishGuard } from '@/wish/guards/wish.guard';
@@ -50,8 +52,8 @@ export class WishController {
   @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the wish" })
   @ApiConflictResponse({ description: "Wish already exists" })
   @ApiNotFoundResponse({ description: "Game or user not found" })
-  async createWish(@Body() wishDto: WishDto): Promise<Wish> {
-    const wish = await this.wishlistService.create( wishDto);
+  async createWish(@Body() wishDto: WishDto, @CurrentUser() user: User): Promise<Wish> {
+    const wish = await this.wishlistService.create( wishDto, user.id);
     if (!wish) {
       throw new HttpException(await this.translationsService.translate("error.WISH_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }

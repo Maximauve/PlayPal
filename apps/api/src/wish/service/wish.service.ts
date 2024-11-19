@@ -56,10 +56,10 @@ export class WishService {
       .getOne();
   }
 
-  async create( wishDto: WishDto): Promise<Wish | null> {
+  async create( wishDto: WishDto, userId: string): Promise<Wish | null> {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :id', { id: wishDto.userId })
+      .where('user.id = :id', { id: userId })
       .getOne();
     if (!user) {
       throw new HttpException(

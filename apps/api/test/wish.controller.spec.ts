@@ -97,17 +97,17 @@ describe('WishController', () => {
     });
 
     describe('createWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId };
+        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId };
 
         it('should create a wish', async () => {
-            const result = await wishController.createWish(mockWishDto);
+            const result = await wishController.createWish(mockWishDto, mockWish.user);
             expect(result).toEqual(mockWish);
         });
 
     });
 
     describe('updateWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId};
+        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId};
 
         it('should update a wish', async () => {
             const result = await wishController.updateWish(mockWish, mockWishDto);

@@ -11,10 +11,6 @@ export class WishDto {
 
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
-  userId: string;
-
-  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
-  @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
   gameId: string;
 
 } 
