@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Button(): React.JSX.Element {
+export default function Footer(): React.JSX.Element {
   return (
     <main>
       <p></p>
