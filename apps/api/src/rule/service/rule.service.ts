@@ -22,6 +22,7 @@ export class RuleService {
     return this.ruleRepository
       .createQueryBuilder('rule')
       .where("rule.gameId = :id", { id: gameId })
+      .leftJoinAndSelect("rule.game", "game")
       .getMany();
   }
 
@@ -30,6 +31,7 @@ export class RuleService {
       .createQueryBuilder("rule")
       .where("rule.gameId = :gameId", { gameId: gameId })
       .andWhere("rule.id = :ruleId", { ruleId: ruleId })
+      .leftJoinAndSelect("rule.game", "game")
       .getOne();
   }
 
@@ -38,6 +40,7 @@ export class RuleService {
       .createQueryBuilder("rule")
       .where("rule.gameId = :gameId", { gameId: gameId })
       .andWhere("rule.youtubeId = :youtubeId", { youtubeId: youtubeId })
+      .leftJoinAndSelect("rule.game", "game")
       .getOne();
   }
 
@@ -63,13 +66,12 @@ export class RuleService {
     return this.ruleRepository.save(rule);
   }
 
-  async update(gameId: string, ruleId: string, ruleUpdatedDto: RuleUpdatedDto): Promise<void> {
+  async update(ruleId: string, ruleUpdatedDto: RuleUpdatedDto): Promise<void> {
     const query = await this.ruleRepository
       .createQueryBuilder("rule")
       .update(Rule)
       .set(ruleUpdatedDto)
-      .where("rule.gameId = :gameId", { gameId: gameId })
-      .andWhere("rule.id = :ruleId", { ruleId: ruleId })
+      .where("rule.id = :ruleId", { ruleId: ruleId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.RULE_NOT_FOUND"), HttpStatus.NOT_FOUND);
@@ -83,8 +85,7 @@ export class RuleService {
       .createQueryBuilder("rule")
       .delete()
       .from(Rule)
-      .where("rule.gameId = :gameId", { gameId: gameId })
-      .andWhere("rule.id = :ruleId", { ruleId: ruleId })
+      .where("rule.id = :ruleId", { ruleId: ruleId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.RULE_NOT_FOUND"), HttpStatus.NOT_FOUND);

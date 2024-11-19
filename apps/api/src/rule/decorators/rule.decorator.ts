@@ -1,10 +1,10 @@
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
 
-import { type RequestWithTag } from "@/tag/types/RequestWithTag";
+import { type RequestWithRule } from "@/rule/types/RequestWithRule";
 
-export const TagRequest = createParamDecorator(
+export const RuleRequest = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
-    const request = context.switchToHttp().getRequest<RequestWithTag>();
-    return request.tag;
+    const request = context.switchToHttp().getRequest<RequestWithRule>();
+    return request.rule;
   },
 );

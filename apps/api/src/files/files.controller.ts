@@ -1,12 +1,13 @@
 import { Controller, Delete, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBadRequestResponse, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Express, Response } from 'express';
 
 import { FileUploadService } from '@/files/files.service';
 import { TranslationService } from '@/translation/translation.service';
 
 @Controller('files')
+@ApiTags('files')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService, private readonly translationService: TranslationService) {}
 
