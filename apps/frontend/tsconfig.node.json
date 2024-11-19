@@ -16,9 +16,15 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules",
+      "./@types"
+    ]
   },
   "include": [
-    "vite.config.ts"
+    "vite.config.ts",
+    "@types/i18n-js.d.ts"
   ]
 }
