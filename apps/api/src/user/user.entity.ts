@@ -4,6 +4,7 @@ import { Loan } from '@/loan/loan.entity';
 import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
 import { Role } from '@/user/role.enum';
+import { Wish } from '@/wish/wish.entity';
 
 @Entity()
 export class User {
@@ -33,4 +34,8 @@ export class User {
 
   @OneToMany(() => Loan, loan => loan.user)
   loan?: Loan[];
+
+  @OneToMany(() => Wish, wish => wish.user)
+  wish?: Wish[];
 }
+

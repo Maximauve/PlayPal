@@ -74,7 +74,7 @@ export class RatingService {
       .update(Rating)
       .set(ratingUpdatedDto)
       .where("id = :id", { id: ratingId })
-      .execute(); 
+      .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate('error.RATING_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }

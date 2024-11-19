@@ -1,7 +1,8 @@
 import { type Game } from "./game.interface";
 import { type User } from "./user.interface";
 
-export type Wishlist = {
+
+export type Wish = {
   id: number;
   game: Game;
   user: User;
