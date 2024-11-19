@@ -2,8 +2,8 @@ import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 't
 
 import { Product } from '@/product/product.entity';
 import { Rating } from '@/rating/rating.entity';
-import { Wish } from '@/wish/wish.entity';
 import { Tag } from '@/tag/tag.entity';
+import { Wish } from '@/wish/wish.entity';
 
 @Entity()
 export class Game {

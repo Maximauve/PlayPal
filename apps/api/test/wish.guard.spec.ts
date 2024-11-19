@@ -3,7 +3,6 @@ import { Role } from "@/user/role.enum";
 import { WishController } from "@/wish/controller/wish.controller";
 import { WishGuard } from "@/wish/guards/wish.guard";
 import { Wish } from "@/wish/wish.entity";
-import { E } from "@faker-js/faker/dist/airline-WjISwexU";
 import { ExecutionContext, HttpException, HttpStatus } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
@@ -38,7 +37,8 @@ describe('WishGuard', () => {
             maxPlayers: 5,
             minYear: 3,
             difficulty: 3,
-            duration: "35min"
+            duration: "35min",
+            tags: [],
         },
         date: new Date()
     };

@@ -18,7 +18,6 @@ import { RedisModule } from '@/redis/redis.module';
 import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
 import { UsersModule } from '@/user/user.module';
-import { Wish } from '@/wish/wish.entity';
 import { WishModule } from '@/wish/wish.module';
 
 @Module({
