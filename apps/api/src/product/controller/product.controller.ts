@@ -1,11 +1,10 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
 import { Game } from "@/game/game.entity";
 import { GameGuard } from "@/game/guards/game.guard";
-import { GameService } from "@/game/service/game.service";
 import { ProductRequest } from "@/product/decorators/product.decorator";
 import { AssignDto } from "@/product/dto/assign.dto";
 import { ProductDto } from "@/product/dto/product.dto";
@@ -21,15 +20,16 @@ import { User } from "@/user/user.entity";
 @UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('product')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
-@ApiUnauthorizedResponse()
-@ApiNotFoundResponse()
+@ApiNotFoundResponse({ description: "Game not found" })
+@ApiBadRequestResponse({ description: "UUID are invalid" })
+@ApiUnauthorizedResponse({ description: "User not connected" })
 @Controller('games/:gameId/product')
 export class ProductController {
-  constructor(private readonly usersService: UserService, private readonly gameService: GameService, private readonly translationsService: TranslationService, private readonly productService: ProductService) { }
+  constructor(private readonly usersService: UserService, private readonly translationsService: TranslationService, private readonly productService: ProductService) { }
 
   @Get('')
   @ApiOperation({ summary: "Get all product of a game" })
-  @ApiOkResponse({ type: Product, isArray: true })
+  @ApiOkResponse({ description: "Products found successfully", type: Product, isArray: true })
   async getAllProduct(@GameRequest() game: Game): Promise<Product[]> {
     return this.productService.getAllProduct(game.id);
   }
@@ -38,8 +38,8 @@ export class ProductController {
   @UseGuards(ProductGuard)
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Return a product" })
-  @ApiOkResponse({ type: Product })
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "Product found successfully", type: Product })
+  @ApiNotFoundResponse({ description: "Game or product is not found" })
   getProduct(@ProductRequest() product: Product): Product {
     return product;
   }
@@ -47,9 +47,10 @@ export class ProductController {
   @UsePipes(ValidationPipe)
   @Post("")
   @ApiOperation({ summary: "Create a product" })
-  @ApiOkResponse({ type: Product })
-  @ApiInternalServerErrorResponse()
-  @ApiConflictResponse()
+  @ApiCreatedResponse({ description: "Product created successfully", type: Product })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the product" })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game or user not found" })
   async createProduct(@CurrentUser() user: User, @GameRequest() game: Game, @Body() body: ProductDto): Promise<Product> {
     const newBody = {
       state: body.state,
@@ -67,14 +68,15 @@ export class ProductController {
   @UseGuards(ProductGuard)
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Assign a product to a user" })
-  @ApiOkResponse({ type: Product })
-  @ApiBadRequestResponse()
-  async assignProduct(@GameRequest() game: Game, @ProductRequest() product: Product, @Body() body: AssignDto): Promise<Product> {
+  @ApiOkResponse({ description: "Product is correctly assigned", type: Product })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game, product or user is not found" })
+  async assignProduct(@ProductRequest() product: Product, @Body() body: AssignDto): Promise<Product> {
     const user = await this.usersService.findOneUser(body.userId);
     if (!user) {
       throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    const productAssign = await this.productService.assign(game.id, product.id, user);
+    const productAssign = await this.productService.assign(product, user);
     if (!productAssign) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
@@ -85,10 +87,11 @@ export class ProductController {
   @UseGuards(ProductGuard)
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Unassign a product to a user" })
-  @ApiOkResponse({ type: Product })
-  @ApiBadRequestResponse()
-  async unassignProduct(@GameRequest() game: Game, @ProductRequest() product: Product): Promise<Product> {
-    const productUpdated = await this.productService.unassign(game.id, product.id);
+  @ApiOkResponse({ description: "Product is correctly unassigned", type: Product })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game or product is not found" })
+  async unassignProduct(@ProductRequest() product: Product): Promise<Product> {
+    const productUpdated = await this.productService.unassign(product);
     if (!productUpdated) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
@@ -101,8 +104,9 @@ export class ProductController {
   @UseGuards(ProductGuard)
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Update a product" })
-  @ApiOkResponse({ type: Product })
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "Product updated successfully", type: Product })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game or product is not found" })
   async updateProduct(@GameRequest() game: Game, @ProductRequest() product: Product, @Body() body: ProductUpdatedDto): Promise<Product> {
     await this.productService.update(product.id, body);
     const productUpdated = await this.productService.getProduct(game.id, product.id);
@@ -116,9 +120,9 @@ export class ProductController {
   @UseGuards(ProductGuard)
   @ApiParam({ name: 'productId', description: 'ID of product', required: true })
   @ApiOperation({ summary: "Delete a product" })
-  @ApiOkResponse({ type: Product })
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "Product deleted successfully" })
+  @ApiNotFoundResponse({ description: "Game or product is not found" })
   async deleteProduct(@GameRequest() game: Game, @ProductRequest() product: Product): Promise<void> {
-    return this.productService.delete(game.id, product.id);
+    await this.productService.delete(game.id, product.id);
   }
 }

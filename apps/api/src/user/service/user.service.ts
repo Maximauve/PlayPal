@@ -69,17 +69,13 @@ export class UserService {
   }
 
   async findOneUser(id: string): Promise<User | null> {
-    const user = await this.usersRepository
+    return this.usersRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: id })
       .leftJoinAndSelect("user.rating", "rating")
       .leftJoinAndSelect("user.loan", "loan")
       .leftJoinAndSelect("user.product", "product")
       .getOne();
-    if (!user) {
-      return null;
-    }
-    return user;
   }
 
   async getUserConnected(request: Request): Promise<User | null> {
@@ -87,11 +83,7 @@ export class UserService {
     if (!requestUser) {
       return null;
     }
-    const user: User | null = await this.findOneUser(requestUser?.id);
-    if (!user) {
-      return null;
-    }
-    return user;
+    return this.findOneUser(requestUser?.id);
   }
 
   async checkUnknownUser(user: RegisterDto | UserUpdatedDto, userId?: string): Promise<boolean> {

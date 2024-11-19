@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
@@ -20,8 +20,9 @@ import { User } from "@/user/user.entity";
 @UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('rating')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
-@ApiUnauthorizedResponse()
-@ApiNotFoundResponse()
+@ApiNotFoundResponse({ description: "Game not found" })
+@ApiBadRequestResponse({ description: "UUID are invalid" })
+@ApiUnauthorizedResponse({ description: "User not connected" })
 @Controller('/games/:gameId/rating')
 export class RatingController {
 
@@ -29,7 +30,7 @@ export class RatingController {
 
   @Get("")
   @ApiOperation({ summary: 'Returns all game\'s rating' })
-  @ApiOkResponse({ type: Rating, isArray: true })
+  @ApiOkResponse({ description: "Ratings found successfully", type: Rating, isArray: true })
   async getAllRating(@GameRequest() game: Game): Promise<Rating[]> {
     return this.ratingService.getAllRating(game.id);
   }
@@ -38,8 +39,8 @@ export class RatingController {
   @UseGuards(RatingGuard)
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Return a rating" })
-  @ApiOkResponse({ type: Rating })
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "Rating found successfully", type: Rating })
+  @ApiNotFoundResponse({ description: "Game or rating is not found" })
   getRating(@RatingRequest() rating: Rating): Rating {
     return rating;
   }
@@ -47,9 +48,10 @@ export class RatingController {
   @Post("")
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiOperation({ summary: "Create a rating" })
-  @ApiOkResponse({ type: Rating })
-  @ApiInternalServerErrorResponse()
-  @ApiConflictResponse()
+  @ApiOkResponse({ description: "Rating created successfully", type: Rating })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the rating" })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game or rating not found" })
   async createRating(@CurrentUser() user: User, @GameRequest() game: Game, @Body() body: RatingDto): Promise<Rating> {
     const rating = await this.ratingService.create(game.id, user.id, body);
     if (!rating) {
@@ -62,7 +64,9 @@ export class RatingController {
   @UseGuards(RatingGuard)
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Update a rating" })
-  @ApiOkResponse({ type: Rating })
+  @ApiOkResponse({ description: "Rating updated successfully", type: Rating })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "Game or rating is not found" })
   async updateRating(@CurrentUser() user: User, @GameRequest() game: Game, @RatingRequest() rating: Rating, @Body() body: RatingUpdatedDto): Promise<Rating> {
     await this.ratingService.update(rating.id, body);
     const ratingUpdated = await this.ratingService.getRating(game.id, user.id);
@@ -74,11 +78,11 @@ export class RatingController {
   
   @Delete("/:ratingId")
   @UseGuards(RatingGuard)
-  @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
   @ApiOperation({ summary: "Update a rating" })
-  @ApiOkResponse({ type: Rating })
+  @ApiOkResponse({ description: "Product deleted successfully", type: Rating })
+  @ApiNotFoundResponse({ description: "Game or product is not found" })
   async deleteRating(@GameRequest() game: Game, @RatingRequest() rating: Rating): Promise<void> {
-    return this.ratingService.delete(game.id, rating.id);
+    await this.ratingService.delete(game.id, rating.id);
   }
 }

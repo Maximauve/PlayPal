@@ -145,22 +145,33 @@ describe('ProductController', () => {
     it('should assign a product to a user for valid gameId and productId', async () => {
       const assignDto: AssignDto = { userId: mockUser.id };
 
-      jest.spyOn(mockProductService, 'assign').mockResolvedValue(mockProduct);
+      const assignProduct: Product = {
+        ...mockProduct,
+        user: mockUser,
+        available: false
+      }
 
-      const result = await productController.assignProduct(mockGame, mockProduct, assignDto);
-      expect(result).toEqual(mockProduct);
-      expect(mockProductService.assign).toHaveBeenCalledWith(validGameId, validProductId, mockUser);
+      jest.spyOn(mockProductService, 'assign').mockResolvedValue(assignProduct);
+
+      const result = await productController.assignProduct(mockProduct, assignDto);
+      expect(result).toEqual(assignProduct);
+      expect(mockProductService.assign).toHaveBeenCalledWith(mockProduct, mockUser);
     });
   });
 
   describe('unassignProduct', () => {
     it('should unassign a product for valid gameId and productId', async () => {
+      const unassignProduct: Product = {
+        ...mockProduct,
+        user: null,
+        available: true
+      }
 
-      jest.spyOn(mockProductService, 'unassign').mockResolvedValue(mockProduct);
+      jest.spyOn(mockProductService, 'unassign').mockResolvedValue(unassignProduct);
 
-      const result = await productController.unassignProduct(mockGame, mockProduct);
-      expect(result).toEqual(mockProduct);
-      expect(mockProductService.unassign).toHaveBeenCalledWith(validGameId, validProductId);
+      const result = await productController.unassignProduct(mockProduct);
+      expect(result).toEqual(unassignProduct);
+      expect(mockProductService.unassign).toHaveBeenCalledWith(mockProduct);
     });
   });
 

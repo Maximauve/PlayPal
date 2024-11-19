@@ -1,5 +1,5 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
 import { LoginDto } from '@/auth/dto/login.dto';
@@ -16,8 +16,7 @@ export class AuthController {
     
   @Post('/login')
   @ApiOperation({ summary: 'Login user' })
-  @ApiBadRequestResponse()
-  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse({ description: "User not found" })
   @ApiOkResponse({ type: LoginResponse })
   async login(@Body() body: LoginDto): Promise<{ accessToken: string }> {
     const user = await this.userService.findOneEmail(body.email);
@@ -25,16 +24,19 @@ export class AuthController {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
     if (!await comparePassword(body.password, user.password)) {
-      throw new HttpException(await this.translationService.translate('error.PASSWORD_INCORRECT'), HttpStatus.UNAUTHORIZED);
+      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND); // user does not know if email or password which not good
     }
     return this.authService.login(user);
   }
 
   @Post('/register')
-  @ApiOperation({ summary: 'Register user' })
-  @ApiInternalServerErrorResponse()
-  @ApiConflictResponse()
-  @ApiCreatedResponse({ type: LoginResponse })
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the user" })
+  @ApiConflictResponse({ description: "A user with the given email or username already exists" })
+  @ApiCreatedResponse({ 
+    description: "The user was successfully registered and an access token has been returned", 
+    type: LoginResponse 
+  })
   async register(@Body() body: RegisterDto): Promise<{ accessToken: string }> {
     if (await this.userService.checkUnknownUser(body)) {
       throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.CONFLICT);
