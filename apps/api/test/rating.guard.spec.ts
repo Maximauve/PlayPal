@@ -28,7 +28,8 @@ describe('RatingGuard', () => {
       minYear: 3,
       difficulty: 3,
       duration: "35min",
-      tags: []
+      tags: [],
+      rules: []
     },
     note: 4,
     comment: "Trop cool",

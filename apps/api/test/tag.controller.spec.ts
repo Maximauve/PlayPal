@@ -46,7 +46,8 @@ describe('TagController', () => {
     difficulty: 3,
     minYear: 10,
     rating: [],
-    tags: mockTags
+    tags: mockTags,
+    rules: []
   };
 
   const mockUser = {

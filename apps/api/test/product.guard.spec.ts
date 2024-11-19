@@ -30,7 +30,8 @@ describe('ProductGuard', () => {
       difficulty: 3,
       duration: "35min",
       tags: [],
-      rating: []
+      rating: [],
+      rules: []
     },
     available: true,
     user: { 
