@@ -7,7 +7,7 @@ export default function useTranslation(): I18n {
   const appContext = useContext<I18nContextType>(i18nContext);
 
   if (!appContext) {
-    throw new Error('useTranslations must be used within an AppProvider');
+    throw new Error('useTranslation must be used within an AppProvider');
   }
 
   return appContext.i18n;
