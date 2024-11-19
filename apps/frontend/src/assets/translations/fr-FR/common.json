@@ -1,0 +1,14 @@
+{
+	"common": {
+		"yes": "oui",
+		"no": "non",
+		"cancel": "annuler",
+		"save": "enregistrer",
+		"delete": "supprimer",
+		"edit": "modifier",
+		"add": "ajouter",
+		"close": "fermer",
+		"search": "rechercher",
+		"confirm": "confirmer"
+	}
+}
