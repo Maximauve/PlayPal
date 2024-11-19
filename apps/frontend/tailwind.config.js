@@ -1,3 +1,4 @@
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -10,7 +11,10 @@ export default {
         background : {
           dark : '#2C2830',
           light : '#2F2C34',
-        }
+        },
+        text : {
+          light : '#FFFFFF',
+        },
       }
     },
   },
