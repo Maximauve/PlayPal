@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Put, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -9,21 +9,21 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { type JwtPayload } from '@playpal/schemas/jwt.interface';
-import { Request } from 'express';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RedisService } from "@/redis/service/redis.service";
 import { TranslationService } from '@/translation/translation.service';
+import { CurrentUser } from '@/user/decorators/currentUser.decorator';
+import { UserRequest } from '@/user/decorators/user.decorator';
 import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { Role } from '@/user/role.enum';
 import { UserService } from '@/user/service/user.service';
 import { User } from '@/user/user.entity';
 import hashPassword from '@/utils/auth.variable';
-import { uuidRegex } from '@/utils/regex.variable';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('users')
+@ApiUnauthorizedResponse()
 @Controller('users')
 export class UserController {
 
@@ -32,7 +32,6 @@ export class UserController {
   @Get("/")
   @ApiOperation({ summary: 'Returns all users' })
   @ApiOkResponse({ type: User, isArray: true })
-  @ApiUnauthorizedResponse()
   async getAll(): Promise<User[]> {
     return this.userService.getAll();
   }
@@ -40,17 +39,8 @@ export class UserController {
   @Get('/me')
   @ApiOperation({ summary: 'Return my user informations' })
   @ApiOkResponse({ type: User })
-  @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getMe(@Req() request: Request): Promise<User> {
-    const requestUser: JwtPayload = request?.user as JwtPayload;
-    if (!requestUser) {
-      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
-    const user: User | null = await this.userService.findOneUser(requestUser?.id);
-    if (!user) {
-      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
+  getMe(@CurrentUser() user: User): User {
     return user;
   }
 
@@ -58,13 +48,8 @@ export class UserController {
   @ApiOperation({ summary: 'Return a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse({ type: User })
-  @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  async getOneUser(@Param('id') id: string): Promise<User> {
-    const user: User | null = await this.userService.findOneUser(id);
-    if (!user) {
-      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
-    }
+  getOneUser(@UserRequest() user: User): User {
     return user;
   }
 
@@ -72,36 +57,28 @@ export class UserController {
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse({ type: User })
-  @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiConflictResponse()
-  async update(@Req() request: Request, @Param('id') id: string, @Body() body: UserUpdatedDto): Promise<User> {
-    const me = await this.userService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (!uuidRegex.test(id)) {
-      throw new HttpException(await this.translationService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    if (me.role !== Role.Admin && me.id !== id) {
+  async update(@CurrentUser() me: User, @UserRequest() user: User, @Body() body: UserUpdatedDto): Promise<User> {
+    if (me.role !== Role.Admin && me.id !== user.id) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_ADMIN'), HttpStatus.UNAUTHORIZED);
     }
     if (me.role !== Role.Admin) {
       delete body.role;
     }
-    if (await this.userService.checkUnknownUser(body, id)) {
+    if (await this.userService.checkUnknownUser(body, user.id)) {
       throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.CONFLICT);
     }
     if (body.password) {
       body.password = await hashPassword(body.password);
     }
-    await this.userService.update(id, body);
-    const user = await this.userService.findOneUser(id);
-    if (!user) {
+    await this.userService.update(user.id, body);
+    const userUpdated = await this.userService.findOneUser(user.id);
+    if (!userUpdated) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return user;
+    return userUpdated;
   }
 
   @Delete('/:id')
@@ -109,18 +86,10 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
   @ApiOkResponse()
   @ApiBadRequestResponse()
-  @ApiUnauthorizedResponse()
-  async delete(@Req() request: Request, @Param('id') id: string): Promise<void> {
-    const me = await this.userService.getUserConnected(request);
-    if (!me) {
-      throw new UnauthorizedException();
-    }
-    if (me.role !== Role.Admin && me.id !== id) {
+  async delete(@CurrentUser() me: User, @UserRequest() user: User): Promise<void> {
+    if (me.role !== Role.Admin && me.id !== user.id) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_ADMIN'), HttpStatus.UNAUTHORIZED);
     }
-    if (!uuidRegex.test(id)) {
-      throw new HttpException(await this.translationService.translate('error.ID_INVALID'), HttpStatus.BAD_REQUEST);
-    }
-    return this.userService.delete(id);
+    return this.userService.delete(user.id);
   }
 }

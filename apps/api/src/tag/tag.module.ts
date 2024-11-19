@@ -7,13 +7,11 @@ import { TagController } from "@/tag/controller/tag.controller";
 import { TagService } from "@/tag/service/tag.service";
 import { Tag } from "@/tag/tag.entity";
 import { TranslationService } from "@/translation/translation.service";
-import { UsersModule } from "@/user/user.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Tag]),
     TypeOrmModule.forFeature([Game]),
-    forwardRef(() => UsersModule),
     forwardRef(() => GameModule)
   ],
   controllers: [TagController],

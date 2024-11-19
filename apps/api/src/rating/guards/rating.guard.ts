@@ -32,7 +32,8 @@ export class RatingGuard implements CanActivate {
         }
       },
       relations: {
-        game: true
+        game: true,
+        user: true
       }
     });
     if (!rating) {

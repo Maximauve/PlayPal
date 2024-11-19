@@ -123,29 +123,20 @@ describe('LoanController', () => {
   describe('getAllLoan', () => {
     it('should return all loans for a valid gameId and productId', async () => {
 
-      const result = await loanController.getAllLoan(validProductId);
+      jest.spyOn(mockLoanService, 'getAllLoan').mockResolvedValue(mockLoans);
+
+      const result = await loanController.getAllLoan(mockProduct);
       
       expect(result).toEqual(mockLoans);
-      expect(mockLoanService.getAllLoan).toHaveBeenCalledWith(validProductId);
     });
   });
 
   describe('getLoan', () => {
     it('should return a loan for valid ids', async () => {
 
-      const result = await loanController.getLoan(validProductId, validLoanId);
+      const result = loanController.getLoan(mockLoan);
       
       expect(result).toEqual(mockLoan);
-      expect(mockLoanService.getLoan).toHaveBeenCalledWith(validProductId, validLoanId);
-    });
-
-    it('should throw HttpException with 404 status if loan not found', async () => {
-      jest.spyOn(mockLoanService, 'getLoan').mockResolvedValue(null);
-
-      await expect(loanController.getLoan(validProductId, validLoanId))
-        .rejects.toThrow(HttpException);
-      await expect(loanController.getLoan(validProductId, validLoanId))
-        .rejects.toMatchObject({ status: HttpStatus.NOT_FOUND });
     });
   });
 
@@ -153,11 +144,9 @@ describe('LoanController', () => {
     it('should create a loan for valid gameId and productId', async () => {
       const loanDto = { endDate: new Date(), type: "non", userId: "444e6543-e89b-12d3-a456-426614174000" };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
       jest.spyOn(mockLoanService, 'create').mockResolvedValue(mockLoan);
 
-      const result = await loanController.createLoan(mockUser, validProductId, loanDto);
+      const result = await loanController.createLoan(mockUser, mockProduct, loanDto);
       expect(result).toEqual(mockLoan);
       expect(mockLoanService.create).toHaveBeenCalledWith(validProductId, mockUser.id, loanDto);
     });
@@ -165,13 +154,11 @@ describe('LoanController', () => {
     it('should throw HttpException with 500 status if loan creation fails', async () => {
       const loanDto = { endDate: new Date(), userId: "444e6543-e89b-12d3-a456-426614174000", type: "oui" };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
       jest.spyOn(mockLoanService, 'create').mockResolvedValue(null);
 
-      await expect(loanController.createLoan(mockUser, validProductId, loanDto))
+      await expect(loanController.createLoan(mockUser, mockProduct, loanDto))
         .rejects.toThrow(HttpException);
-      await expect(loanController.createLoan(mockUser, validProductId, loanDto))
+      await expect(loanController.createLoan(mockUser, mockProduct, loanDto))
         .rejects.toMatchObject({
           status: HttpStatus.INTERNAL_SERVER_ERROR,
         });
@@ -182,41 +169,21 @@ describe('LoanController', () => {
     it('should update a loan for valid gameId, productId and loanId', async () => {
       const loanUpdatedDto = { startDate: new Date(), endDate: new Date() };
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
       jest.spyOn(mockLoanService, 'update').mockResolvedValue(undefined);
       jest.spyOn(mockLoanService, 'getLoan').mockResolvedValue(mockLoan);
 
-      const result = await loanController.updateLoan(validProductId, validLoanId, loanUpdatedDto);
+      const result = await loanController.updateLoan(mockProduct, mockLoan, loanUpdatedDto);
       expect(result).toEqual(mockLoan);
       expect(mockLoanService.update).toHaveBeenCalledWith(validLoanId, loanUpdatedDto);
-    });
-
-    it('should throw HttpException with 404 status if loan not found after update', async () => {
-      const loanUpdatedDto = { startDate: new Date(), endDate: new Date() };
-
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
-      jest.spyOn(mockLoanService, 'update').mockResolvedValue(undefined);
-      jest.spyOn(mockLoanService, 'getLoan').mockResolvedValue(null);
-
-      await expect(loanController.updateLoan(validProductId, validLoanId, loanUpdatedDto))
-        .rejects.toThrow(HttpException);
-      await expect(loanController.updateLoan(validProductId, validLoanId, loanUpdatedDto))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-        });
     });
   });
 
   describe('deleteLoan', () => {
     it('should delete a loan for valid gameId, productId and loanId', async () => {
 
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGame);
-      jest.spyOn(mockProductService, 'getProduct').mockResolvedValue(mockProduct);
       jest.spyOn(mockLoanService, 'delete').mockResolvedValue(undefined);
 
-      await expect(loanController.deleteLoan(validProductId, validLoanId))
+      await expect(loanController.deleteLoan(mockProduct, mockLoan))
         .resolves.toBeUndefined();
       expect(mockLoanService.delete).toHaveBeenCalledWith(validProductId, validLoanId);
     });

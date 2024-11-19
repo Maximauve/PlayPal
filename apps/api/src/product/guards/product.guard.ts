@@ -32,7 +32,9 @@ export class ProductGuard implements CanActivate {
         }
       },
       relations: {
-        game: true
+        game: true,
+        user: true,
+        loan: true
       }
     });
     if (!product) {

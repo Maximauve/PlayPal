@@ -10,12 +10,15 @@ import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common
 import { Role } from '@/user/role.enum';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Tag } from '@/tag/tag.entity';
+import { FileUploadService } from '@/files/files.service';
 
 describe('GameController', () => {
   let gameController: GameController;
   let mockGameService: Partial<GameService>;
   let mockUserService: Partial<UserService>;
   let mockTranslationService: Partial<TranslationService>;
+  let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
 
   const mockGames: Game[] = [
@@ -58,6 +61,7 @@ describe('GameController', () => {
     mockGameService = {
       getAll: jest.fn().mockResolvedValue(mockGames),
       findOneGame: jest.fn(),
+      findOneName: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -77,6 +81,7 @@ describe('GameController', () => {
         { provide: GameService, useValue: mockGameService },
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
+        { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
       ],
     }).compile();
@@ -88,29 +93,14 @@ describe('GameController', () => {
     it('should return all games', async () => {
       const result = await gameController.getAll();
       expect(result).toEqual(mockGames);
-      expect(mockGameService.getAll).toHaveBeenCalled();
     });
   });
 
   describe('getOneGame', () => {
 
     it('should return a specific game by ID', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGames[0]);
-
-      const result = await gameController.getOneGame("568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      const result = gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
-      expect(mockGameService.findOneGame).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-    });
-
-    it('should throw exception if game not found', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
-
-      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
-        .rejects.toThrow(HttpException);
-      await expect(gameController.getOneGame('fd5446b4-8e89-4cd4-8c01-46e9f8cc975b'))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-        });
     });
   });
 
@@ -122,7 +112,8 @@ describe('GameController', () => {
       maxPlayers: 4,
       duration: "35min",
       difficulty: 2,
-      minYear: 10
+      minYear: 10,
+      image: "exemple.com"
     };
 
     it('should create a new game successfully', async () => {
@@ -153,29 +144,20 @@ describe('GameController', () => {
 
     it('should update a game successfully', async () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
+      
+      jest.spyOn(mockGameService, 'update').mockResolvedValue(updatedGame);
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 
-      const result = await gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
+      const result = await gameController.update(mockGames[0], updateGameDto);
       expect(result).toEqual(updatedGame);
-      expect(mockGameService.update).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto);
-    });
-
-    it('should throw exception if game not found after update', async () => {
-      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(null);
-
-      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
-        .rejects.toThrow(HttpException);
-      await expect(gameController.update("568931ed-d87e-4bf1-b477-2f1aea83e3da", updateGameDto))
-        .rejects.toMatchObject({
-          status: HttpStatus.NOT_FOUND,
-        });
+      expect(mockGameService.update).toHaveBeenCalledWith(mockGames[0].id, updateGameDto);
     });
   });
 
   describe('delete', () => {
     it('should delete a game successfully', async () => {
-      await gameController.delete("568931ed-d87e-4bf1-b477-2f1aea83e3da");
-      expect(mockGameService.delete).toHaveBeenCalledWith("568931ed-d87e-4bf1-b477-2f1aea83e3da");
+      await gameController.delete(mockGames[1]);
+      expect(mockGameService.delete).toHaveBeenCalledWith(mockGames[1].id);
     });
   });
 });

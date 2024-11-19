@@ -92,7 +92,6 @@ export class ProductService {
   }
 
   async assign(gameId: string, productId: string, user: User): Promise<Product | null> {
-    // Récupérer le produit par son id
     const product: Product | null = await this.getProduct(gameId, productId);
     if (!product) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);

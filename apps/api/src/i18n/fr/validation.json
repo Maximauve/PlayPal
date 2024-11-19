@@ -1,5 +1,6 @@
 {
   "NOT_EMPTY": "{property} ne peut pas être vide",
+  "IS_EMPTY": "{property} doit être vide",
   "INVALID_EMAIL": "l'email n'est pas valide",
   "INVALID_BOOLEAN": "{property} n'est pas un boolean",
   "MIN": "{property} doit contenir au minimum {constraints.0} caractères",
@@ -7,7 +8,10 @@
   "MIN_NUMBER": "{property} doit être plus petit que {constraints.0}",
   "MAX_NUMBER": "{property} doit être plus grand que {constraints.0}",
   "NOT_STRING": "{property} n'est pas un string",
+  "NOT_INT": "{property} n'est pas un nombre",
   "IS_STATE": "{property} doit être BROKEN, DAMAGED, FAIR, GOOD, LIKE_NEW, NEW",
   "NOT_BOOLEAN": "{property} doit être un boolean",
-  "NOT_DATE": "{property} doit être une date"
+  "NOT_DATE": "{property} doit être une date",
+  "IS_NOT_ARRAY": "{property} doit être un tableau",
+  "IS_NOT_UUID": "{property} n'est pas un uuid"
 }

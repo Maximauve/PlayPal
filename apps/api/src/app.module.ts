@@ -9,19 +9,14 @@ import * as path from 'node:path';
 
 import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
-import { Game } from '@/game/game.entity';
+import { FileUploadModule } from '@/files/files.module';
 import { GameModule } from '@/game/game.module';
-import { Loan } from '@/loan/loan.entity';
 import { LoanModule } from '@/loan/loan.module';
-import { Product } from '@/product/product.entity';
 import { ProductModule } from '@/product/product.module';
-import { Rating } from '@/rating/rating.entity';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
-import { Tag } from '@/tag/tag.entity';
 import { TagModule } from '@/tag/tag.module';
 import { TranslationService } from '@/translation/translation.service';
-import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
 
 @Module({
@@ -39,7 +34,8 @@ import { UsersModule } from '@/user/user.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [User, Game, Rating, Product, Loan, Tag],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        autoLoadEntities: true,
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
@@ -69,7 +65,8 @@ import { UsersModule } from '@/user/user.module';
     RatingModule,
     ProductModule,
     LoanModule,
-    TagModule
+    TagModule,
+    FileUploadModule
   ],
   controllers: [],
   providers: [TranslationService, {
