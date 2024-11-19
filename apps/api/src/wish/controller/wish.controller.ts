@@ -1,11 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiConflictResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { GameGuard } from '@/game/guards/game.guard';
 import { TranslationService } from '@/translation/translation.service';
-import { CurrentUser } from '@/user/decorators/currentUser.decorator';
-import { User } from '@/user/user.entity';
+import { WishRequest } from '@/wish/decorators/wish.decorator';
 import { WishDto } from '@/wish/dto/wish.dto';
 import { WishGuard } from '@/wish/guards/wish.guard';
 import { WishService } from '@/wish/service/wish.service';
@@ -20,12 +19,13 @@ export class WishController {
   constructor(private readonly translationsService: TranslationService, private wishlistService: WishService) { }
 
   @Get('')
-  @ApiParam({ name: 'gameId', description: 'ID of game', required: true })  
+  @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiOperation({ summary: "Get all wishes of a game" })
-  @ApiOkResponse({ type: Wish, isArray: true })
-  @ApiUnauthorizedResponse()
-  async getAllWishes(@Param('gameId') gameId: string): Promise<Wish[]> {
-    return this.wishlistService.getAllWishesForGame(gameId);
+  @ApiBadRequestResponse({ description: "UUID are invalid" })
+  @ApiOkResponse({ description: "Wishes found successfully", type: Wish, isArray: true })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  async getAllWishes(@WishRequest() wish : Wish): Promise<Wish[]> {
+    return this.wishlistService.getAllWishesForGame(wish.game.id);  
   }
 
 
@@ -34,27 +34,24 @@ export class WishController {
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'wishId', description: 'ID of wish', required: true })
   @ApiOperation({ summary: "Return a wish" })
-  @ApiOkResponse({ type: Wish })
-  @ApiUnauthorizedResponse()
-  async getWish(@Param('wishId') wishId: string): Promise<Wish> {
-    const wish = await this.wishlistService.getWish(wishId);
-    if (!wish) {
-      throw new HttpException(await this.translationsService.translate("error.WISH_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  @ApiBadRequestResponse({ description: "UUID are invalid" })
+  @ApiOkResponse({ description: "Wish found successfully", type: Wish })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  getWish(@WishRequest() wish: Wish): Wish {
     return wish;
   }
 
   @UsePipes(ValidationPipe)
   @Post('')
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
-  @ApiOperation({ summary: "Create a wish" })  
-  @ApiOkResponse({ type: Wish })
-  @ApiUnauthorizedResponse()
-  @ApiInternalServerErrorResponse()
-  @ApiConflictResponse()
-  @ApiNotFoundResponse()
-  async createWish(@Param('gameId') gameId: string, @CurrentUser() user: User, @Body() wishDto: WishDto): Promise<Wish> {
-    const wish = await this.wishlistService.create(user.id, gameId, wishDto);
+  @ApiOperation({ summary: "Create a wish" })
+  @ApiCreatedResponse({ description: "Wish created successfully", type: Wish })
+  @ApiUnauthorizedResponse({ description: 'User not authenticated' })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the wish" })
+  @ApiConflictResponse({ description: "Wish already exists" })
+  @ApiNotFoundResponse({ description: "Game or user not found" })
+  async createWish(@Body() wishDto: WishDto): Promise<Wish> {
+    const wish = await this.wishlistService.create( wishDto);
     if (!wish) {
       throw new HttpException(await this.translationsService.translate("error.WISH_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -67,17 +64,17 @@ export class WishController {
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'wishId', description: 'ID of wish', required: true })
   @ApiOperation({ summary: "Update a wish" })
-  @ApiOkResponse({ type: Wish })
-  @ApiUnauthorizedResponse()
-  @ApiInternalServerErrorResponse()
-  @ApiNotFoundResponse()
-  async updateWish(@Param('wishId') wishId: string, @Body() wishDto: WishDto): Promise<Wish> {
-    await this.wishlistService.updateWish(wishId, wishDto);
-    const wish = await this.wishlistService.getWish(wishId);
-    if (!wish) {
+  @ApiCreatedResponse({ description: "The wish has been successfully updated", type: Wish })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while updating the wish" })
+  @ApiNotFoundResponse({ description: "Game or user not found" })
+  async updateWish(@WishRequest() wish: Wish, @Body() wishDto: WishDto): Promise<Wish> {
+    await this.wishlistService.updateWish(wish.id, wishDto);
+    const wishUpdated = await this.wishlistService.getWish(wish.id);
+    if (!wishUpdated) {
       throw new HttpException(await this.translationsService.translate("error.WISH_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    return wish;
+    return wishUpdated;
   }
 
   @Delete('/:wishId')
@@ -85,11 +82,11 @@ export class WishController {
   @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
   @ApiParam({ name: 'wishId', description: 'ID of wish', required: true })
   @ApiOperation({ summary: "Delete a wish" })
-  @ApiOkResponse({ type: Wish })
-  @ApiUnauthorizedResponse()
-  @ApiInternalServerErrorResponse()
-  @ApiNotFoundResponse()
-  async deleteWish(@Param('wishId') wishId: string): Promise<void> {
-    return this.wishlistService.deleteWish(wishId);
+  @ApiOkResponse({ description: "Wish deleted successfully" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while deleting the wish" })
+  @ApiNotFoundResponse({ description: "Wish not found" })
+  async deleteWish(@WishRequest() wish: Wish): Promise<void> {
+    return this.wishlistService.deleteWish(wish.id);
   }
 }

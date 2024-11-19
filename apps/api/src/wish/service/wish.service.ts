@@ -56,32 +56,25 @@ export class WishService {
       .getOne();
   }
 
-  async create(userId: string, gameId: string, wishDto: WishDto): Promise<Wish | null> {
-    const game = await this.gameRepository
-      .createQueryBuilder('game')
-      .where('game.id = :id', { id: gameId })
-      .getOne();
-    if (!game) {
-      throw new HttpException(
-        await this.translationService.translate("error.GAME_NOT_FOUND"),
-        HttpStatus.NOT_FOUND
-      );
-    }
+  async create( wishDto: WishDto): Promise<Wish | null> {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :id', { id: userId })
+      .where('user.id = :id', { id: wishDto.userId })
       .getOne();
     if (!user) {
       throw new HttpException(
-        await this.translationService.translate("error.USER_NOT_FOUND"),
+        await this.translationService.translate('error.USER_NOT_FOUND'),
         HttpStatus.NOT_FOUND
       );
     }
-    const existingWish = await this.getWish(userId);
-    if (existingWish) {
+    const game = await this.gameRepository
+      .createQueryBuilder('game')
+      .where('game.id = :id', { id: wishDto.gameId })
+      .getOne();
+    if (!game) {
       throw new HttpException(
-        await this.translationService.translate("error.WISH_ALREADY_EXISTS"),
-        HttpStatus.BAD_REQUEST
+        await this.translationService.translate('error.GAME_NOT_FOUND'),
+        HttpStatus.NOT_FOUND
       );
     }
     const wish = this.wishRepository.create({
@@ -90,6 +83,7 @@ export class WishService {
       game
     });
     return this.wishRepository.save(wish);
+
   }
 
   async updateWish(wishId: string, wishUpdatedDto: WishUpdatedDto): Promise<void> {

@@ -82,7 +82,7 @@ describe('WishController', () => {
 
     describe('getAllWishes', () => {
         it('should return all wishes for a valid gameId', async () => {
-            const result = await wishController.getAllWishes(validGameId);
+            const result = await wishController.getAllWishes(mockWish);
             expect(result).toEqual([mockWish]);
         });
 
@@ -90,27 +90,27 @@ describe('WishController', () => {
 
     describe('getWish', () => {
         it('should return a wish for a valid wishId', async () => {
-            const result = await wishController.getWish(validWishId);
+            const result = await wishController.getWish(mockWish);
             expect(result).toEqual(mockWish);
         });
 
     });
 
     describe('createWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId, date: new Date() };
+        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId };
 
         it('should create a wish', async () => {
-            const result = await wishController.createWish(validGameId, mockWish.user, mockWishDto);
+            const result = await wishController.createWish(mockWishDto);
             expect(result).toEqual(mockWish);
         });
 
     });
 
     describe('updateWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId, date: new Date() };
+        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId, userId: validUserId};
 
         it('should update a wish', async () => {
-            const result = await wishController.updateWish(validWishId, mockWishDto);
+            const result = await wishController.updateWish(mockWish, mockWishDto);
             expect(result).toEqual(mockWish);
         });
 
@@ -118,7 +118,7 @@ describe('WishController', () => {
 
     describe('deleteWish', () => {
         it('should delete a wish', async () => {
-            const result = await wishController.deleteWish(validWishId);
+            const result = await wishController.deleteWish(mockWish);
             expect(result).toBeNull();
         });
 
