@@ -10,8 +10,4 @@ export class LoanDto {
 
   @IsDateString()
   endDate: Date;
-
-  // a remplacer par un enum surement
-  @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
-  type: string;
 }
