@@ -80,26 +80,21 @@ export class GameService {
   }
 
   async findOneGame(gameId: string): Promise<Game | null> {
-    const game = await this.gamesRepository
+    return this.gamesRepository
       .createQueryBuilder("game")
       .where("game.id = :id", { id: gameId })
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
       .leftJoinAndSelect("game.tags", "tag")
       .getOne();
-    return game;
   }
 
   async findOneName(name: string): Promise<Game | null> {
-    const game = await this.gamesRepository
+    return this.gamesRepository
       .createQueryBuilder("game")
       .where("game.name = :name", { name })
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
       .getOne();
-    if (!game) {
-      return null;
-    }
-    return game;
   }
 }

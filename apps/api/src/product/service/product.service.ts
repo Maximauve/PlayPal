@@ -74,7 +74,6 @@ export class ProductService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate('error.PRODUCT_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
   async delete(gameId: string, productId: string): Promise<void> {
@@ -88,30 +87,17 @@ export class ProductService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
-  async assign(gameId: string, productId: string, user: User): Promise<Product | null> {
-    const product: Product | null = await this.getProduct(gameId, productId);
-    if (!product) {
-      throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
-
+  async assign(product: Product, user: User): Promise<Product | null> {
     product.user = user;
     product.available = false;
-
     return this.productRepository.save(product);
   }
 
-  async unassign(gameId: string, productId: string): Promise<Product | null> {
-    const product: Product | null = await this.getProduct(gameId, productId);
-    if (!product) {
-      throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
-
+  async unassign(product: Product): Promise<Product | null> {
     product.user = null;
     product.available = true;
-
     return this.productRepository.save(product);
   }
 }

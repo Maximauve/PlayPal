@@ -11,7 +11,6 @@ import {
 } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { RedisService } from "@/redis/service/redis.service";
 import { TranslationService } from '@/translation/translation.service';
 import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 import { UserRequest } from '@/user/decorators/user.decorator';
@@ -23,23 +22,23 @@ import hashPassword from '@/utils/auth.variable';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('users')
-@ApiUnauthorizedResponse()
+@ApiUnauthorizedResponse({ description: "User not connected" })
 @Controller('users')
 export class UserController {
 
-  constructor(private userService: UserService, private readonly redisService: RedisService, private readonly translationService: TranslationService) { }
+  constructor(private userService: UserService, private readonly translationService: TranslationService) { }
 
-  @Get("/")
+  @Get("")
   @ApiOperation({ summary: 'Returns all users' })
-  @ApiOkResponse({ type: User, isArray: true })
+  @ApiOkResponse({ description: "Users found successfully", type: User, isArray: true })
   async getAll(): Promise<User[]> {
     return this.userService.getAll();
   }
 
   @Get('/me')
   @ApiOperation({ summary: 'Return my user informations' })
-  @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse()
+  @ApiOkResponse({ description: "User found successfully", type: User })
+  @ApiNotFoundResponse({ description: "User not found" })
   getMe(@CurrentUser() user: User): User {
     return user;
   }
@@ -47,8 +46,8 @@ export class UserController {
   @Get("/:id")
   @ApiOperation({ summary: 'Return a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
-  @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse()
+  @ApiOkResponse({ description: "User found successfully", type: User })
+  @ApiNotFoundResponse({ description: "User not found" })
   getOneUser(@UserRequest() user: User): User {
     return user;
   }
@@ -56,10 +55,11 @@ export class UserController {
   @Put('/:id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
-  @ApiOkResponse({ type: User })
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @ApiConflictResponse()
+  @ApiOkResponse({ description: "User updated successfully", type: User })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  @ApiNotFoundResponse({ description: "User not found" })
+  @ApiUnauthorizedResponse({ description: "User not connected or user not admin" })
+  @ApiConflictResponse({ description: "User already exists" })
   async update(@CurrentUser() me: User, @UserRequest() user: User, @Body() body: UserUpdatedDto): Promise<User> {
     if (me.role !== Role.Admin && me.id !== user.id) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_ADMIN'), HttpStatus.UNAUTHORIZED);
@@ -84,12 +84,13 @@ export class UserController {
   @Delete('/:id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'id', description: 'ID of user', required: true })
-  @ApiOkResponse()
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "User deleted succesfully" })
+  @ApiUnauthorizedResponse({ description: "User not connected or user not admin" })
+  @ApiNotFoundResponse({ description: "User not found" })
   async delete(@CurrentUser() me: User, @UserRequest() user: User): Promise<void> {
     if (me.role !== Role.Admin && me.id !== user.id) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_ADMIN'), HttpStatus.UNAUTHORIZED);
     }
-    return this.userService.delete(user.id);
+    await this.userService.delete(user.id);
   }
 }

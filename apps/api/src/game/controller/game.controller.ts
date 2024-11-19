@@ -3,6 +3,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiConsumes,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -26,14 +28,14 @@ import { TranslationService } from '@/translation/translation.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('games')
-@ApiUnauthorizedResponse()
 @Controller('games')
 export class GameController {
   constructor(private readonly gamesService: GameService, private readonly translationsService: TranslationService, private readonly fileUploadService: FileUploadService) { }
 
   @Get('')
   @ApiOperation({ summary: "Get all games" })
-  @ApiOkResponse({ type: Game, isArray: true })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getAll() {
     return this.gamesService.getAll();
   }
@@ -42,8 +44,10 @@ export class GameController {
   @UseGuards(GameGuard)
   @ApiOperation({ summary: "Get one game" })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
-  @ApiOkResponse({ type: Game })
-  @ApiNotFoundResponse()
+  @ApiOkResponse({ description: "Game found successfully", type: Game })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
   getOneGame(@GameRequest() game: Game): Game {
     return game;
   }
@@ -51,10 +55,12 @@ export class GameController {
   @Post('')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Create a game" })
-  @ApiOkResponse({ type: Game })
-  @ApiInternalServerErrorResponse()
-  @ApiBadRequestResponse()
-  @ApiConflictResponse()
+  @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({ description: 'The game has been successfully created', type: Game })
+  @ApiConflictResponse({ description: 'A game with the same name already exists' })
+  @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the game" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiBadRequestResponse({ description: "Request body is invalid" })
   async create(@Body() body: GameDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
     if (await this.gamesService.findOneName(body.name)) {
       throw new HttpException(await this.translationsService.translate("error.GAME_ALREADY_EXIST"), HttpStatus.CONFLICT);
@@ -74,9 +80,12 @@ export class GameController {
   @UseGuards(GameGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Update a game" })
+  @ApiConsumes('multipart/form-data')
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
-  @ApiOkResponse({ type: Game })
-  @ApiNotFoundResponse()
+  @ApiOkResponse({ description: "Game updated successfully", type: Game })
+  @ApiNotFoundResponse({ description: "Game or tags not found" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiBadRequestResponse({ description: "Request body or UUID is invalid" })
   async update(@GameRequest() game: Game, @Body() body: GameUpdatedDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
@@ -94,12 +103,14 @@ export class GameController {
   @UseGuards(GameGuard)
   @ApiOperation({ summary: 'Delete a game' })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
-  @ApiOkResponse()
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: "Game deleted successfully" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
   async delete(@GameRequest() game: Game): Promise<void> {
     if (game.image) {
       await this.fileUploadService.deleteFile(game.image);
     }
-    return this.gamesService.delete(game.id);
+    await this.gamesService.delete(game.id);
   }
 }

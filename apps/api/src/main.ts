@@ -27,9 +27,6 @@ async function bootstrap() {
     .setTitle('Playpal')
     .setDescription('The playpal API description')
     .setVersion('1.0')
-    .addTag('users')
-    .addTag('auth')
-    .addTag('games')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);

@@ -41,14 +41,7 @@ export class LoanService {
       .getOne();
   }
 
-  async create(productId: string, userId: string, loanDto: LoanDto): Promise<Loan | null> {
-    const product = await this.productRepository
-      .createQueryBuilder("product")
-      .where("product.id = :id", { id: productId })
-      .getOne();
-    if (!product) {
-      throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async create(loanDto: LoanDto): Promise<Loan | null> {
     const user = await this.userRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: loanDto.userId })
@@ -73,7 +66,6 @@ export class LoanService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate('error.LOAN_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
   async delete(productId: string, loanId: string): Promise<void> {
@@ -87,6 +79,5 @@ export class LoanService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 }

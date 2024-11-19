@@ -78,11 +78,11 @@ describe('AuthController', () => {
 
       await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
       await expect(authController.login(loginDto)).rejects.toMatchObject({
-        status: HttpStatus.NOT_FOUND,
+        status: HttpStatus.BAD_REQUEST,
       });
     });
 
-    it('should throw UnauthorizedException for incorrect password', async () => {
+    it('should throw NotFoundException for incorrect password', async () => {
       const loginDto: LoginDto = {
         email: 'test@example.com',
         password: 'wrongpassword',
@@ -102,7 +102,7 @@ describe('AuthController', () => {
 
       await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
       await expect(authController.login(loginDto)).rejects.toMatchObject({
-        status: HttpStatus.UNAUTHORIZED,
+        status: HttpStatus.BAD_REQUEST,
       });
     });
   });

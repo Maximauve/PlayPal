@@ -78,7 +78,6 @@ export class RatingService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate('error.RATING_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 
   async delete(gameId: string, ratingId: string): Promise<void> {
@@ -92,6 +91,5 @@ export class RatingService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.RATING_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
-    return;
   }
 }
