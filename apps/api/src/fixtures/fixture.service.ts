@@ -7,9 +7,11 @@ import { Loan } from '@/loan/loan.entity';
 import { Product } from '@/product/product.entity';
 import { State } from '@/product/state.enum';
 import { Rating } from '@/rating/rating.entity';
+import { Rule } from '@/rule/rule.entity';
 import { Tag } from '@/tag/tag.entity';
 import { Role } from '@/user/role.enum';
 import { User } from '@/user/user.entity';
+import { Wish } from '@/wish/wish.entity';
 
 @Injectable()
 export class FixturesService implements OnModuleInit {
@@ -25,7 +27,11 @@ export class FixturesService implements OnModuleInit {
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
     @InjectRepository(Loan)
-    private loanRepository: Repository<Loan>
+    private loanRepository: Repository<Loan>,
+    @InjectRepository(Wish)
+    private wishRepository: Repository<Wish>,
+    @InjectRepository(Rule)
+    private ruleRepository: Repository<Rule>
   ) {}
 
   async onModuleInit() {
@@ -35,15 +41,17 @@ export class FixturesService implements OnModuleInit {
     const ratingCount = await this.ratingRepository.count();
     const productCount = await this.productRepository.count();
     const loanCount = await this.loanRepository.count();
+    const wishCount = await this.wishRepository.count();
 
-    if ([userCount, gameCount, tagCount, ratingCount, productCount, loanCount].every(count => count === 0)) {
+    if ([userCount, gameCount, tagCount, ratingCount, productCount, loanCount, wishCount].every(count => count === 0)) {
       const savedUsers = await this.loadFixturesUsers();
       const savedTags = await this.loadFixturesTags();
       const savedGames = await this.loadFixturesGames(savedTags);
       await this.loadFixturesRatings(savedUsers, savedGames);
       const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
       await this.loadFixturesLoans(savedUsers, savedProduct);
-      
+      await this.loadFixturesWish(savedUsers, savedGames);
+      await this.loadFixturesRules(savedGames);
     }
   }
 
@@ -216,5 +224,48 @@ export class FixturesService implements OnModuleInit {
 
     const savedLoans = await this.loanRepository.save(loans);
     return savedLoans;
+  }
+
+  private async loadFixturesWish(savedUsers: User[], savedGames: Game[]) {
+    const [skyjo, galerapagos] = savedGames;
+    const [, customer, customer2] = savedUsers;
+    
+    const wish = this.wishRepository.create([
+      { 
+        user: customer,
+        game: skyjo,
+      },
+      {
+        user: customer,
+        game: galerapagos
+      },
+      {
+        user: customer2,
+        game: galerapagos
+      }
+    ]);
+
+    const savedWish = await this.loanRepository.save(wish);
+    return savedWish;
+  }
+
+  private async loadFixturesRules(savedGames: Game[]) {
+    const [skyjo, galerapagos] = savedGames;
+    
+    const rules = this.ruleRepository.create([
+      { 
+        game: skyjo,
+        title: "Règle générale",
+        description: "Les joueurs tirent les cartes chacun leur tour, jusqu'à ce qu'un des joueurs aie toutes les cartes de révélées"
+      },
+      {
+        game: galerapagos,
+        title: "Règle générale",
+        description: "Les joueurs sont sur une île déserte et doivent s'enfuir, ils doivent trouver des ressources pour survivre et pouvoir s'enfuir de l'île avec tous les participants (ou pas)"
+      }
+    ]);
+
+    const savedRules = await this.loanRepository.save(rules);
+    return savedRules;
   }
 }
