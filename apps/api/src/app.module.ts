@@ -10,6 +10,7 @@ import * as path from 'node:path';
 import { AuthModule } from '@/auth/auth.module';
 import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
 import { FileUploadModule } from '@/files/files.module';
+import { FixturesModule } from '@/fixtures/fixture.module';
 import { GameModule } from '@/game/game.module';
 import { LoanModule } from '@/loan/loan.module';
 import { ProductModule } from '@/product/product.module';
@@ -70,7 +71,8 @@ import { WishModule } from '@/wish/wish.module';
     TagModule,
     RuleModule,
     FileUploadModule,
-    WishModule
+    WishModule,
+    FixturesModule
   ],
   controllers: [],
   providers: [TranslationService, {

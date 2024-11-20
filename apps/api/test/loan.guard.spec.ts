@@ -48,7 +48,6 @@ describe('LoanGuard', () => {
       },
       state: State.BROKEN
     },
-    type: "oui",
     startDate: new Date(),
     endDate: new Date(),
     user: { 

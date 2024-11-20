@@ -7,8 +7,8 @@ export class Rule {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  youtubeId: string;
+  @Column({ type: 'varchar', nullable: true })
+  youtubeId?: string;
 
   @Column({ type: 'varchar', nullable: false })
   title: string;

@@ -11,9 +11,6 @@ export class Loan {
   @Column({ type: 'timestamptz' })
   endDate: Date;
 
-  @Column({ type: 'varchar' })
-  type: string;
-
   @CreateDateColumn()
   startDate: Date;
 

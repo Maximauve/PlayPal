@@ -3,7 +3,6 @@ import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typ
 import { Game } from "@/game/game.entity";
 import { User } from "@/user/user.entity";
 
-
 @Entity()
 export class Wish {
   @PrimaryGeneratedColumn('uuid')
