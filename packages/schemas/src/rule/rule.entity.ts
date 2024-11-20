@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Game } from "@/game/game.entity";
+import { Game } from "../game/game.entity";
 
 @Entity()
 export class Rule {

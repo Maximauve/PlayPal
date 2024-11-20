@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { Game, Loan, Product, Rating, Rule, Tag, User, Wish } from '@playpal/schemas';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 //* See i18n-nest doc : https://nestjs-i18n.com/guides/type-safety
 // eslint-disable-next-line unicorn/import-style
@@ -37,7 +38,7 @@ import { WishModule } from '@/wish/wish.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [User, Game, Loan, Product, Rating, Tag, Wish, Rule],
         autoLoadEntities: true,
         synchronize: true,
         extra: {

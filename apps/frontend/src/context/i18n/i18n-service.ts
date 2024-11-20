@@ -27,7 +27,3 @@ export function initI18n(): I18n {
 
   return i18n;
 }
-
-export function changeLocale(i18n: I18n, locale: string) {
-  i18n.locale = locale;
-}

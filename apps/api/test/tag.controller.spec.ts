@@ -4,15 +4,13 @@ import { TagService } from '@/tag/service/tag.service';
 import { UserService } from '@/user/service/user.service';
 import { TranslationService } from '@/translation/translation.service';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { Tag } from '@/tag/tag.entity';
+import { Tag, Role, Game } from '@playpal/schemas';
 import { TagDto } from '@/tag/dto/tag.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { Role } from '@/user/role.enum';
 import { TagUpdatedDto } from '@/tag/dto/tagUpdated.dto';
 import { GameService } from '@/game/service/game.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Game } from '@/game/game.entity';
 
 describe('TagController', () => {
   let tagController: TagController;

@@ -1,21 +1,19 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { Game, Rating, User } from "@playpal/schemas";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
-import { Game } from "@/game/game.entity";
 import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
 import { RatingRequest } from "@/rating/decorators/rating.decorator";
 import { RatingDto } from "@/rating/dto/rating.dto";
 import { RatingUpdatedDto } from "@/rating/dto/ratingUpdated.dto";
 import { RatingGuard } from "@/rating/guards/rating.guard";
-import { Rating } from "@/rating/rating.entity";
 import { RatingService } from "@/rating/service/rating.service";
 import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 import { UserService } from "@/user/service/user.service";
-import { User } from "@/user/user.entity";
 
 @UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('rating')

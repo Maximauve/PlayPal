@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { Game } from "@/game/game.entity";
+import { Game } from "../game/game.entity";
 
 @Entity()
 export class Tag {
@@ -10,7 +10,7 @@ export class Tag {
   @Column({ type: 'varchar', nullable: false })
   name: string;
 
-  @ManyToMany( () => Game , game => game.tags)
+  @ManyToMany( () => Game, (game: Game) => game.tags)
   @JoinTable()
   games: Game[];
 }

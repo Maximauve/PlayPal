@@ -1,8 +1,7 @@
 import { TranslationService } from "@/translation/translation.service";
-import { Role } from "@/user/role.enum";
+import { Role, Wish } from "@playpal/schemas";
 import { WishController } from "@/wish/controller/wish.controller";
 import { WishGuard } from "@/wish/guards/wish.guard";
-import { Wish } from "@/wish/wish.entity";
 import { ExecutionContext, HttpException, HttpStatus } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";

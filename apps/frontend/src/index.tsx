@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
-import I18nProvider from '@/i18n/i18n-provider';
+import I18nProvider from '@/context/i18n/i18n-provider';
 import router from '@/router/router';
 import "@/assets/styles/index.scss";
 

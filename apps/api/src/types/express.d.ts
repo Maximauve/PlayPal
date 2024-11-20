@@ -1,4 +1,4 @@
-import { type JwtPayload } from '@playpal/schemas/jwt.interface';
+import { type JwtPayload } from '@playpal/schemas';
 
 declare global {
   namespace Express {

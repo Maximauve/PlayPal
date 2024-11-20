@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { type JwtPayload } from '@playpal/schemas/jwt.interface';
+import { type JwtPayload } from '@playpal/schemas';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()

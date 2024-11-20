@@ -1,10 +1,10 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Product } from '@/product/product.entity';
-import { Rating } from '@/rating/rating.entity';
-import { Rule } from '@/rule/rule.entity';
-import { Tag } from '@/tag/tag.entity';
-import { Wish } from '@/wish/wish.entity';
+import { Product } from '../product/product.entity';
+import { Rating } from '../rating/rating.entity';
+import { Rule } from '../rule/rule.entity';
+import { Tag } from '../tag/tag.entity';
+import { Wish } from '../wish/wish.entity';
 
 @Entity()
 export class Game {

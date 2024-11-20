@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Game, Tag } from "@playpal/schemas";
 import { In, Repository } from "typeorm";
 
-import { Game } from "@/game/game.entity";
 import { TagDto } from "@/tag/dto/tag.dto";
 import { TagUpdatedDto } from "@/tag/dto/tagUpdated.dto";
-import { Tag } from "@/tag/tag.entity";
 import { TranslationService } from "@/translation/translation.service";
 
 export class TagService {

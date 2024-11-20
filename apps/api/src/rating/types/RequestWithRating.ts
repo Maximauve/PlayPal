@@ -1,4 +1,4 @@
-import { type Rating } from "@/rating/rating.entity";
+import { type Rating } from "@playpal/schemas";
 
 export interface RequestWithRating extends Request {
   params: {

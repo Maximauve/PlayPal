@@ -8,7 +8,7 @@ import { LoginDto } from '@/auth/dto/login.dto';
 import { RegisterDto } from '@/auth/dto/register.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Role } from '@/user/role.enum';
+import { Role } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 
 describe('AuthController', () => {

@@ -1,13 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Game, Rating, User } from "@playpal/schemas";
 import { type Repository } from "typeorm";
 
-import { Game } from "@/game/game.entity";
 import { RatingDto } from "@/rating/dto/rating.dto";
 import { RatingUpdatedDto } from "@/rating/dto/ratingUpdated.dto";
-import { Rating } from "@/rating/rating.entity";
 import { TranslationService } from "@/translation/translation.service";
-import { User } from "@/user/user.entity";
 
 @Injectable()
 export class RatingService {

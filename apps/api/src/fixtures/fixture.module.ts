@@ -1,15 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { Game, Loan, Product, Rating, Rule, Tag, User, Wish } from "@playpal/schemas";
 
 import { FixturesService } from "@/fixtures/fixture.service";
-import { Game } from "@/game/game.entity";
-import { Loan } from "@/loan/loan.entity";
-import { Product } from "@/product/product.entity";
-import { Rating } from "@/rating/rating.entity";
-import { Rule } from "@/rule/rule.entity";
-import { Tag } from "@/tag/tag.entity";
-import { User } from "@/user/user.entity";
-import { Wish } from "@/wish/wish.entity";
 
 @Module({
   imports: [

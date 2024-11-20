@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "@playpal/schemas";
 import { Repository } from "typeorm";
 
 import { TranslationService } from "@/translation/translation.service";
 import { RequestWithParamUser } from "@/user/types/RequestWithParamUser";
-import { User } from "@/user/user.entity";
 import { uuidRegex } from "@/utils/regex.variable";
 
 @Injectable()

@@ -1,11 +1,11 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Wish } from "@playpal/schemas";
 import { Repository } from "typeorm/repository/Repository";
 
 import { TranslationService } from "@/translation/translation.service";
 import { uuidRegex } from "@/utils/regex.variable";
 import { RequestWithWish } from "@/wish/types/RequestWithWish";
-import { Wish } from "@/wish/wish.entity";
 
 
 

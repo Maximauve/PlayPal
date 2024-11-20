@@ -1,10 +1,10 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Loan } from '@/loan/loan.entity';
-import { Product } from '@/product/product.entity';
-import { Rating } from '@/rating/rating.entity';
-import { Role } from '@/user/role.enum';
-import { Wish } from '@/wish/wish.entity';
+import { Loan } from '../loan/loan.entity';
+import { Product } from '../product/product.entity';
+import { Rating } from '../rating/rating.entity';
+import { Role } from '../user/role.enum';
+import { Wish } from '../wish/wish.entity';
 
 @Entity()
 export class User {

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Product } from '@/product/product.entity';
-import { User } from '@/user/user.entity';
+import { Product } from '../product/product.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Loan {

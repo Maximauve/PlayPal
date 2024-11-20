@@ -13,6 +13,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
+import { Game } from "@playpal/schemas";
 import { Express } from 'express';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
@@ -21,7 +22,6 @@ import { ParseFilePipeDocument } from '@/files/files.validator';
 import { GameRequest } from '@/game/decorators/game.decorator';
 import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
-import { Game } from "@/game/game.entity";
 import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
 import { TranslationService } from '@/translation/translation.service';

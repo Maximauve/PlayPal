@@ -3,14 +3,12 @@ import { GameController } from '@/game/controller/game.controller';
 import { GameService } from '@/game/service/game.service';
 import { UserService } from '@/user/service/user.service';
 import { TranslationService } from '@/translation/translation.service';
-import { Game } from '@/game/game.entity';
 import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { Role } from '@/user/role.enum';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag } from '@/tag/tag.entity';
+import { Tag, Game, Role } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 
 describe('GameController', () => {

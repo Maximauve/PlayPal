@@ -1,4 +1,4 @@
-import { type Wish } from "@/wish/wish.entity";
+import { type Wish } from "@playpal/schemas";
 
 export interface RequestWithWish extends Request {
   params: {

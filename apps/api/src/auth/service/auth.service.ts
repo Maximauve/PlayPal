@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { type JwtPayload } from '@playpal/schemas/jwt.interface';
-
-import { User } from '@/user/user.entity';
+import { type JwtPayload, User } from '@playpal/schemas';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +11,7 @@ export class AuthService {
   login(user: User) {
     const payload: JwtPayload = { username: user.username, id: user.id, email: user.email };
     return {
-      accessToken: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+      accessToken: this.jwtService.sign(payload as object, { secret: process.env.JWT_SECRET })
     };
   }
 }

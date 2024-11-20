@@ -1,14 +1,12 @@
 import { TranslationService } from "@/translation/translation.service";
 import { WishGuard } from "@/wish/guards/wish.guard";
-import { Role } from "@/user/role.enum";
+import { Role, Game, Wish } from "@playpal/schemas";
 import { WishController } from "@/wish/controller/wish.controller";
 import { WishService } from "@/wish/service/wish.service";
-import { Wish } from "@/wish/wish.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Repository } from "typeorm";
 import { WishDto } from "@/wish/dto/wish.dto";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { Game } from "@/game/game.entity";
 
 describe('WishController', () => {
     let WishGuard: WishGuard;

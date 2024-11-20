@@ -3,10 +3,9 @@ import { RatingGuard } from '@/rating/guards/rating.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Rating } from '@/rating/rating.entity';
+import { Rating, Role } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
-import { Role } from '@/user/role.enum';
 
 describe('RatingGuard', () => {
   let ratingGuard: RatingGuard;

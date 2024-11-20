@@ -1,9 +1,9 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Game } from '@/game/game.entity';
-import { Loan } from '@/loan/loan.entity';
-import { State } from '@/product/state.enum';
-import { User } from '@/user/user.entity';
+import { Game } from '../game/game.entity';
+import { Loan } from '../loan/loan.entity';
+import { State } from '../product/state.enum';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Product {

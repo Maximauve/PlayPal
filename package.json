@@ -32,7 +32,8 @@
     "lint:frontend": "cd apps/frontend && eslint .",
     "lint": "yarn lint:api && yarn lint:frontend",
     "test:api": "cd apps/api && yarn test",
-    "test:frontend": "cd apps/frontend && yarn test"
+    "test:frontend": "cd apps/frontend && yarn test",
+    "build:types": "cd packages/schemas && yarn build"
   },
   "dependencies": {
     "@nestjs/platform-express": "^10.4.8"

@@ -3,11 +3,9 @@ import { LoanGuard } from '@/loan/guards/loan.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Loan } from '@/loan/loan.entity';
+import { Loan, State, Role } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
-import { State } from '@/product/state.enum';
-import { Role } from '@/user/role.enum';
 
 describe('LoanGuard', () => {
   let loanGuard: LoanGuard;

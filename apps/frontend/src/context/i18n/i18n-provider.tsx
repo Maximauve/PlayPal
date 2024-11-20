@@ -1,7 +1,7 @@
 import { I18n } from "i18n-js";
 import { createContext, type PropsWithChildren } from "react";
 
-import { initI18n } from "@/i18n/i18n-service";
+import { initI18n } from "@/context/i18n/i18n-service";
 
 export interface I18nContextType {
   changeLocale: (locale: string) => void;

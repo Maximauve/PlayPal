@@ -4,18 +4,14 @@ import { ProductService } from '@/product/service/product.service';
 import { UserService } from '@/user/service/user.service';
 import { TranslationService } from '@/translation/translation.service';
 import { GameService } from '@/game/service/game.service';
-import { Product } from '@/product/product.entity';
+import { Product, State, User, Role, Game } from '@playpal/schemas';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
-import { State } from '@/product/state.enum';
-import { User } from '@/user/user.entity';
-import { Role } from '@/user/role.enum';
 import { ProductDto } from '@/product/dto/product.dto';
 import { AssignDto } from '@/product/dto/assign.dto';
 import { Repository } from 'typeorm';
-import { Game } from '@/game/game.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { ProductUpdatedDto } from '@/product/dto/productUpdated.dto';
+
+import { getRepositoryToken } from '@nestjs/typeorm';import { ProductUpdatedDto } from '@/product/dto/productUpdated.dto';
 
 describe('ProductController', () => {
   let productController: ProductController;

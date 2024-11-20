@@ -1,7 +1,7 @@
 import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Game } from "@/game/game.entity";
-import { User } from "@/user/user.entity";
+import { Game } from "../game/game.entity";
+import { User } from "../user/user.entity";
 
 @Entity()
 export class Wish {
