@@ -6,7 +6,17 @@
   "publishConfig": {
     "access": "restricted"
   },
-  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "devDependencies": {},
   "dependencies": {
     "typeorm": "^0.3.20"
