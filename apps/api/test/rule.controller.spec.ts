@@ -44,17 +44,18 @@ describe('RuleController', () => {
         duration: "45",
         difficulty: 3,
         minYear: 10,
+        brand: "Magilano",
         rating: [],
         tags: [],
         rules: []
     };
 
     const mockRule: Rule = {
-            id: validRuleId,
-            title: "Règle du jeu à 6",
-            youtubeId: "xYX8Z1n5j3Y",
-            description: "Les règles du jeu",
-            game: mockGame,
+        id: validRuleId,
+        title: "Règle du jeu à 6",
+        youtubeId: "xYX8Z1n5j3Y",
+        description: "Les règles du jeu",
+        game: mockGame,
     }
 
     beforeEach(async () => {

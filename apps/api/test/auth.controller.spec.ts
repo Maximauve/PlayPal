@@ -9,12 +9,14 @@ import { RegisterDto } from '@/auth/dto/register.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Role } from '@/user/role.enum';
+import { FileUploadService } from '@/files/files.service';
 
 describe('AuthController', () => {
   let authController: AuthController;
   let mockAuthService: Partial<AuthService>;
   let mockUserService: Partial<UserService>;
   let mockTranslationService: Partial<TranslationService>;
+  let mockFileUploadService: Partial<FileUploadService>
 
   beforeEach(async () => {
     mockAuthService = {
@@ -37,6 +39,7 @@ describe('AuthController', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
+        { provide: FileUploadService, useValue: mockFileUploadService },
       ],
     }).compile();
 

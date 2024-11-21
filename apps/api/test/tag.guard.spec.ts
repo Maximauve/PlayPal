@@ -18,18 +18,19 @@ describe('TagGuard', () => {
     id: validTagId,
     name: 'Adventure',
     games: [
-        {
-          id: validGameId,
-          name: 'Skyjo',
-          description: "oui",
-          minPlayers: 3,
-          maxPlayers: 5,
-          minYear: 3,
-          difficulty: 3,
-          duration: "35min",
-          tags: [],
-          rules: []
-        }
+      {
+        id: validGameId,
+        name: 'Skyjo',
+        description: "oui",
+        minPlayers: 3,
+        maxPlayers: 5,
+        minYear: 3,
+        difficulty: 3,
+        duration: "35min",
+        brand: "Magilano",
+        tags: [],
+        rules: []
+      }
     ]
   };
 

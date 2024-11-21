@@ -8,11 +8,13 @@ import { Role } from '@/user/role.enum';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { UserUpdatedDto } from '@/user/dto/userUpdated';
+import { FileUploadService } from '@/files/files.service';
 
 describe('UserController', () => {
   let controller: UserController;
   let userService: UserService;
   let translationService: TranslationService;
+  let fileUploadService: FileUploadService;
 
   const mockUser: User = {
     id: 'user-id',
@@ -52,6 +54,12 @@ describe('UserController', () => {
             translate: jest.fn((key) => Promise.resolve(key)),
           },
         },
+        {
+          provide: FileUploadService,
+          useValue: {
+            uploadFile: jest.fn(),
+          }
+        }
       ],
     })
       .overrideGuard(JwtAuthGuard)
@@ -61,6 +69,7 @@ describe('UserController', () => {
     controller = module.get<UserController>(UserController);
     userService = module.get<UserService>(UserService);
     translationService = module.get<TranslationService>(TranslationService);
+    fileUploadService = module.get<FileUploadService>(FileUploadService);
   });
 
   describe('getAll', () => {

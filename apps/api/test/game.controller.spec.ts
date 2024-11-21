@@ -31,6 +31,7 @@ describe('GameController', () => {
       duration: "45",
       difficulty: 3,
       minYear: 10,
+      brand: "Gigamic",
       rating: [],
       tags: [],
       rules: []
@@ -44,6 +45,7 @@ describe('GameController', () => {
       duration: "35",
       difficulty: 1,
       minYear: 3,
+      brand: "Magilano",
       rating: [],
       tags: [],
       rules: []
@@ -108,15 +110,15 @@ describe('GameController', () => {
 
   describe('create', () => {
     const createGameDto: GameDto = {
-      name: "Jeu",
-      description: "Un jeu amusant",
-      minPlayers: 2,
-      maxPlayers: 4,
-      duration: "35min",
-      difficulty: 2,
+      name: "6-qui-prends",
+      description: "Un jeu de taureaux",
+      minPlayers: 3,
+      maxPlayers: 8,
+      duration: "45",
+      difficulty: 3,
       minYear: 10,
-      image: "exemple.com"
-    };
+      brand: "Gigamic",
+    }
 
     it('should create a new game successfully', async () => {
       jest.spyOn(mockGameService, 'create').mockResolvedValue(mockGames[0]);

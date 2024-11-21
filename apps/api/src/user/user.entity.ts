@@ -23,6 +23,9 @@ export class User {
   @Column({ type: 'varchar', default: Role.Customer })
   role: Role;
 
+  @Column({ type: 'varchar', nullable: true })
+  image?: string;
+
   @CreateDateColumn()
   creationDate: Date;
 

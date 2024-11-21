@@ -45,6 +45,7 @@ describe('TagController', () => {
     duration: "45",
     difficulty: 3,
     minYear: 10,
+    brand: "Magilano",
     rating: [],
     tags: mockTags,
     rules: []

@@ -56,6 +56,7 @@ describe('RatingController', () => {
         minYear: 3,
         difficulty: 3,
         duration: "35min",
+        brand: "Magilano",
         rating: [],
         tags: [],
         rules: []
@@ -74,6 +75,7 @@ describe('RatingController', () => {
     maxPlayers: 8,
     duration: "45",
     difficulty: 3,
+    brand: "Gigamic",
     minYear: 10,
     rating: [],
     tags: [],
