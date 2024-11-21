@@ -9,12 +9,15 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { FileUploadService } from '@/files/files.service';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('UserController', () => {
-  let controller: UserController;
-  let userService: UserService;
-  let translationService: TranslationService;
-  let fileUploadService: FileUploadService;
+  let userController: UserController;
+  let mockUserService: Partial<UserService>;
+  let mockTranslationService: Partial<TranslationService>;
+  let mockFileUploadService: Partial<FileUploadService>;
+  let mockUserRepository: Partial<Repository<User>>;
 
   const mockUser: User = {
     id: 'user-id',
@@ -22,7 +25,7 @@ describe('UserController', () => {
     email: 'test@example.com',
     role: Role.Customer,
     password: 'hashed-password',
-    creationDate: new Date()
+    creationDate: new Date(),
   };
 
   const adminUser: User = {
@@ -30,66 +33,58 @@ describe('UserController', () => {
     role: Role.Admin,
   };
 
+  const mockUsers: User[] = [mockUser, adminUser];
+
   beforeEach(async () => {
+    mockUserService = {
+      getAll: jest.fn().mockResolvedValue(mockUsers),
+      findOneUser: jest.fn().mockImplementation((id: string) =>
+        Promise.resolve(mockUsers.find((user) => user.id === id)),
+      ),
+      update: jest.fn().mockResolvedValue({ ...mockUser, username: 'updatedUser' }),
+      delete: jest.fn().mockResolvedValue(undefined),
+      checkUnknownUser: jest.fn().mockResolvedValue(false),
+    };
+
+    mockTranslationService = {
+      translate: jest.fn((key) => Promise.resolve(`${key}`)),
+    };
+
+    mockFileUploadService = {
+      uploadFile: jest.fn().mockResolvedValue({ url: 'http://example.com/file.jpg' }),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
-        {
-          provide: UserService,
-          useValue: {
-            getAll: jest.fn(),
-            findOneUser: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-            checkUnknownUser: jest.fn(),
-          },
-        },
-        {
-          provide: RedisService,
-          useValue: {},
-        },
-        {
-          provide: TranslationService,
-          useValue: {
-            translate: jest.fn((key) => Promise.resolve(key)),
-          },
-        },
-        {
-          provide: FileUploadService,
-          useValue: {
-            uploadFile: jest.fn(),
-          }
-        }
+        { provide: UserService, useValue: mockUserService },
+        { provide: TranslationService, useValue: mockTranslationService },
+        { provide: FileUploadService, useValue: mockFileUploadService },
+        { provide: getRepositoryToken(User), useValue: mockUserRepository },
       ],
-    })
-      .overrideGuard(JwtAuthGuard)
-      .useValue({ canActivate: jest.fn(() => true) })
-      .compile();
+    }).compile();
 
-    controller = module.get<UserController>(UserController);
-    userService = module.get<UserService>(UserService);
-    translationService = module.get<TranslationService>(TranslationService);
-    fileUploadService = module.get<FileUploadService>(FileUploadService);
+    userController = module.get<UserController>(UserController);
   });
 
   describe('getAll', () => {
     it('should return an array of users', async () => {
       const users: User[] = [mockUser];
-      jest.spyOn(userService, 'getAll').mockResolvedValue(users);
+      jest.spyOn(mockUserService, 'getAll').mockResolvedValue(users);
 
-      expect(await controller.getAll()).toEqual(users);
+      expect(await userController.getAll()).toEqual(users);
     });
   });
 
   describe('getMe', () => {
     it('should return the current user', () => {
-      expect(controller.getMe(mockUser)).toEqual(mockUser);
+      expect(userController.getMe(mockUser)).toEqual(mockUser);
     });
   });
 
   describe('getOneUser', () => {
     it('should return a user by ID', () => {
-      expect(controller.getOneUser(mockUser)).toEqual(mockUser);
+      expect(userController.getOneUser(mockUser)).toEqual(mockUser);
     });
   });
 
@@ -98,28 +93,28 @@ describe('UserController', () => {
       const userUpdateData: UserUpdatedDto = { username: 'updatedUser' };
       const updatedUser: User = { ...mockUser, ...userUpdateData };
 
-      jest.spyOn(userService, 'checkUnknownUser').mockResolvedValue(false);
-      jest.spyOn(userService, 'update').mockResolvedValue(undefined);
-      jest.spyOn(userService, 'findOneUser').mockResolvedValue(updatedUser);
+      jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(false);
+      jest.spyOn(mockUserService, 'update').mockResolvedValue(undefined);
+      jest.spyOn(mockUserService, 'findOneUser').mockResolvedValue(updatedUser);
 
-      const result = await controller.update(mockUser, mockUser, userUpdateData);
+      const result = await userController.update(mockUser, mockUser, userUpdateData);
       expect(result).toEqual(updatedUser);
-      expect(userService.update).toHaveBeenCalledWith(mockUser.id, userUpdateData);
+      expect(mockUserService.update).toHaveBeenCalledWith(mockUser.id, userUpdateData);
     });
 
     it('should throw conflict error if user already exists', async () => {
-      jest.spyOn(userService, 'checkUnknownUser').mockResolvedValue(true);
+      jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(true);
 
-      await expect(controller.update(mockUser, mockUser, {})).rejects.toThrow(
+      await expect(userController.update(mockUser, mockUser, {})).rejects.toThrow(
         new HttpException('error.USER_EXIST', HttpStatus.CONFLICT),
       );
     });
 
     it('should throw unauthorized error if user is not admin or updating own account', async () => {
       const nonAdminUser: User = { ...mockUser, id: 'another-id' };
-      jest.spyOn(translationService, 'translate').mockResolvedValue('error.USER_NOT_ADMIN');
+      jest.spyOn(mockTranslationService, 'translate').mockResolvedValue('error.USER_NOT_ADMIN');
 
-      await expect(controller.update(nonAdminUser, mockUser, {})).rejects.toThrow(
+      await expect(userController.update(nonAdminUser, mockUser, {})).rejects.toThrow(
         new HttpException('error.USER_NOT_ADMIN', HttpStatus.UNAUTHORIZED),
       );
     });
@@ -127,17 +122,17 @@ describe('UserController', () => {
 
   describe('delete', () => {
     it('should delete the user if authorized', async () => {
-      const deleteSpy = jest.spyOn(userService, 'delete').mockResolvedValue(undefined);
+      const deleteSpy = jest.spyOn(mockUserService, 'delete').mockResolvedValue(undefined);
 
-      await controller.delete(adminUser, mockUser);
+      await userController.delete(adminUser, mockUser);
       expect(deleteSpy).toHaveBeenCalledWith(mockUser.id);
     });
 
     it('should throw unauthorized error if user is not admin or deleting own account', async () => {
       const nonAdminUser: User = { ...mockUser, id: 'another-id' };
-      jest.spyOn(translationService, 'translate').mockResolvedValue('error.USER_NOT_ADMIN');
+      jest.spyOn(mockTranslationService, 'translate').mockResolvedValue('error.USER_NOT_ADMIN');
 
-      await expect(controller.delete(nonAdminUser, mockUser)).rejects.toThrow(
+      await expect(userController.delete(nonAdminUser, mockUser)).rejects.toThrow(
         new HttpException('error.USER_NOT_ADMIN', HttpStatus.UNAUTHORIZED),
       );
     });
