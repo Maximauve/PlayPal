@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build types (@playpal/schemas)
+        run: yarn build:types
+
       - name: Run Test for NestJS
         run: yarn test:api
 
@@ -40,6 +43,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Build types (@playpal/schemas)
+        run: yarn build:types
 
       - name: Run Test for React
         run: yarn test:frontend
