@@ -14,7 +14,13 @@ export default {
         },
         text : {
           light : '#FFFFFF',
+          dark : '#2C2830',
         },
+        button : {
+          active : '#FFFFFF',
+          hover : '#FFFFFF',
+          default : '#2F2C34',
+        }
       }
     },
   },
