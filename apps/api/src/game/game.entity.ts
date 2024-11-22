@@ -32,6 +32,9 @@ export class Game {
   @Column({ type: 'int' })
   minYear: number;
 
+  @Column({ type: 'varchar' })
+  brand: string;
+
   @Column({ type: 'varchar', nullable: true })
   image?: string;
 

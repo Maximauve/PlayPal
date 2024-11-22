@@ -5,13 +5,14 @@ import { Repository } from "typeorm";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { User } from "@/user/user.entity";
 import { TranslationService } from "@/translation/translation.service";
-import { uuidRegex } from "@/utils/regex.variable";
 import { Role } from '@/user/role.enum';
+import { FileUploadService } from '@/files/files.service';
 
 describe('UserGuard', () => {
   let guard: UserGuard;
   let userRepository: Repository<User>;
   let translationService: TranslationService;
+  let fileUploadService: FileUploadService;
 
   const mockUser: User = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -51,12 +52,19 @@ describe('UserGuard', () => {
             translate: jest.fn((key) => Promise.resolve(key)),
           },
         },
+        {
+          provide: FileUploadService,
+          useValue: {
+            uploadFile: jest.fn(),
+          }
+        }
       ],
     }).compile();
 
     guard = module.get<UserGuard>(UserGuard);
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     translationService = module.get<TranslationService>(TranslationService);
+    fileUploadService = module.get<FileUploadService>(FileUploadService);
   });
 
   it('should be defined', () => {

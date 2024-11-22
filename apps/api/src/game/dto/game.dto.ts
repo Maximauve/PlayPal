@@ -32,6 +32,10 @@ export class GameDto {
   @IsInt({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_INT') })
   minYear: number;
 
+  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
+  @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
+  brand: string;
+
   @IsOptional()
   @IsEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.IS_EMPTY') })
   image?: string;

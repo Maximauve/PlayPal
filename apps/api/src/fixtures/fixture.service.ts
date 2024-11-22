@@ -120,6 +120,7 @@ export class FixturesService implements OnModuleInit {
         minYear: 3,
         difficulty: 5,
         duration: "20min",
+        brand: "Magilano",
         rating: [],
         product: [],
         tags: [social, intellectuel, ambiance]
@@ -132,6 +133,7 @@ export class FixturesService implements OnModuleInit {
         minYear: 3,
         difficulty: 5,
         duration: "30min",
+        brand: "Gigamic",
         rating: [],
         product: [],
         tags: [cooperatif, social]
@@ -200,25 +202,19 @@ export class FixturesService implements OnModuleInit {
   private async loadFixturesLoans(savedUsers: User[], savedProducts: Product[]) {
     const [skyjo, galerapagos] = savedProducts;
     const [, customer, customer2] = savedUsers;
+
+    const futureDate = new Date();
     
     const loans = this.loanRepository.create([
       { 
-        endDate: (() => {
-          const futureDate = new Date();
-          futureDate.setDate(futureDate.getDate() + 7);
-          return futureDate;
-        })(),
+        endDate: futureDate.setDate(futureDate.getDate() + 7),
         product: skyjo,
         user: customer
       },
       {
         product: galerapagos,
         user: customer2,
-        endDate: (() => {
-          const futureDate = new Date();
-          futureDate.setDate(futureDate.getDate() + 10);
-          return futureDate;
-        })(),
+        endDate: futureDate.setDate(futureDate.getDate() + 7),
       }
     ]);
 

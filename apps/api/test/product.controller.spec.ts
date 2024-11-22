@@ -40,6 +40,7 @@ describe('ProductController', () => {
     duration: "45",
     difficulty: 3,
     minYear: 10,
+    brand: "Magilano",
     rating: [],
     tags: [],
     rules: []
@@ -51,7 +52,7 @@ describe('ProductController', () => {
     available: true,
     user: null,
     game: {
-      id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", rating: [], tags: [],
+      id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", brand: "Gigamic", rating: [], tags: [],
       rules: []
     },
     loan: []
