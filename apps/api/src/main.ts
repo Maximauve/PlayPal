@@ -1,13 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 
 import { AppModule } from '@/app.module';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: {
+    origin: process.env.FRONT_BASE_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  } });
 
   // REDIS
   const microserviceOptions: MicroserviceOptions = {
@@ -40,6 +45,8 @@ async function bootstrap() {
       detailedErrors: false,
     }),
   );
+
+  app.use(cookieParser());
 
   await app.startAllMicroservices();
   await app.listen(process.env.NEST_PORT || 3000);

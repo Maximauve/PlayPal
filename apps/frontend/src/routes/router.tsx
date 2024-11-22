@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import AdminLayout from "@/components/_layout/admin-layout";
-import GameList from "@/components/_layout/game-list";
-import MainLayout from "@/components/_layout/main-layout";
-import HomePage from "@/router/pages/home-page";
+import AdminLayout from "@/components/_layout/admin/admin-layout";
+import MainLayout from "@/components/_layout/default/main-layout";
+import GameList from "@/components/game-list";
+import HomePage from "@/routes/pages/home-page";
 
 const router = createBrowserRouter([
   {

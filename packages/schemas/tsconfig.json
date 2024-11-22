@@ -17,9 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
   },
 	"include": ["**/*.ts"],
   "exclude": ["./dist/**/*", "node_modules"]

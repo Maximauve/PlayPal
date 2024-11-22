@@ -22,6 +22,7 @@
     "typeorm": "^0.3.20"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   }
 }
