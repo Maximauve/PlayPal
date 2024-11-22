@@ -36,7 +36,7 @@ export class AuthController {
       expires: expirationTime,
       httpOnly: true
     });
-    return response.send(user);
+    return response.send({ accessToken });
   }
 
   @Post('/register')

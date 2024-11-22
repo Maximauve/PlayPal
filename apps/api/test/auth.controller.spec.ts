@@ -10,6 +10,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Role } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
+import { Response } from 'express';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -64,11 +65,20 @@ describe('AuthController', () => {
       };
 
       jest.spyOn(mockUserService, 'findOneEmail').mockResolvedValue(mockUser);
+      jest.spyOn(mockAuthService, 'login').mockReturnValue({ accessToken: 'test-token' });
 
-      const result = await authController.login(loginDto);
+      const mockSend = jest.fn();
+      const response = { cookie: jest.fn(), send: mockSend} as unknown as Response;
+      
+      await authController.login(loginDto, response);
 
       expect(mockUserService.findOneEmail).toHaveBeenCalledWith(loginDto.email);
-      expect(result).toEqual({ accessToken: 'test-token' });
+      expect(response.cookie).toHaveBeenCalledWith(
+        'access_token',
+        'test-token',
+        expect.objectContaining({ httpOnly: true })
+      );
+      expect(mockSend).toHaveBeenCalledWith({ accessToken: 'test-token' });
     });
 
     it('should throw NotFoundExeption for non-existent user', async () => {
@@ -79,8 +89,10 @@ describe('AuthController', () => {
 
       jest.spyOn(mockUserService, 'findOneEmail').mockResolvedValue(null);
 
-      await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
-      await expect(authController.login(loginDto)).rejects.toMatchObject({
+      const response = { cookie: jest.fn(), send: jest.fn()} as unknown as Response;
+
+      await expect(authController.login(loginDto, response)).rejects.toThrow(HttpException);
+      await expect(authController.login(loginDto, response)).rejects.toMatchObject({
         status: HttpStatus.BAD_REQUEST,
       });
     });
@@ -103,8 +115,10 @@ describe('AuthController', () => {
 
       jest.spyOn(mockUserService, 'findOneEmail').mockResolvedValue(mockUser);
 
-      await expect(authController.login(loginDto)).rejects.toThrow(HttpException);
-      await expect(authController.login(loginDto)).rejects.toMatchObject({
+      const response = { cookie: jest.fn(), send: jest.fn()} as unknown as Response;
+
+      await expect(authController.login(loginDto, response)).rejects.toThrow(HttpException);
+      await expect(authController.login(loginDto, response)).rejects.toMatchObject({
         status: HttpStatus.BAD_REQUEST,
       });
     });
