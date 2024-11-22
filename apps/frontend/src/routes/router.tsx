@@ -23,9 +23,25 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <GameList/>
-      }
-    ]
+        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
+      },
+      {
+        path: "dashboard",
+        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
+      },
+      {
+        path: "games",
+        element: <GameList />,
+      },
+      {
+        path: "loans",
+        element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
+      },
+      {
+        path: "wishlist",
+        element: <div>Wishlist</div>, // Remplacez par un vrai composant
+      },
+    ],
   },
   {
     path: "/search/",
