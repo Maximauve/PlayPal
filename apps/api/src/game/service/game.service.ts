@@ -16,14 +16,26 @@ export class GameService {
     private translationService: TranslationService
   ) { }
 
-  async getAll(): Promise<Game[]> {
-    return this.gamesRepository.find({
-      relations: {
-        rating: true,
-        product: true,
-        tags: true
-      }
-    });
+  async getAll(page: number, limit: number, tags?: string[]): Promise<{ data: Game[]; total: number }> {
+    const query = this.gamesRepository.createQueryBuilder('game')
+      .leftJoinAndSelect('game.rating', 'rating')
+      .leftJoinAndSelect('game.product', 'product')
+      .leftJoinAndSelect('game.tags', 'tags');
+    if (tags && tags.length > 0) {
+      query.where('tags.name IN (:...tags)', { tags });
+    }
+    const offset = (page - 1) * limit;
+    const total = await query.getCount();
+    const data = await query
+      .skip(offset)
+      .take(limit)
+      .getMany();
+
+    if (offset >= total) {
+      throw new HttpException(await this.translationService.translate("error.PAGE_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    }
+
+    return { data, total };
   }
 
   async create(game: GameDto): Promise<Game | null> {

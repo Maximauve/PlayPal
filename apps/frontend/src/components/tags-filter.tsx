@@ -1,67 +1,30 @@
-import { type Tag as TagType } from "@playpal/schemas/tag.interface";
-import { type FC } from "react";
+import { type Tag as TagType } from "@playpal/schemas";
+import React, { type FC } from "react";
 
 import { Tag } from "@/components/tag";
+import { useGetTagsQuery } from "@/services/tag";
 
-interface TagsFilterProperties {}
+interface TagsFilterProperties {
+  setSelectedTags: React.Dispatch<React.SetStateAction<TagType[]>>;
+}
 
-export const TagsFilter: FC<TagsFilterProperties> = () => {
+export const TagsFilter: FC<TagsFilterProperties> = ({ setSelectedTags }) => {
 
-  const allTags: TagType[] = [
-    {
-      name: "Coopératif",
-      id: "1"
-    }, {
-      name: "Social",
-      id: "2"
-    }, {
-      name: "Ambiance",
-      id: "3"
-    }, {
-      name: "Soirée",
-      id: "4"
-    }, {
-      name: "Coopératif",
-      id: "1"
-    }, {
-      name: "Social",
-      id: "2"
-    }, {
-      name: "Ambiance",
-      id: "3"
-    }, {
-      name: "Soirée",
-      id: "4"
-    }, {
-      name: "Coopératif",
-      id: "1"
-    }, {
-      name: "Social",
-      id: "2",
-    }, {
-      name: "Ambiance",
-      id: "3"
-    }, {
-      name: "Soirée",
-      id: "4",
-    }
-  ];
-  // const { data: allTags = [], isLoading, error } = useGetTagsQuery();
-  // const [tagsSelected, setTagsSelected] = useState<string[]>([]);
+  const { data: allTags = [], isLoading, error } = useGetTagsQuery();
 
-  // const tagSelect = (tagId: string) => {
-  //   setTagsSelected((previousSelected) =>
-  //     previousSelected.includes(tagId)
-  //       ? previousSelected.filter((id: string) => id !== tagId)
-  //       : [...previousSelected, tagId]
-  //   );
-  // };
+  const tagSelect = (tag: TagType) => {
+    setSelectedTags((prevTags: TagType[]) => prevTags.some((t) => t.id === tag.id) ? prevTags.filter((t) => t.id !== tag.id) : [...prevTags, tag]);
+  };
+
+  if (isLoading || error) {
+    return null;
+  }
 
   return (
     <section className="relative flex justify-center mb-8">
       <div className="max-w-screen-xl mx-5 flex flex-wrap gap-4">
         {allTags && allTags.map((tag: TagType) => (
-          <Tag key={tag.id} id={tag.id} name={tag.name} tagSelect={() => {}}/>
+          <Tag key={tag.id} tag={tag} tagSelect={tagSelect}/>
         ))}
       </div>
     </section>

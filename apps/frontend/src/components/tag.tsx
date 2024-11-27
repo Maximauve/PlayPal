@@ -1,13 +1,13 @@
+import { type Tag as TagType } from "@playpal/schemas";
 import { type FC } from "react";
 
 interface TagProperties {
-  id: string;
-  name: string;
+  tag: TagType;
   isSelected?: boolean;
-  tagSelect?: (tagId: string) => void;
+  tagSelect?: (tag: TagType) => void;
 }
 
-export const Tag: FC<TagProperties> = ({ id, name, isSelected = false, tagSelect = () => {} }) => {
+export const Tag: FC<TagProperties> = ({ tag, isSelected = false, tagSelect = () => {} }) => {
   return (
     <button
       className={`px-3 py-1 rounded-full text-sm font-medium transition 
@@ -16,9 +16,9 @@ export const Tag: FC<TagProperties> = ({ id, name, isSelected = false, tagSelect
       ? "bg-black text-white"
       : "bg-gray-200 text-black hover:bg-gray-300"
     }`}
-      onClick={() => tagSelect(id)}
+      onClick={() => tagSelect(tag)}
     >
-      {name}
+      {tag.name}
     </button>
   );
 };

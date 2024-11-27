@@ -1,4 +1,4 @@
-import { type Game } from '@playpal/schemas/game.interface';
+import { type Game } from '@playpal/schemas';
 import { type FC } from 'react';
 
 import { Rating } from '@/components/rating';
@@ -8,7 +8,6 @@ import useTranslation from '@/hooks/use-translation';
 interface CardProperties {
   game: Game;
   inStock?: boolean;
-
 }
 
 export const Card: FC<CardProperties> = ({
