@@ -1,4 +1,6 @@
 export { Game } from './src/game/game.entity';
+export { GamePayload } from './src/game/game.payload';
+export { GameResponse } from './src/game/game.response';
 export { Loan } from './src/loan/loan.entity';
 export { Product } from './src/product/product.entity';
 export { State } from './src/product/state.enum';

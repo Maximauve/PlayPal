@@ -1,5 +1,7 @@
+import { Tag } from "tag.interface";
+
 export interface GamePayload {
-  tags?: string[];
+  tags?: Tag[];
   page: number;
   limit: number;
 }

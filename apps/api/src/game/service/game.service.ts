@@ -16,13 +16,13 @@ export class GameService {
     private translationService: TranslationService
   ) { }
 
-  async getAll(page: number, limit: number, tags?: string[]): Promise<{ data: Game[]; total: number }> {
+  async getAll(page: number, limit: number, tags?: string[] | string): Promise<{ data: Game[]; total: number }> {
     const query = this.gamesRepository.createQueryBuilder('game')
       .leftJoinAndSelect('game.rating', 'rating')
       .leftJoinAndSelect('game.product', 'product')
       .leftJoinAndSelect('game.tags', 'tags');
     if (tags && tags.length > 0) {
-      query.where('tags.name IN (:...tags)', { tags });
+      query.where('tags.name IN (:...tags)', { tags: Array.isArray(tags) ? tags : [tags] });
     }
     const offset = (page - 1) * limit;
     const total = await query.getCount();

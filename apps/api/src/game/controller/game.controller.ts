@@ -36,7 +36,7 @@ export class GameController {
   @ApiOperation({ summary: "Get all games" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
-  async getAll(@Query('tags') tags?: string[], @Query('page') page = 1, @Query('limit') limit = 10) {
+  async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10) {
     const { data, total } = await this.gamesService.getAll(page, limit, tags);
     return {
       data,
