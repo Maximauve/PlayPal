@@ -7,6 +7,7 @@ import { SearchHeader } from '@/components/search-header';
 import { TagsFilter } from '@/components/tags-filter';
 import { useGetGamesQuery } from '@/services/game';
 
+
 export default function SearchPage(): React.JSX.Element {
   const [searchParameters] = useSearchParams();
   const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
@@ -21,10 +22,6 @@ export default function SearchPage(): React.JSX.Element {
     limit: limit,
     search: search
   });
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <>

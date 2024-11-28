@@ -33,8 +33,8 @@ export const Card = ({
           </div>
           <span className={`${inStock ? 'bg-green-700' : 'bg-red-600'} text-white text-xs px-2 py-1 rounded`}>{inStock ? i18n.t("card.inStock") : i18n.t("card.notStock")}</span>
         </div>
-        <div className="flex gap-1 my-2">
-          <Rating rating={1.2} />
+        <div className="flex items-center gap-1 my-2">
+          <Rating rating={Math.round((Math.random() * 4 + 1) * 10) / 10} /> {/* todo : dynamiser */}
           <span className="text-gray-600 text-sm"> - {game?.rating?.length ?? 0} {i18n.t("card.rating")}</span>
         </div>
         <TagsContainer tags={game.tags}/>
