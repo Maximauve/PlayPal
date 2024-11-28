@@ -3,10 +3,10 @@ import { ExecutionContext, HttpException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Repository } from "typeorm";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { User } from "@/user/user.entity";
+import { User, Role } from "@playpal/schemas";
 import { TranslationService } from "@/translation/translation.service";
-import { Role } from '@/user/role.enum';
 import { FileUploadService } from '@/files/files.service';
+import { uuidRegex } from "@/utils/regex.variable";
 
 describe('UserGuard', () => {
   let guard: UserGuard;

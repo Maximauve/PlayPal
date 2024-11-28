@@ -1,4 +1,4 @@
-import { type Game } from "@/game/game.entity";
+import { type Game } from "@playpal/schemas";
 
 export interface RequestWithGame extends Request {
   params: {

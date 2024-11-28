@@ -1,15 +1,11 @@
-import { Game } from "@/game/game.entity";
+import { Game, Loan, Product, State, Role } from "@playpal/schemas";
 import { GameService } from "@/game/service/game.service";
 import { LoanController } from "@/loan/controller/loan.controller";
 import { LoanDto } from "@/loan/dto/loan.dto";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
-import { Loan } from "@/loan/loan.entity";
 import { LoanService } from "@/loan/service/loan.service";
-import { Product } from "@/product/product.entity";
 import { ProductService } from "@/product/service/product.service";
-import { State } from "@/product/state.enum";
 import { TranslationService } from "@/translation/translation.service";
-import { Role } from "@/user/role.enum";
 import { UserService } from "@/user/service/user.service";
 import { HttpException, HttpStatus, UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";

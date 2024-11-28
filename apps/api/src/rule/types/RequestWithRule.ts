@@ -1,4 +1,4 @@
-import { type Rule } from "@/rule/rule.entity";
+import { type Rule } from "@playpal/schemas";
 
 export interface RequestWithRule extends Request {
   params: {

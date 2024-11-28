@@ -1,4 +1,4 @@
-import { type Tag } from "@/tag/tag.entity";
+import { type Tag } from "@playpal/schemas";
 
 export interface RequestWithTag extends Request {
   params: {

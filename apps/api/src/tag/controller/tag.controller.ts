@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { Tag } from "@playpal/schemas";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { TagRequest } from "@/tag/decorators/tag.decorator";
@@ -7,7 +8,6 @@ import { TagDto } from "@/tag/dto/tag.dto";
 import { TagUpdatedDto } from "@/tag/dto/tagUpdated.dto";
 import { TagGuard } from "@/tag/guards/tag.guard";
 import { TagService } from "@/tag/service/tag.service";
-import { Tag } from "@/tag/tag.entity";
 import { TranslationService } from "@/translation/translation.service";
 
 @UseGuards(JwtAuthGuard)

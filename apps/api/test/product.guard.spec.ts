@@ -3,11 +3,9 @@ import { ProductGuard } from '@/product/guards/product.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Product } from '@/product/product.entity';
+import { Product, Role, State } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
-import { Role } from '@/user/role.enum';
-import { State } from '@/product/state.enum';
 
 describe('ProductGuard', () => {
   let productGuard: ProductGuard;

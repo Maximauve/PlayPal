@@ -1,17 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Game, Loan, Product, Rating, Role, Rule, State, Tag, User, Wish } from '@playpal/schemas';
 import { Repository } from 'typeorm';
-
-import { Game } from '@/game/game.entity';
-import { Loan } from '@/loan/loan.entity';
-import { Product } from '@/product/product.entity';
-import { State } from '@/product/state.enum';
-import { Rating } from '@/rating/rating.entity';
-import { Rule } from '@/rule/rule.entity';
-import { Tag } from '@/tag/tag.entity';
-import { Role } from '@/user/role.enum';
-import { User } from '@/user/user.entity';
-import { Wish } from '@/wish/wish.entity';
 
 @Injectable()
 export class FixturesService implements OnModuleInit {

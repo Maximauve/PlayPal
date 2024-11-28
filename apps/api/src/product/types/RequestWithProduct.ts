@@ -1,4 +1,4 @@
-import { type Product } from "@/product/product.entity";
+import { type Product } from "@playpal/schemas";
 
 export interface RequestWithProduct extends Request {
   params: {

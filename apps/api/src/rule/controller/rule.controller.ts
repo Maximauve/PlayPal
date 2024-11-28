@@ -1,16 +1,15 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { Game, Rule } from "@playpal/schemas";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
-import { Game } from "@/game/game.entity";
 import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
 import { RuleRequest } from "@/rule/decorators/rule.decorator";
 import { RuleDto } from "@/rule/dto/rule.dto";
 import { RuleUpdatedDto } from "@/rule/dto/ruleUpdated.dto";
 import { RuleGuard } from "@/rule/guards/rule.guard";
-import { Rule } from "@/rule/rule.entity";
 import { RuleService } from "@/rule/service/rule.service";
 import { TranslationService } from "@/translation/translation.service";
 

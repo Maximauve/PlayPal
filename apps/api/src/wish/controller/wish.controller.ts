@@ -1,16 +1,15 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { User, Wish } from '@playpal/schemas';
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { GameGuard } from '@/game/guards/game.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { CurrentUser } from '@/user/decorators/currentUser.decorator';
-import { User } from '@/user/user.entity';
 import { WishRequest } from '@/wish/decorators/wish.decorator';
 import { WishDto } from '@/wish/dto/wish.dto';
 import { WishGuard } from '@/wish/guards/wish.guard';
 import { WishService } from '@/wish/service/wish.service';
-import { Wish } from '@/wish/wish.entity';
 
 
 @UseGuards(JwtAuthGuard, GameGuard)

@@ -1,12 +1,9 @@
-import { Game } from "@/game/game.entity";
+import { Game, Role, User, Rule } from "@playpal/schemas";
 import { GameService } from "@/game/service/game.service";
 import { RuleController } from "@/rule/controller/rule.controller";
-import { Rule } from "@/rule/rule.entity";
 import { RuleService } from "@/rule/service/rule.service";
 import { TranslationService } from "@/translation/translation.service";
-import { Role } from "@/user/role.enum";
 import { UserService } from "@/user/service/user.service";
-import { User } from "@/user/user.entity";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";

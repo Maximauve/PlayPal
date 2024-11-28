@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { Loan, Product } from "@playpal/schemas";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameGuard } from "@/game/guards/game.guard";
@@ -7,11 +8,9 @@ import { LoanRequest } from "@/loan/decorators/loan.decorator";
 import { LoanDto } from "@/loan/dto/loan.dto";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
 import { LoanGuard } from "@/loan/guards/loan.guard";
-import { Loan } from "@/loan/loan.entity";
 import { LoanService } from "@/loan/service/loan.service";
 import { ProductRequest } from "@/product/decorators/product.decorator";
 import { ProductGuard } from "@/product/guards/product.guard";
-import { Product } from "@/product/product.entity";
 import { TranslationService } from "@/translation/translation.service";
 
 @UseGuards(JwtAuthGuard, GameGuard, ProductGuard)

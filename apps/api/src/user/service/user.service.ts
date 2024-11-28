@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { type JwtPayload } from '@playpal/schemas/jwt.interface';
+import { type JwtPayload, User } from '@playpal/schemas';
 import { Request } from "express";
 import { type Repository } from "typeorm";
 
 import { type RegisterDto } from "@/auth/dto/register.dto";
 import { TranslationService } from "@/translation/translation.service";
 import { UserUpdatedDto } from "@/user/dto/userUpdated";
-import { User } from "@/user/user.entity";
 
 @Injectable()
 export class UserService {
@@ -80,11 +79,11 @@ export class UserService {
   }
 
   async getUserConnected(request: Request): Promise<User | null> {
-    const requestUser: JwtPayload = request?.user as JwtPayload;
-    if (!requestUser) {
+    if (!request?.user) {
       return null;
     }
-    return this.findOneUser(requestUser?.id);
+    const requestUser : JwtPayload = request.user as JwtPayload;
+    return this.findOneUser(requestUser.id);
   }
 
   async checkUnknownUser(user: RegisterDto | UserUpdatedDto, userId?: string): Promise<boolean> {

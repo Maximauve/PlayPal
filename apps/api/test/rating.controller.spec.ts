@@ -4,12 +4,9 @@ import { RatingService } from '@/rating/service/rating.service';
 import { GameService } from '@/game/service/game.service';
 import { UserService } from '@/user/service/user.service';
 import { UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
-import { Rating } from '@/rating/rating.entity';
 import { Request } from 'express';
 import { TranslationService } from '@/translation/translation.service';
-import { User } from '@/user/user.entity';
-import { Role } from '@/user/role.enum';
-import { Game } from '@/game/game.entity';
+import { User, Rating, Role, Game } from '@playpal/schemas';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

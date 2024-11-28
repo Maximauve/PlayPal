@@ -6,6 +6,8 @@ export default tseslint.config(js.configs.recommended, {
   languageOptions: {
     globals: {
       ...globals.node,
+      localStorage: "readonly",
+      document: "readonly",
     },
   },
   rules: {

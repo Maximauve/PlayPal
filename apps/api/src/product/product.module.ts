@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { forwardRef } from '@nestjs/common/utils';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Game, Product, User } from '@playpal/schemas';
 
-import { Game } from '@/game/game.entity';
 import { GameModule } from '@/game/game.module';
 import { ProductController } from '@/product/controller/product.controller';
-import { Product } from '@/product/product.entity';
 import { ProductService } from '@/product/service/product.service';
 import { RedisModule } from "@/redis/redis.module";
 import { TranslationService } from '@/translation/translation.service';
-import { User } from '@/user/user.entity';
 import { UsersModule } from '@/user/user.module';
 
 @Module({

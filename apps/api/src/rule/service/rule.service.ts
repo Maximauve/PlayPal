@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Game, Rule } from "@playpal/schemas";
 import { Repository } from "typeorm";
 
-import { Game } from "@/game/game.entity";
 import { RuleDto } from "@/rule/dto/rule.dto";
 import { RuleUpdatedDto } from "@/rule/dto/ruleUpdated.dto";
-import { Rule } from "@/rule/rule.entity";
 import { TranslationService } from "@/translation/translation.service";
 
 @Injectable()

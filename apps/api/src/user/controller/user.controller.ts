@@ -10,6 +10,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
+import { Role, User } from '@playpal/schemas';
 import { Express } from "express";
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
@@ -20,9 +21,7 @@ import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 import { UserRequest } from '@/user/decorators/user.decorator';
 import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { UserGuard } from '@/user/guards/user.guard';
-import { Role } from '@/user/role.enum';
 import { UserService } from '@/user/service/user.service';
-import { User } from '@/user/user.entity';
 import hashPassword from '@/utils/auth.variable';
 
 @UseGuards(JwtAuthGuard)

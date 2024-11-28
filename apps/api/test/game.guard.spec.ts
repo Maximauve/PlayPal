@@ -3,7 +3,7 @@ import { GameGuard } from '@/game/guards/game.guard';  // Remplacez par le bon c
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Game } from '@/game/game.entity';
+import { Game } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
 

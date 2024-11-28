@@ -1,4 +1,4 @@
-import { type Loan } from "@/loan/loan.entity";
+import { type Loan } from "@playpal/schemas";
 
 export interface RequestWithLoan extends Request {
   params: {

@@ -1,21 +1,19 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { Game, Product, User } from "@playpal/schemas";
 
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
-import { Game } from "@/game/game.entity";
 import { GameGuard } from "@/game/guards/game.guard";
 import { ProductRequest } from "@/product/decorators/product.decorator";
 import { AssignDto } from "@/product/dto/assign.dto";
 import { ProductDto } from "@/product/dto/product.dto";
 import { ProductUpdatedDto } from "@/product/dto/productUpdated.dto";
 import { ProductGuard } from "@/product/guards/product.guard";
-import { Product } from "@/product/product.entity";
 import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 import { UserService } from "@/user/service/user.service";
-import { User } from "@/user/user.entity";
 
 @UseGuards(JwtAuthGuard, GameGuard)
 @ApiTags('product')

@@ -1,4 +1,4 @@
-import { Tag } from '@/tag/tag.entity';
+import { Tag } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
 import { TagGuard } from '@/tag/guards/tag.guard';

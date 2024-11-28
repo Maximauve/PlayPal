@@ -1,8 +1,8 @@
-import { Body, Controller, HttpException, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
-import { Express } from "express";
+import { Express, Response } from "express";
 
 import { LoginDto } from '@/auth/dto/login.dto';
 import { LoginResponse } from '@/auth/dto/loginResponse';
@@ -13,6 +13,7 @@ import { ParseFilePipeDocument } from '@/files/files.validator';
 import { TranslationService } from '@/translation/translation.service';
 import { UserService } from '@/user/service/user.service';
 
+const expirationTime = new Date(Date.now() + 7 * 24 * 60 * 60); // 7 days
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -22,7 +23,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login user' })
   @ApiNotFoundResponse({ description: "User not found" })
   @ApiOkResponse({ type: LoginResponse })
-  async login(@Body() body: LoginDto): Promise<{ accessToken: string }> {
+  async login(@Body() body: LoginDto, @Res() response: Response): Promise<{}> {
     const user = await this.userService.findOneEmail(body.email);
     if (!user) {
       throw new HttpException(await this.translationService.translate('error.INVALID_CREDENTIALS'), HttpStatus.BAD_REQUEST);
@@ -30,7 +31,12 @@ export class AuthController {
     if (!await comparePassword(body.password, user.password)) {
       throw new HttpException(await this.translationService.translate('error.INVALID_CREDENTIALS'), HttpStatus.BAD_REQUEST); // user does not know if email or password is not valid
     }
-    return this.authService.login(user);
+    const { accessToken } = this.authService.login(user);
+    response.cookie('access_token', accessToken, {
+      expires: expirationTime,
+      httpOnly: true
+    });
+    return response.send({ accessToken });
   }
 
   @Post('/register')

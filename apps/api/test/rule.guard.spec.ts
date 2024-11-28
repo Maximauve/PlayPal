@@ -1,5 +1,5 @@
 import { RuleGuard } from "@/rule/guards/rule.guard";
-import { Rule } from "@/rule/rule.entity";
+import { Rule } from "@playpal/schemas";
 import { TranslationService } from "@/translation/translation.service";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";

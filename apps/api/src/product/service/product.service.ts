@@ -1,13 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Game, Product, User } from "@playpal/schemas";
 import { Repository } from "typeorm";
 
-import { Game } from "@/game/game.entity";
 import { ProductDto } from "@/product/dto/product.dto";
 import { ProductUpdatedDto } from "@/product/dto/productUpdated.dto";
-import { Product } from "@/product/product.entity";
 import { TranslationService } from "@/translation/translation.service";
-import { User } from "@/user/user.entity";
 
 @Injectable()
 export class ProductService {

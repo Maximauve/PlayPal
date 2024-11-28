@@ -20,7 +20,7 @@ export default tseslint.config(pluginUnicorn.configs['flat/recommended'], {
     'unicorn/prevent-abbreviations': [
       'error',
       {
-        allowList: { Param: true, Req: true, Res: true },
+        allowList: { Param: true, Req: true, Res: true, Props: true, Prop: true, props: true, prop: true, prev: true, e: true },
       },
     ],
     'unicorn/prefer-top-level-await': 'off',
