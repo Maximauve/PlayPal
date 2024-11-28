@@ -1,0 +1,51 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test-api:
+    name: Tests - NestJS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build types (@playpal/schemas)
+        run: yarn build:types
+
+      - name: Run Test for NestJS
+        run: yarn test:api
+
+  test-job-2:
+    name: Tests - React
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build types (@playpal/schemas)
+        run: yarn build:types
+
+      - name: Run Test for React
+        run: yarn test:frontend

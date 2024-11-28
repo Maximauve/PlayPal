@@ -1,11 +1,25 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider as ReduxProvider } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
 
-import App from '@/App.tsx';
+import AuthProvider from '@/context/auth/auth-provider';
+import I18nProvider from '@/context/i18n/i18n-provider';
+import "@/assets/styles/index.scss";
+import router from '@/routes/router';
+import { setupStore } from '@/store';
 
-// eslint-disable-next-line no-undef
+
+const store = setupStore();
+
 createRoot(document.querySelector('#root')!).render(
   <StrictMode>
-    <App />
+    <ReduxProvider store={store}>
+      <I18nProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </I18nProvider>
+    </ReduxProvider>
   </StrictMode>,
 );

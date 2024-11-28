@@ -1,0 +1,7 @@
+{
+	"validation": {
+		"email": "Cet email est invalide.",
+		"passwordMissmatch": "Les mots de passes ne correspondent pas.",
+		"required": "Veuillez remplir ce champ."
+	}
+}
