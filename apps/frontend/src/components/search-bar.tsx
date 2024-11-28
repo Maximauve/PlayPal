@@ -1,32 +1,22 @@
-import { type ChangeEvent, type FC, type FormEvent, useState } from 'react';
+import React, { type ChangeEvent, useState } from 'react';
 
-interface SearchBarProperties {
+interface SearchBarProps {
+  search: string;
   className?: string;
-  onSearch?: (search: string) => void;
   placeholder?: string;
+  setSearch?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const SearchBar: FC<SearchBarProperties> = ({ 
+export const SearchBar = ({ 
   placeholder = "Rechercher...",
-  onSearch = () => {},
+  setSearch = () => {},
+  search,
   className = ""
-}) => {
-  const [searchTerm, setSearchTerm] = useState('');
+}: SearchBarProps) => {
   const [isFocused, setIsFocused] = useState(false);
-
-  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onSearch(searchTerm);
-  };
-
-  const handleClear = () => {
-    setSearchTerm('');
-    onSearch('');
-  };
 
   return (
     <form 
-      onSubmit={handleSearch}
       className={`relative max-w-2xl w-full ${className}`}
     >
       <div className={`
@@ -51,18 +41,18 @@ export const SearchBar: FC<SearchBarProperties> = ({
         
         <input
           type="text"
-          value={searchTerm}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)}
+          value={search}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className="w-full bg-transparent py-2 pr-3 pl-10 outline-none placeholder:text-gray-400 text-gray-500"
         />
         
-        {searchTerm && (
+        {search && (
           <button
             type="button"
-            onClick={handleClear}
+            onClick={() => setSearch('')}
             className="px-3 hover:text-gray-600"
             aria-label="Effacer la recherche"
           >

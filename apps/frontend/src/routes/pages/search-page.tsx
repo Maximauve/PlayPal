@@ -13,11 +13,13 @@ export default function SearchPage(): React.JSX.Element {
   const [page] = useState<number>(
     Number.parseInt(searchParameters.get('page') || '1', 10)
   );
+  const [search, setSearch] = useState<string>("");
   const limit = Number.parseInt(searchParameters.get('limit') || '10', 10);
   const { data } = useGetGamesQuery({
     tags: selectedTags,
     page: page,
     limit: limit,
+    search: search
   });
 
   useEffect(() => {
@@ -26,9 +28,9 @@ export default function SearchPage(): React.JSX.Element {
 
   return (
     <>
-      <SearchHeader />
-      <TagsFilter setSelectedTags={setSelectedTags}/>
-      <AllCards games={[]}/>
+      <SearchHeader search={search} setSearch={setSearch}/>
+      <TagsFilter selectedTags={selectedTags} setSelectedTags={setSelectedTags}/>
+      <AllCards games={data}/>
     </>
   );
 }

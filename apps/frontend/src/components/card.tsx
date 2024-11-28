@@ -1,19 +1,18 @@
 import { type Game } from '@playpal/schemas';
-import { type FC } from 'react';
 
 import { Rating } from '@/components/rating';
 import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
 
-interface CardProperties {
+interface CardProps {
   game: Game;
   inStock?: boolean;
 }
 
-export const Card: FC<CardProperties> = ({
+export const Card = ({
   game,
   inStock = false
-}) => {
+}: CardProps) => {
   const i18n = useTranslation();
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex flex-col">
