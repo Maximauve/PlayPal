@@ -12,7 +12,7 @@ import UserProfilePage from "@/routes/pages/user-profile-page";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <MainLayout  />,
     children: [
       {
         path: "",
@@ -40,17 +40,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <GameList />
-      }
-    ]
-  },
-  {
-    path: "/search/",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <SearchPage />
+        element: <GameList/>
       }
     ]
   },
