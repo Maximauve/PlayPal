@@ -69,12 +69,23 @@ export class UserService {
   }
 
   async findOneUser(id: string): Promise<User | null> {
-    return this.usersRepository
+    const user = this.usersRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: id })
       .leftJoinAndSelect("user.rating", "rating")
       .leftJoinAndSelect("user.loan", "loan")
       .leftJoinAndSelect("user.product", "product")
+      .getOne();
+    return user;
+  }
+
+  async findOneUserWithLoans(id: string): Promise<User | null> { 
+    return this.usersRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.loan", "loan")
+      .leftJoinAndSelect("loan.product", "product")
+      .leftJoinAndSelect("product.game", "game")
+      .where("user.id = :id", { id: id })
       .getOne();
   }
 

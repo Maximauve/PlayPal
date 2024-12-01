@@ -47,9 +47,18 @@ export class LoanService {
     if (!user) {
       throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
+
+    const product = await this.productRepository
+      .createQueryBuilder("product")
+      .where("product.id = :id", { id: loanDto.productId })
+      .getOne();
+    if (!product) {
+      throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    }
     const loan = this.loanRepository.create({
       ...loanDto,
-      user
+      user,
+      product
     });
     return this.loanRepository.save(loan);
   }

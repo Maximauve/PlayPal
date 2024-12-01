@@ -38,8 +38,9 @@ export class FixturesService implements OnModuleInit {
       const savedTags = await this.loadFixturesTags();
       const savedGames = await this.loadFixturesGames(savedTags);
       await this.loadFixturesRatings(savedUsers, savedGames);
-      const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
-      await this.loadFixturesLoans(savedUsers, savedProduct);
+      await this.loadFixturesProducts(savedUsers, savedGames);
+      // const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
+      // await this.loadFixturesLoans(savedUsers, savedProduct);
       await this.loadFixturesWish(savedUsers, savedGames);
       await this.loadFixturesRules(savedGames);
     }
@@ -189,28 +190,28 @@ export class FixturesService implements OnModuleInit {
     return savedProducts;
   }
 
-  private async loadFixturesLoans(savedUsers: User[], savedProducts: Product[]) {
-    const [skyjo, galerapagos] = savedProducts;
-    const [, customer, customer2] = savedUsers;
+  // private async loadFixturesLoans(savedUsers: User[], savedProducts: Product[]) {
+  //   const [skyjo, galerapagos] = savedProducts;
+  //   const [, customer, customer2] = savedUsers;
 
-    const futureDate = new Date();
+  //   const futureDate = new Date();
     
-    const loans = this.loanRepository.create([
-      { 
-        endDate: futureDate.setDate(futureDate.getDate() + 7),
-        product: skyjo,
-        user: customer
-      },
-      {
-        product: galerapagos,
-        user: customer2,
-        endDate: futureDate.setDate(futureDate.getDate() + 7),
-      }
-    ]);
+  //   const loans = this.loanRepository.create([
+  //     { 
+  //       endDate: futureDate.setDate(futureDate.getDate() + 7),
+  //       product: skyjo,
+  //       user: customer
+  //     },
+  //     {
+  //       product: galerapagos,
+  //       user: customer2,
+  //       endDate: futureDate.setDate(futureDate.getDate() + 7),
+  //     }
+  //   ]);
 
-    const savedLoans = await this.loanRepository.save(loans);
-    return savedLoans;
-  }
+  //   const savedLoans = await this.loanRepository.save(loans);
+  //   return savedLoans;
+  // }
 
   private async loadFixturesWish(savedUsers: User[], savedGames: Game[]) {
     const [skyjo, galerapagos] = savedGames;
