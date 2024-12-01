@@ -9,6 +9,7 @@
 		"add": "ajouter",
 		"close": "fermer",
 		"search": "rechercher",
-		"confirm": "confirmer"
+		"confirm": "confirmer",
+		"validate": "valider"
 	}
 }
