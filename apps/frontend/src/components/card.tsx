@@ -18,11 +18,7 @@ export const Card = ({
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex flex-col">
       <img
         className="w-full h-48 object-cover"
-        src={
-          game?.image
-            ? `${import.meta.env.VITE_BASE_API_URL}:${import.meta.env.VITE_BASE_API_PORT}/files/${game.image}`
-            : '/all-games.png'
-        }
+        src={'/all-games.png'}
         alt="Game image"
       />
       <div className="p-4">
