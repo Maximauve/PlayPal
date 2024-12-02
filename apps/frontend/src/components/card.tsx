@@ -1,8 +1,10 @@
 import { type Game } from '@playpal/schemas';
 
+import AllGame from "@/assets/images/all-games.png";
 import { Rating } from '@/components/rating';
 import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
+
 
 interface CardProps {
   game: Game;
@@ -18,7 +20,7 @@ export const Card = ({
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex flex-col">
       <img
         className="w-full h-48 object-cover"
-        src={'/all-games.png'}
+        src={AllGame}
         alt="Game image"
       />
       <div className="p-4">
