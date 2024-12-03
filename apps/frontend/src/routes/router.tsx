@@ -44,6 +44,16 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: "/search/",
+    element: <MainLayout/>,
+    children: [
+      {
+        path: "",
+        element: <SearchPage />
+      }
+    ]
+  }
 ]);
 
 export default router;

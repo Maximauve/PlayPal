@@ -43,7 +43,7 @@ export default function SearchPage(): React.JSX.Element {
 
   // test for image
 
-  const shouldShowPagination = () => gamesData?.total && gamesData.total > limit;
+  const shouldShowPagination = () => !!gamesData?.total && gamesData.total > limit;
 
   return (
     <>
