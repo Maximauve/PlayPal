@@ -16,14 +16,36 @@ export class GameService {
     private translationService: TranslationService
   ) { }
 
-  async getAll(): Promise<Game[]> {
-    return this.gamesRepository.find({
-      relations: {
-        rating: true,
-        product: true,
-        tags: true
-      }
-    });
+  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: Game[]; total: number }> {
+    const query = this.gamesRepository.createQueryBuilder('game')
+      .leftJoinAndSelect('game.rating', 'rating')
+      .leftJoinAndSelect('game.product', 'product')
+      .leftJoinAndSelect('game.tags', 'tags');
+    if (tags && tags.length > 0) {
+      query.andWhere('tags.name IN (:...tags)', { tags: Array.isArray(tags) ? tags : [tags] });
+    }
+    if (search) {
+      query.andWhere(
+        '(LOWER(game.name) LIKE :search OR LOWER(game.description) LIKE :search OR LOWER(game.brand) LIKE :search)',
+        { search: `%${search.toLocaleLowerCase()}%` }
+      );
+    }
+    const offset = (page - 1) * limit;
+    const total = await query.getCount();
+    const data = await query
+      .skip(offset)
+      .take(limit)
+      .getMany();
+    
+    await Promise.all(data.map(async (game) => {
+      game.tags = await this.gamesRepository
+        .createQueryBuilder('game')
+        .relation('tags')
+        .of(game)
+        .loadMany();
+    })); // tags are not loaded at all when they are filtered
+
+    return { data, total };
   }
 
   async create(game: GameDto): Promise<Game | null> {

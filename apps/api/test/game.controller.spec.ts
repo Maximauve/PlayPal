@@ -8,7 +8,7 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag, Game, Role } from '@playpal/schemas';
+import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 
 describe('GameController', () => {
@@ -93,8 +93,19 @@ describe('GameController', () => {
 
   describe('getAll', () => {
     it('should return all games', async () => {
+
+      const allResult: GameResponse = {
+        data: mockGames,
+        total: mockGames.length,
+        page: 1,
+        limit: 10,
+        totalPages: 1
+      }
+
+      jest.spyOn(mockGameService, 'getAll').mockResolvedValue(allResult);
+
       const result = await gameController.getAll();
-      expect(result).toEqual(mockGames);
+      expect(result).toEqual(allResult);
     });
   });
 

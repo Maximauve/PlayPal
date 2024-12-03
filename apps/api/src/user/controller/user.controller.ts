@@ -44,7 +44,6 @@ export class UserController {
   @ApiOkResponse({ description: "User found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
   getMe(@CurrentUser() user: User): User {
-    console.log(user);
     return user;
   }
 

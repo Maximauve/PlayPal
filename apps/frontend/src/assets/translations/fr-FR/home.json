@@ -1,5 +1,11 @@
 {
 	"home": {
 		"title": "Bienvenue sur notre site"
+	},
+	"card": {
+		"open": "Decouvrir",
+		"rating": "avis",
+		"inStock": "En stock",
+		"notStock": "Indisponible"
 	}
 }

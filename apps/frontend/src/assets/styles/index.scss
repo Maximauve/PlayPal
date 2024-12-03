@@ -81,4 +81,14 @@ body {
     }
 }
 
+.mona {
+    font-family: 'Mona';
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Mona";
+    src: url("/apps/frontend/src/assets/fonts/MonaSans.ttf");
+}
+
 

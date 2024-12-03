@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -36,8 +36,15 @@ export class GameController {
   @ApiOperation({ summary: "Get all games" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
-  async getAll() {
-    return this.gamesService.getAll();
+  async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
+    const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   @Get('/:gameId')
