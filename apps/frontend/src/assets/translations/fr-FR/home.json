@@ -6,6 +6,8 @@
 		"open": "Decouvrir",
 		"rating": "avis",
 		"inStock": "En stock",
-		"notStock": "Indisponible"
+		"notStock": "Indisponible",
+		"loanStartDate": "Date de début du prêt",
+		"loanEndDate": "Date de fin du prêt"
 	}
 }
