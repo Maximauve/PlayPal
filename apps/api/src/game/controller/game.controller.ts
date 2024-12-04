@@ -74,7 +74,7 @@ export class GameController {
     }
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     const game = await this.gamesService.create(body);
     if (!game) {

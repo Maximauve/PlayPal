@@ -82,7 +82,7 @@ export class UserController {
     }
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     await this.userService.update(user.id, body);
     const userUpdated = await this.userService.findOneUser(user.id);
