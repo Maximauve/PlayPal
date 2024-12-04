@@ -5,7 +5,6 @@ import { Rating } from '@/components/rating';
 import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
 
-
 interface CardProps {
   game: Game;
   inStock?: boolean;
@@ -20,7 +19,7 @@ export const Card = ({
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex flex-col">
       <img
         className="w-full h-48 object-cover"
-        src={AllGame}
+        src={(game?.image ? `${import.meta.env.VITE_API_BASE_URL}/files/${game.image}` : AllGame) ?? AllGame}
         alt="Game image"
       />
       <div className="p-4">
