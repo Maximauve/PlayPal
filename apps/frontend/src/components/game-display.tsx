@@ -26,17 +26,17 @@ const GameDisplay: React.FC<GameDisplayProperties> = ({ games, displayMode }) =>
         <div
           key={game.id}
           className={classNames({
-            "game-card": displayMode === "card",
-            "game-list-item": displayMode === "list",
+            "game-card-item": displayMode === "card",
+            "game-list-item ": displayMode === "list",
           })}
         >
           {game.image && (
-            <img src={game.image} alt={game.name} />
+            <img className={classNames({ "hidden": displayMode === "list" })} src={game.image} alt={game.name} />
           )}
-          <div>
-            <h3>{game.name}</h3>
-            {displayMode === "list" && <p>{game.description}</p>}
-          </div>
+          
+          <h3 className="">{game.name}</h3>
+          {displayMode === "list" && <p className="truncate mx-1">{game.description}</p>}
+        
         </div>
       ))}
     </div>
