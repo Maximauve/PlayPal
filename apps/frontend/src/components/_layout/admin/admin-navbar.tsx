@@ -16,13 +16,13 @@ export default function AdminNavbar(): React.JSX.Element {
           Tableau de Bord
         </NavLink>
         <NavLink
-          to="/admin/games"
+          to="/admin/game"
           className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
         >
           Liste de Jeux
         </NavLink>
         <NavLink
-          to="/admin/loans"
+          to="/admin/loan"
           className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
         >
           Liste de Prêts

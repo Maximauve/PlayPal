@@ -9,7 +9,7 @@ const games = [
     id: 1,
     name: "Uno",
     image: "https://cdn1.epicgames.com/ca93b6d41a4e41af864942d8f0a2a826/offer/GameName_Store_Landscape_2560x1440-2560x1440-43068caa839fc392e6bb54e0daf2e8a8.jpg",
-    description: "Tout le monde s’amuse avec UNO ! Ce jeu de cartes incontournable, qui consiste à associer des couleurs et des chiffres, comprend désormais des cartes Joker personnalisables. .",
+    description: "Tout le monde s’amuse avec UNO ! Ce jeu de cartes incontournable, qui consiste à associer des couleurs et des chiffres, comprend désormais des cartes Joker personnalisables.",
   },
   {
     id: 2,

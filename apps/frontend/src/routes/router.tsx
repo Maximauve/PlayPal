@@ -30,11 +30,11 @@ const router = createBrowserRouter([
         element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
       },
       {
-        path: "games",
+        path: "game",
         element: <GameList />,
       },
       {
-        path: "loans",
+        path: "loan",
         element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
       },
       {
