@@ -78,7 +78,8 @@ describe('LoanController', () => {
       getLoan: jest.fn().mockResolvedValue(mockLoan),
       create: jest.fn().mockResolvedValue(mockLoan),
       update: jest.fn().mockResolvedValue(mockLoan),
-      delete: jest.fn().mockRejectedValue(undefined)
+      delete: jest.fn().mockRejectedValue(undefined),
+      checkProductNotRented: jest.fn()
     };
 
     mockUserService = {
@@ -139,29 +140,50 @@ describe('LoanController', () => {
   });
 
   describe('createLoan', () => {
-    it('should create a loan for valid gameId and productId', async () => {
-      const loanDto = { endDate: new Date(), type: "non", userId: "444e6543-e89b-12d3-a456-426614174000" };
+    it('should throw HttpException with 409 status if the product is already rented for the given dates', async () => {
+      const loanDto = {
+        endDate: new Date(new Date().setDate(new Date().getDate() + 5)),
+        userId: mockUser.id,
+      };
+  
+      jest.spyOn(mockLoanService, 'checkProductNotRented').mockResolvedValue(true);
+  
+      await expect(loanController.createLoan(mockProduct, loanDto))
+        .rejects.toThrow(HttpException);
+  
+      await expect(loanController.createLoan(mockProduct, loanDto))
+        .rejects.toMatchObject({
+          status: HttpStatus.CONFLICT,
+        });
+  
+      expect(mockLoanService.checkProductNotRented).toHaveBeenCalledWith(mockProduct.id, loanDto);
+      expect(mockLoanService.create).not.toHaveBeenCalled(); // Assurez-vous que la création n'est pas appelée
+    });
 
-      const createLoan = {
+    it('should create a loan for valid gameId and productId', async () => {
+      const loanDto = { endDate: new Date(), userId: mockUser.id };
+
+      const createLoan: Loan = {
         ...mockLoan,
-        ...loanDto
+        endDate: loanDto.endDate,
+        user: mockUser
       }
 
       jest.spyOn(mockLoanService, 'create').mockResolvedValue(createLoan);
 
-      const result = await loanController.createLoan(loanDto);
+      const result = await loanController.createLoan(mockProduct, loanDto);
       expect(result).toEqual(createLoan);
-      expect(mockLoanService.create).toHaveBeenCalledWith(loanDto);
+      expect(mockLoanService.create).toHaveBeenCalledWith(loanDto, mockProduct);
     });
 
     it('should throw HttpException with 500 status if loan creation fails', async () => {
-      const loanDto = { endDate: new Date(), userId: "444e6543-e89b-12d3-a456-426614174000", type: "oui" };
+      const loanDto = { endDate: new Date(), userId: "444e6543-e89b-12d3-a456-426614174000" };
 
       jest.spyOn(mockLoanService, 'create').mockResolvedValue(null);
 
-      await expect(loanController.createLoan(loanDto))
+      await expect(loanController.createLoan(mockProduct, loanDto))
         .rejects.toThrow(HttpException);
-      await expect(loanController.createLoan(loanDto))
+      await expect(loanController.createLoan(mockProduct, loanDto))
         .rejects.toMatchObject({
           status: HttpStatus.INTERNAL_SERVER_ERROR,
         });

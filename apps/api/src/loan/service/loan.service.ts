@@ -39,7 +39,7 @@ export class LoanService {
       .getOne();
   }
 
-  async create(loanDto: LoanDto): Promise<Loan | null> {
+  async create(loanDto: LoanDto, product: Product): Promise<Loan | null> {
     const user = await this.userRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: loanDto.userId })
@@ -49,7 +49,8 @@ export class LoanService {
     }
     const loan = this.loanRepository.create({
       ...loanDto,
-      user
+      user,
+      product
     });
     return this.loanRepository.save(loan);
   }
@@ -77,5 +78,40 @@ export class LoanService {
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
+  }
+
+  async findActiveLoansForProduct(productId: string): Promise<Loan[]> {
+    const currentDate = new Date();
+  
+    return this.loanRepository.createQueryBuilder('loan')
+      .leftJoinAndSelect('loan.product', 'product')
+      .where('product.id = :productId', { productId })
+      .andWhere('loan.startDate <= :currentDate', { currentDate })
+      .andWhere('loan.endDate >= :currentDate', { currentDate })
+      .orderBy('loan.startDate', 'ASC') 
+      .getMany();
+  }
+
+  async checkProductNotRented(productId: string, newLoan: LoanDto) {
+    const existingLoans = await this.findActiveLoansForProduct(productId);
+  
+    const now = new Date();
+    const newStartDate = now;
+    const newEndDate = new Date(newLoan.endDate);
+
+  
+    for (const existingLoan of existingLoans) {
+      const existingStartDate = new Date(existingLoan.startDate);
+      const existingEndDate = new Date(existingLoan.endDate);
+  
+      if (
+        (newStartDate >= existingStartDate && newStartDate < existingEndDate) ||
+        (newEndDate > existingStartDate && newEndDate <= existingEndDate) ||
+        (newStartDate <= existingStartDate && newEndDate >= existingEndDate)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 }

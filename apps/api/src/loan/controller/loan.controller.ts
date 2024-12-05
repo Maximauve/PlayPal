@@ -47,8 +47,11 @@ export class LoanController {
   @ApiCreatedResponse({ description: "Loan created successfully", type: Loan })
   @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the loan" })
   @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
-  async createLoan(@Body() body: LoanDto): Promise<Loan> {
-    const loan = await this.loanService.create(body);
+  async createLoan(@ProductRequest() product: Product, @Body() body: LoanDto): Promise<Loan> {
+    if (await this.loanService.checkProductNotRented(product.id, body)) {
+      throw new HttpException(await this.translationsService.translate("error.PRODUCT_ALREADY_RENTED"), HttpStatus.CONFLICT);
+    }
+    const loan = await this.loanService.create(body, product);
     if (!loan) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
