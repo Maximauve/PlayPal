@@ -37,6 +37,7 @@ export type I18nTranslations = {
         "WISH_CANT_CREATE": string;
         "WISH_CANT_DELETE": string;
         "PAGE_NOT_FOUND": string;
+        "PRODUCT_ALREADY_RENTED": string;
     };
     "user": {
         "HELLO": string;
