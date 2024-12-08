@@ -1,6 +1,6 @@
 import { type Tag as TagType } from "@playpal/schemas";
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { AllCards } from '@/components/all-cards';
 import { Pagination } from "@/components/pagination";
@@ -11,12 +11,22 @@ import { useGetGamesQuery } from '@/services/game';
 
 
 export default function SearchPage(): React.JSX.Element {
+  const location = useLocation(); 
   const [searchParameters, setSearchParameters] = useSearchParams();
   const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
   const [search, setSearch] = useState<string>("");
   
   const page = Number.parseInt(searchParameters.get('page') || '1', 10);
   const limit = Number.parseInt(searchParameters.get('limit') || '10', 10);
+  
+  useEffect(() => {
+    const tags: TagType[]= location.state?.tags;
+    if (tags) {
+      tags.forEach((tag: TagType) => {
+        setSelectedTags((prevTags: TagType[]) => prevTags.some((t) => t.id === tag.id) ? prevTags.filter((t) => t.id !== tag.id) : [...prevTags, tag]);
+      });
+    }
+  }, [location.state?.tags]);
 
   useEffect(() => {
     const newSearchParameters = new URLSearchParams(searchParameters);
@@ -43,14 +53,16 @@ export default function SearchPage(): React.JSX.Element {
 
   // test for image
 
-  const shouldShowPagination = () => !!gamesData?.total && gamesData.total > limit;
+  const shouldShowPagination = useMemo(() => {
+    return gamesData?.total && gamesData.total > limit;
+  }, [gamesData, limit]);
 
   return (
     <>
       <SearchHeader search={search} setSearch={setSearch}/>
       <TagsFilter selectedTags={selectedTags} setSelectedTags={setSelectedTags}/>
       <AllCards games={gamesData}/>
-      {shouldShowPagination() && (
+      {shouldShowPagination && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

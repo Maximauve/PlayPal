@@ -22,7 +22,9 @@ export default function Navbar(): React.JSX.Element {
   return (
     <Fragment>
       <nav className="w-full flex flex-row justify-between bg-gray-400 px-4 py-2">
-        <div></div>
+        <div className="flex items-center"> 
+          <NavLink to="/" className="text-white text-3xl font-bold">Playpal</NavLink>
+        </div>
         <div className="flex flex-row justify-end">
           {/* WishList */}
           <div></div>
