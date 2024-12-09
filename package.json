@@ -36,9 +36,6 @@
     "build:types": "cd packages/schemas && yarn build"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.7.1",
-    "@fortawesome/free-solid-svg-icons": "^6.7.1",
-    "@fortawesome/react-fontawesome": "^0.2.2",
     "@nestjs/platform-express": "^10.4.8"
   }
 }
