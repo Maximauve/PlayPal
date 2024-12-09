@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -13,10 +13,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Game } from "@playpal/schemas";
+import { Game, Product } from "@playpal/schemas";
 import { Express } from 'express';
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { AdminGuard } from '@/auth/guards/admin.guard';
 import { FileUploadService } from '@/files/files.service';
 import { ParseFilePipeDocument } from '@/files/files.validator';
 import { GameRequest } from '@/game/decorators/game.decorator';
@@ -24,13 +24,19 @@ import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
+import { ProductService } from '@/product/service/product.service';
 import { TranslationService } from '@/translation/translation.service';
 
-@UseGuards(JwtAuthGuard)
+
 @ApiTags('games')
 @Controller('games')
 export class GameController {
-  constructor(private readonly gamesService: GameService, private readonly translationsService: TranslationService, private readonly fileUploadService: FileUploadService) { }
+  constructor(
+    private readonly gamesService: GameService,
+    private readonly translationsService: TranslationService,
+    private readonly fileUploadService: FileUploadService,
+    private readonly productService: ProductService,
+  ) { }
 
   @Get('')
   @ApiOperation({ summary: "Get all games" })
@@ -60,6 +66,7 @@ export class GameController {
   }
 
   @Post('')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Create a game" })
   @ApiConsumes('multipart/form-data')
@@ -84,6 +91,7 @@ export class GameController {
   }
 
   @Put('/:gameId')
+  @UseGuards(AdminGuard)
   @UseGuards(GameGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Update a game" })
@@ -107,6 +115,7 @@ export class GameController {
   }
 
   @Delete('/:gameId')
+  @UseGuards(AdminGuard)
   @UseGuards(GameGuard)
   @ApiOperation({ summary: 'Delete a game' })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
@@ -119,5 +128,14 @@ export class GameController {
       await this.fileUploadService.deleteFile(game.image);
     }
     await this.gamesService.delete(game.id);
+  }
+
+  @Get('/:gameId/products')
+  @UseGuards(AdminGuard)
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: "Get all product of a game" })
+  @ApiOkResponse({ description: "Products found successfully", type: Product, isArray: true })
+  async getAllProduct(@Param("gameId") gameId: string): Promise<Product[]> {
+    return this.productService.getAllProductsByGameId(gameId);
   }
 }

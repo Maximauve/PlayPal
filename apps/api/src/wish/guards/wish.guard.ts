@@ -21,9 +21,8 @@ export class WishGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithWish>();
     const wishId = request.params.wishId;
-    const gameId = request.params.gameId;
 
-    if (!uuidRegex.test(wishId) || !uuidRegex.test(gameId)) {
+    if (!uuidRegex.test(wishId)) {
       throw new HttpException(await this.translationsService.translate("error.ID_INVALID"), HttpStatus.BAD_REQUEST);
     }
 

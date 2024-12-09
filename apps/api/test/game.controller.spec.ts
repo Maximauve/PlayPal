@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
+import { ProductService } from '@/product/service/product.service';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -18,6 +19,7 @@ describe('GameController', () => {
   let mockTranslationService: Partial<TranslationService>;
   let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
+  let mockProductService: Partial<ProductService>;
 
   const mockGames: Game[] = [
     {
@@ -86,6 +88,8 @@ describe('GameController', () => {
       uploadFile: jest.fn().mockResolvedValue({ fileUrl: 'http://mockfileurl.com' })
     };
 
+    mockProductService = {}
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GameController],
       providers: [
@@ -94,6 +98,7 @@ describe('GameController', () => {
         { provide: TranslationService, useValue: mockTranslationService },
         { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
+        { provide: ProductService, useValue: mockProductService },
       ],
     }).compile();
 

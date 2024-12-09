@@ -13,7 +13,7 @@ import { ParseFilePipeDocument } from '@/files/files.validator';
 import { TranslationService } from '@/translation/translation.service';
 import { UserService } from '@/user/service/user.service';
 
-const expirationTime = new Date(Date.now() + 7 * 24 * 60 * 60); // 7 days
+const expirationTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
