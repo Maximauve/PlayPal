@@ -1,7 +1,7 @@
 import { type RegisterDto } from '@playpal/schemas';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- Throw an error on type formik in props otherwise
 import { useFormik } from 'formik';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 
 import TextInput from '@/components/form/text-input';
 import { type WordingKey } from '@/context/i18n/i18n-service';
@@ -11,15 +11,6 @@ interface Props {
 }
 
 export default function RegisterForm({ formik }: Props): React.JSX.Element {
-
-  useEffect(() => {
-    formik.setValues({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
-  }, [formik]);
 
   const handleChange = useCallback((field: string, value: string) => {
     formik.setFieldValue(field, value);
