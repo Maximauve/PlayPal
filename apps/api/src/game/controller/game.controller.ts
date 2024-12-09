@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -10,11 +10,11 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiResetContentResponse,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Game, Product } from "@playpal/schemas";
-import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
+import { Game, GameWithStats, Product, User } from "@playpal/schemas";
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
@@ -26,7 +26,9 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
 import { ProductService } from '@/product/service/product.service';
+import { RedisService } from '@/redis/service/redis.service';
 import { TranslationService } from '@/translation/translation.service';
+import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 
 
 @ApiTags('games')
@@ -37,6 +39,7 @@ export class GameController {
     private readonly translationsService: TranslationService,
     private readonly fileUploadService: FileUploadService,
     private readonly productService: ProductService,
+    private readonly redisService: RedisService,
   ) { }
 
   @Get('')
@@ -161,5 +164,41 @@ export class GameController {
   @ApiOkResponse({ description: "Products found successfully", type: Product, isArray: true })
   async getAllProduct(@Param("gameId") gameId: string): Promise<Product[]> {
     return this.productService.getAllProductsByGameId(gameId);
+  }
+
+  @Post('/waiting/:gameId')
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: 'Subscribe for availability of a game' })
+  @ApiParam({ name: 'gameId', description: 'Game id', required: true })
+  @ApiOkResponse({ description: 'User has been successfully put on the waiting list' })
+  @ApiResetContentResponse({ description: 'A game is already available to rent' })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
+  @HttpCode(HttpStatus.OK)
+  async subscribe(@GameRequest() game: Game, @CurrentUser() user: User)  {
+    if (!await this.productService.hasProductAvailable(game.id)) {
+      throw new HttpException('', HttpStatus.RESET_CONTENT);
+    }
+
+    try {
+      if (await this.redisService.exists(`game-waiting-${game.id}`)) {
+        const userIds =  await this.redisService.lgetall(`game-waiting-${game.id}`);
+        if (userIds.includes(user.id)) {
+          throw new ForbiddenException(await this.translationsService.translate('error.ALREADY_ON_WAITLIST'));
+        }
+        this.redisService.push(`game-waiting-${game.id}`, user.id);
+      } else {
+        this.redisService.push(`game-waiting-${game.id}`, user.id);
+      }
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        throw error;
+      }
+      console.error(error);
+      throw new InternalServerErrorException(await this.translationsService.translate('error.SOMETHING_WENT_WRONG'));
+    }
+
+    return;
   }
 }

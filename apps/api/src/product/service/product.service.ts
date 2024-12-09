@@ -98,4 +98,14 @@ export class ProductService {
     product.available = true;
     return this.productRepository.save(product);
   }
+
+  async hasProductAvailable(gameId: string): Promise<boolean> {
+    const query = await this.productRepository
+      .createQueryBuilder("product")
+      .where("product.gameId = :gameId", { gameId: gameId })
+      .andWhere("product.available = TRUE")
+      .getCount();
+
+    return query > 0;
+  }
 }

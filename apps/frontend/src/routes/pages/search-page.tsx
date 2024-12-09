@@ -52,7 +52,7 @@ export default function SearchPage(): React.JSX.Element {
   // test for image
 
   const shouldShowPagination = useMemo(() => {
-    return gamesData?.total && gamesData.total > limit;
+    return !!gamesData?.total && gamesData.total > limit;
   }, [gamesData, limit]);
 
   return (
