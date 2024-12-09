@@ -16,8 +16,8 @@ body {
     width:  calc(100vw - 50px);
     height: calc(100vh - 50px);
     border-radius: 20px;
-    padding: 10px;
-    background-color: theme('colors.background.dark');
+    padding: 15px;
+    background-color: theme('colors.background.light');
     box-shadow: 4px -4px 10px 0px rgba(0, 0, 0, 0.25), -4px 4px 10px 0px rgba(187, 187, 187, 0.25);
 
     .admin-navbar {

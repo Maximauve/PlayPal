@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import AdminLayout from "@/components/_layout/admin/admin-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import GameList from "@/components/game-list";
+import GamePage from "@/routes/pages/game-page";
 import HomePage from "@/routes/pages/home-page";
 import SearchPage from "@/routes/pages/search-page";
 
@@ -50,6 +51,16 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <SearchPage />
+      }
+    ]
+  },
+  {
+    path: "/game/:id",
+    element: <MainLayout/>,
+    children: [
+      {
+        path: "",
+        element: <GamePage/>
       }
     ]
   }
