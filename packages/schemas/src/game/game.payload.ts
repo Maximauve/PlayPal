@@ -1,4 +1,4 @@
-import { Tag } from "tag.interface";
+import { Tag } from "../tag/tag.entity";
 
 export interface GamePayload {
   tags?: Tag[];

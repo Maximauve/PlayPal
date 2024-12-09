@@ -56,6 +56,9 @@ describe('RuleController', () => {
     }
 
     beforeEach(async () => {
+        mockRuleRepository = {};
+        mockGameRepository = {};
+
         mockRuleService = {
             getAllRules: jest.fn().mockResolvedValue([mockRule]),
             getRule: jest.fn().mockResolvedValue(mockRule),

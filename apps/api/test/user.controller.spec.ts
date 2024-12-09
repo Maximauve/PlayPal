@@ -35,6 +35,8 @@ describe('UserController', () => {
   const mockUsers: User[] = [mockUser, adminUser];
 
   beforeEach(async () => {
+    mockUserRepository = {};
+    
     mockUserService = {
       getAll: jest.fn().mockResolvedValue(mockUsers),
       findOneUser: jest.fn().mockImplementation((id: string) =>

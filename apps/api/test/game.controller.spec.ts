@@ -60,6 +60,11 @@ describe('GameController', () => {
   }
 
   beforeEach(async () => {
+    mockGameRepository = {
+      findOne: jest.fn().mockResolvedValue(mockGames[0]),
+      find: jest.fn().mockResolvedValue(mockGames),
+    };
+
     mockGameService = {
       getAll: jest.fn().mockResolvedValue(mockGames),
       findOneGame: jest.fn(),
@@ -75,6 +80,10 @@ describe('GameController', () => {
 
     mockTranslationService = {
       translate: jest.fn().mockImplementation(key => `Translated: ${key}`),
+    };
+
+    mockFileUploadService = {
+      uploadFile: jest.fn().mockResolvedValue({ fileUrl: 'http://mockfileurl.com' })
     };
 
     const module: TestingModule = await Test.createTestingModule({

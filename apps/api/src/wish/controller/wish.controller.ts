@@ -52,7 +52,7 @@ export class WishController {
   @ApiConflictResponse({ description: "Wish already exists" })
   @ApiNotFoundResponse({ description: "Game or user not found" })
   async createWish(@Body() wishDto: WishDto, @CurrentUser() user: User): Promise<Wish> {
-    const wish = await this.wishlistService.create( wishDto, user.id);
+    const wish = await this.wishlistService.create(wishDto, user.id);
     if (!wish) {
       throw new HttpException(await this.translationsService.translate("error.WISH_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }

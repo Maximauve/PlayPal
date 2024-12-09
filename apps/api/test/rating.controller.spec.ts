@@ -89,6 +89,9 @@ describe('RatingController', () => {
   };
 
   beforeEach(async () => {
+    mockGameRepository = {};
+    mockRatingRepository = {};
+
     mockRatingService = {
       getAllRating: jest.fn().mockResolvedValue([mockRating]),
       getRating: jest.fn().mockResolvedValue(mockRating),
