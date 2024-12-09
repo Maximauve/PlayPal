@@ -152,6 +152,7 @@ describe('LoanController', () => {
       const loanDto = {
         endDate: new Date(new Date().setDate(new Date().getDate() + 5)),
         userId: mockUser.id,
+        productId: mockProduct.id
       };
   
       jest.spyOn(mockLoanService, 'checkProductNotRented').mockResolvedValue(true);
@@ -165,11 +166,11 @@ describe('LoanController', () => {
         });
   
       expect(mockLoanService.checkProductNotRented).toHaveBeenCalledWith(mockProduct.id, loanDto);
-      expect(mockLoanService.create).not.toHaveBeenCalled(); // Assurez-vous que la création n'est pas appelée
+      expect(mockLoanService.create).not.toHaveBeenCalled();
     });
 
     it('should create a loan for valid gameId and productId', async () => {
-      const loanDto = { endDate: new Date(), userId: mockUser.id };
+      const loanDto = { endDate: new Date(), userId: mockUser.id, productId: mockProduct.id };
 
       const createLoan: Loan = {
         ...mockLoan,
@@ -181,11 +182,11 @@ describe('LoanController', () => {
 
       const result = await loanController.createLoan(mockProduct, loanDto);
       expect(result).toEqual(createLoan);
-      expect(mockLoanService.create).toHaveBeenCalledWith(loanDto, mockProduct);
+      expect(mockLoanService.create).toHaveBeenCalledWith(loanDto);
     });
 
     it('should throw HttpException with 500 status if loan creation fails', async () => {
-      const loanDto = { endDate: new Date(), userId: "444e6543-e89b-12d3-a456-426614174000" };
+      const loanDto = { endDate: new Date(), userId: "444e6543-e89b-12d3-a456-426614174000", productId: mockProduct.id };
 
       jest.spyOn(mockLoanService, 'create').mockResolvedValue(null);
 

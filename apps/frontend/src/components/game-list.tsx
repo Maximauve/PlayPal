@@ -1,5 +1,6 @@
 import { faGrip, faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { type GamePayload } from '@playpal/schemas';
 import { useState } from "react";
 
 import GameDisplay from "@/components/game-display";
@@ -9,7 +10,7 @@ import { useGetGamesQuery } from '@/services/game';
 export default function GameList( ) {
   const i18n = useTranslation();
 
-  const { isLoading, data } = useGetGamesQuery({});
+  const { isLoading, data } = useGetGamesQuery({} as GamePayload);
   const [displayMode, setDisplayMode] = useState<"card" | "list">("card");
 
   const toggleDisplayMode = () => {

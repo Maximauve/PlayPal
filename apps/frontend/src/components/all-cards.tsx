@@ -1,6 +1,6 @@
 import { type Game, type GameResponse } from "@playpal/schemas";
 
-import { Card } from "@/components/card";
+import { Card } from "@/components/cards/card";
 
 interface AllCardsProperties {
   games?: GameResponse;
