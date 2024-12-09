@@ -166,7 +166,7 @@ describe('LoanController', () => {
         });
   
       expect(mockLoanService.checkProductNotRented).toHaveBeenCalledWith(mockProduct.id, loanDto);
-      expect(mockLoanService.create).not.toHaveBeenCalled(); // Assurez-vous que la création n'est pas appelée
+      expect(mockLoanService.create).not.toHaveBeenCalled();
     });
 
     it('should create a loan for valid gameId and productId', async () => {

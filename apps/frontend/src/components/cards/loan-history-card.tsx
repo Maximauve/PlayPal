@@ -1,8 +1,9 @@
 import { type Game, type Loan } from '@playpal/schemas';
 import React from 'react';
 
-import { Rating } from '@/components/cards/rating';
-import { TagsContainer } from '@/components/cards/tags-container';
+import AllGame from "@/assets/images/all-games.png";
+import { Rating } from '@/components/rating';
+import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
 
 interface Props {
@@ -19,11 +20,7 @@ export default function LoanHistoryCard({ loan }: Props): React.JSX.Element {
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex ">
       <img
         className="h-56 object-cover"
-        src={
-          game?.image
-            ? `${import.meta.env.VITE_BASE_API_URL}:${import.meta.env.VITE_BASE_API_PORT}/files/${game.image}`
-            : '/all-games.png'
-        }
+        src={game?.image ?? AllGame}
         alt="Game image"
       />
       <div className="p-4 flex flex-col w-full">

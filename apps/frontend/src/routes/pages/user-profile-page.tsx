@@ -29,9 +29,7 @@ export default function UserProfilePage(): React.JSX.Element {
     enableReinitialize: true,
   });
 
-  const handleSubmit = (values: Partial<RegisterDto>) => {
-    console.log(values);
-    
+  const handleSubmit = (values: Partial<RegisterDto>) => {    
     editUser({ id: data?.id || "", body: values }).then(({ error }) => {
       if (error) {
         console.error("Edit user", error);
