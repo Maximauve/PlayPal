@@ -2,33 +2,31 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Us
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Loan, Product } from "@playpal/schemas";
 
+import { AdminGuard } from "@/auth/guards/admin.guard";
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
-import { GameGuard } from "@/game/guards/game.guard";
 import { LoanRequest } from "@/loan/decorators/loan.decorator";
 import { LoanDto } from "@/loan/dto/loan.dto";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
 import { LoanGuard } from "@/loan/guards/loan.guard";
 import { LoanService } from "@/loan/service/loan.service";
 import { ProductRequest } from "@/product/decorators/product.decorator";
-import { ProductGuard } from "@/product/guards/product.guard";
 import { TranslationService } from "@/translation/translation.service";
 
-@UseGuards(JwtAuthGuard, GameGuard, ProductGuard)
+@UseGuards(JwtAuthGuard)
 @ApiTags('loan')
-@ApiParam({ name: 'gameId', description: 'ID of game', required: true })
-@ApiParam({ name: 'productId', description: 'ID of product', required: true })
 @ApiNotFoundResponse({ description: "Game or product not found" })
 @ApiBadRequestResponse({ description: "UUID are invalid" })
 @ApiUnauthorizedResponse({ description: "User not connected" })
-@Controller('games/:gameId/product/:productId/loan')
+@Controller('loan')
 export class LoanController {
   constructor(private readonly translationsService: TranslationService, private readonly loanService: LoanService) { }
 
   @Get('')
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Get all loan of a product" })
   @ApiOkResponse({ description: "Loans found successfully", type: Loan, isArray: true })
-  async getAllLoan(@ProductRequest() product: Product): Promise<Loan[]> {
-    return this.loanService.getAllLoan(product.id);
+  async getAllLoan(): Promise<Loan[]> {
+    return this.loanService.getAllLoan();
   }
 
   @Get("/:loanId")
@@ -41,8 +39,8 @@ export class LoanController {
     return loan;
   }
 
-  @UsePipes(ValidationPipe)
   @Post("")
+  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: "Create a loan" })
   @ApiCreatedResponse({ description: "Loan created successfully", type: Loan })
   @ApiInternalServerErrorResponse({ description: "An unexpected error occurred while creating the loan" })
@@ -65,9 +63,9 @@ export class LoanController {
   @ApiOperation({ summary: "Update a loan" })
   @ApiOkResponse({ description: "Loan updated successfully", type: Loan })
   @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
-  async updateLoan(@ProductRequest() product: Product, @LoanRequest() loan: Loan, @Body() body: LoanUpdatedDto): Promise<Loan> {
+  async updateLoan(@LoanRequest() loan: Loan, @Body() body: LoanUpdatedDto): Promise<Loan> {
     await this.loanService.update(loan.id, body);
-    const loanUpdated = await this.loanService.getLoan(product.id, loan.id);
+    const loanUpdated = await this.loanService.getLoan(loan.id);
     if (!loanUpdated) {
       throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
@@ -79,7 +77,7 @@ export class LoanController {
   @ApiOperation({ summary: "Delete a loan" })
   @ApiOkResponse({ description: "Loan deleted successfully" })
   @ApiNotFoundResponse({ description: "Game, product or loan not found" })
-  async deleteLoan(@ProductRequest() product: Product, @LoanRequest() loan: Loan): Promise<void> {
-    await this.loanService.delete(product.id, loan.id);
+  async deleteLoan(@LoanRequest() loan: Loan): Promise<void> {
+    await this.loanService.delete(loan.id);
   }
 }

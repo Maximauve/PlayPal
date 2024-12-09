@@ -17,19 +17,15 @@ export class ProductGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithProduct>();
-    const gameId = request.params.gameId;
     const productId = request.params.productId;
 
-    if (!uuidRegex.test(productId) || !uuidRegex.test(gameId)) {
+    if (!uuidRegex.test(productId)) {
       throw new HttpException(await this.translationsService.translate("error.ID_INVALID"), HttpStatus.BAD_REQUEST);
     }
 
     const product = await this.productRepository.findOne({
       where: {
-        id: productId,
-        game: {
-          id: gameId
-        }
+        id: productId
       },
       relations: {
         game: true,
