@@ -73,6 +73,14 @@ describe('LoanController', () => {
   const mockLoans = [mockLoan];
 
   beforeEach(async () => {
+    mockProductRepository = {
+      findOne: jest.fn().mockResolvedValue(mockProduct),
+    };
+
+    mockLoanRepository = {
+      findOne: jest.fn().mockResolvedValue(mockLoan),
+    };
+
     mockLoanService = {
       getAllLoan: jest.fn().mockResolvedValue(mockLoans),
       getLoan: jest.fn().mockResolvedValue(mockLoan),
@@ -99,7 +107,7 @@ describe('LoanController', () => {
     };
 
     mockGameRepository = {
-      findOne: jest.fn().mockResolvedValue(mockGame),  // Mockez ici les méthodes nécessaires de Repository<Game>
+      findOne: jest.fn().mockResolvedValue(mockGame),
     };
 
     const module: TestingModule = await Test.createTestingModule({

@@ -49,6 +49,8 @@ describe('WishController', () => {
     };
 
     beforeEach(async () => {
+        mockGameRepository = {};
+        
         mockTranslationService = {
             translate: jest.fn().mockResolvedValue('Translated error message'),
         };

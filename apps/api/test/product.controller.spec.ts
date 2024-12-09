@@ -5,8 +5,7 @@ import { UserService } from '@/user/service/user.service';
 import { TranslationService } from '@/translation/translation.service';
 import { GameService } from '@/game/service/game.service';
 import { Product, State, User, Role, Game } from '@playpal/schemas';
-import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { ProductDto } from '@/product/dto/product.dto';
 import { AssignDto } from '@/product/dto/assign.dto';
 import { Repository } from 'typeorm';
@@ -66,6 +65,15 @@ describe('ProductController', () => {
   const mockProducts: Product[] = [mockProduct];
 
   beforeEach(async () => {
+    mockGameRepository = {
+      findOne: jest.fn().mockResolvedValue(mockGame),
+    };
+
+    mockProductRepository = {
+      findOne: jest.fn().mockResolvedValue(mockProduct),
+      find: jest.fn().mockResolvedValue(mockProducts),
+    };
+
     mockProductService = {
       getAllProduct: jest.fn().mockResolvedValue(mockProducts),
       getProduct: jest.fn().mockResolvedValue(mockProduct),

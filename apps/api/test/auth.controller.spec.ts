@@ -20,6 +20,8 @@ describe('AuthController', () => {
   let mockFileUploadService: Partial<FileUploadService>
 
   beforeEach(async () => {
+    mockFileUploadService = {};
+    
     mockAuthService = {
       login: jest.fn().mockResolvedValue({ accessToken: 'test-token' }),
     };
