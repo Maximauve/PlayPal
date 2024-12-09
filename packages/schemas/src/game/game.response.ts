@@ -1,4 +1,4 @@
-import { Game } from "game.interface";
+import { Game } from "./game.entity";
 
 export type GameResponse = {
   data: Game[];

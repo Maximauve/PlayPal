@@ -48,7 +48,6 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
     }
   }, [isRegisterMode]);
 
-
   const handleSubmit = (values: LoginDto | RegisterDto) => {
     if (isRegisterMode) {
       register(values as RegisterDto).then(({ error }) => {

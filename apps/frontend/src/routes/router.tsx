@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import AdminLayout from "@/components/_layout/admin/admin-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import GameList from "@/components/game-list";
+import AdminGuard from "@/guard/admin-guard";
 import HomePage from "@/routes/pages/home-page";
 import SearchPage from "@/routes/pages/search-page";
 
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/",
-    element: <AdminLayout/>,
+    element: (
+      <AdminGuard>
+        <AdminLayout/>
+      </AdminGuard>
+    ),
     children: [
       {
         path: "",

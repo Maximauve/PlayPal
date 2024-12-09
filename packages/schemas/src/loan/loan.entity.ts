@@ -8,7 +8,7 @@ export class Loan {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', nullable: false })
   endDate: Date;
 
   @CreateDateColumn()

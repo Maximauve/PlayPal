@@ -32,16 +32,17 @@ export class FixturesService implements OnModuleInit {
     const productCount = await this.productRepository.count();
     const loanCount = await this.loanRepository.count();
     const wishCount = await this.wishRepository.count();
+    const ruleCount = await this.ruleRepository.count();
 
-    if ([userCount, gameCount, tagCount, ratingCount, productCount, loanCount, wishCount].every(count => count === 0)) {
+    if ([userCount, gameCount, tagCount, ratingCount, productCount, loanCount, wishCount, ruleCount].every(count => count === 0)) {
       const savedUsers = await this.loadFixturesUsers();
       const savedTags = await this.loadFixturesTags();
       const savedGames = await this.loadFixturesGames(savedTags);
       await this.loadFixturesRatings(savedUsers, savedGames);
       const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
       await this.loadFixturesLoans(savedUsers, savedProduct);
-      await this.loadFixturesWish(savedUsers, savedGames);
       await this.loadFixturesRules(savedGames);
+      await this.loadFixturesWish(savedUsers, savedGames);
     }
   }
 
@@ -50,7 +51,7 @@ export class FixturesService implements OnModuleInit {
       { 
         username: 'admin', 
         email: 'admin@example.com',
-        password: '$2b$10$6UK4wjun5y7bwMMWnc2a1uMbhg4Cv4HobsOgvXp5PlDlvUWrkSKZq', // admin
+        password: '$2b$12$FnOHpXz.4AkurcFVazsmRefZ.TDap6lwgMa8XUMXzgOhzBfBqFgsS', // Admin01
         role: Role.Admin,
         rating: [],
         loan: [],
@@ -59,7 +60,7 @@ export class FixturesService implements OnModuleInit {
       { 
         username: 'customer', 
         email: 'customer@example.com',
-        password: '$2b$10$cI.f6iGXkqQE0rS//4InQ.SLHhfRmzUlybQkW2sRNBsL4jdTpW5Ae', // customer
+        password: '$2y$10$hd4tQ9pRo4BCKlPDMZYBU.QDbS89.Vvhy16ZEZK1dlErDHihnrtDO', // Customer01
         role: Role.Customer,
         rating: [],
         loan: [],
@@ -68,7 +69,7 @@ export class FixturesService implements OnModuleInit {
       { 
         username: 'customer2', 
         email: 'customer2@example.com',
-        password: '$2b$10$cI.f6iGXkqQE0rS//4InQ.SLHhfRmzUlybQkW2sRNBsL4jdTpW5Ae', // customer
+        password: '$2y$10$hd4tQ9pRo4BCKlPDMZYBU.QDbS89.Vvhy16ZEZK1dlErDHihnrtDO', // Customer01
         role: Role.Customer,
         rating: [],
         loan: [],
@@ -192,30 +193,38 @@ export class FixturesService implements OnModuleInit {
   private async loadFixturesLoans(savedUsers: User[], savedProducts: Product[]) {
     const [skyjo, galerapagos] = savedProducts;
     const [, customer, customer2] = savedUsers;
-
-    const futureDate = new Date();
-    
+  
+    const futureDate1 = new Date();
+    futureDate1.setDate(futureDate1.getDate() + 7);
+  
+    const futureDate2 = new Date();
+    futureDate2.setDate(futureDate2.getDate() + 7);
+  
     const loans = this.loanRepository.create([
-      { 
-        endDate: futureDate.setDate(futureDate.getDate() + 7),
+      {
+        endDate: futureDate1,
         product: skyjo,
-        user: customer
+        user: customer,
       },
       {
+        endDate: futureDate2,
         product: galerapagos,
         user: customer2,
-        endDate: futureDate.setDate(futureDate.getDate() + 7),
-      }
+      },
     ]);
-
+  
+    if (!futureDate1 || !futureDate2) {
+      throw new Error("Invalid dates provided.");
+    }
+  
     const savedLoans = await this.loanRepository.save(loans);
     return savedLoans;
   }
+  
 
   private async loadFixturesWish(savedUsers: User[], savedGames: Game[]) {
     const [skyjo, galerapagos] = savedGames;
     const [, customer, customer2] = savedUsers;
-    
     const wish = this.wishRepository.create([
       { 
         user: customer,
@@ -231,7 +240,7 @@ export class FixturesService implements OnModuleInit {
       }
     ]);
 
-    const savedWish = await this.loanRepository.save(wish);
+    const savedWish = await this.wishRepository.save(wish);
     return savedWish;
   }
 
@@ -251,7 +260,7 @@ export class FixturesService implements OnModuleInit {
       }
     ]);
 
-    const savedRules = await this.loanRepository.save(rules);
+    const savedRules = await this.ruleRepository.save(rules);
     return savedRules;
   }
 }

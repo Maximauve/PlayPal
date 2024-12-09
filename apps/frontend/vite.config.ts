@@ -15,4 +15,7 @@ export default defineConfig({
     react(),
     svgr()
   ],
+  optimizeDeps: {
+    include: ['@playpal/schemas']
+  }
 });
