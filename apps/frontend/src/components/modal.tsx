@@ -20,7 +20,7 @@ export default function Modal({ visible, onClose, classes, title, translateOptio
   }
 
   return (
-    <div className={`absolute rounded-md flex flex-col items-center justify-center shadow-lg ${classes}`}>
+    <div className={`absolute z-10 rounded-md flex flex-col items-center justify-center shadow-lg ${classes}`}>
       <div className="py-2 px-9 relative flex flex-row justify-center items-center">
         {title && (
           <p className="font-semibold text-lg">{i18n.t(title, translateOptions)}</p>
