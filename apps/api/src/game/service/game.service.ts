@@ -36,7 +36,7 @@ export class GameService {
       .skip(offset)
       .take(limit)
       .getMany();
-    
+
     await Promise.all(data.map(async (game) => {
       game.tags = await this.gamesRepository
         .createQueryBuilder('game')
@@ -63,20 +63,20 @@ export class GameService {
   }
 
   async update(gameId: string, game: GameUpdatedDto): Promise<Game | null> {
-    const existingGame = await this.gamesRepository.findOne({ 
-      where: { 
+    const existingGame = await this.gamesRepository.findOne({
+      where: {
         id: gameId
-      }, 
+      },
       relations: {
         tags: true,
         product: true,
         rating: true
-      } 
+      }
     });
     if (!existingGame) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-    const { tagIds, ...gameData } = game; 
+    const { tagIds, ...gameData } = game;
     await this.gamesRepository.update(gameId, gameData);
     if (tagIds) {
       const tags = await this.tagsRepository.getByIds(tagIds);
@@ -87,7 +87,7 @@ export class GameService {
     }
     await this.gamesRepository.save(existingGame);
     return this.findOneGame(gameId); // have relations in response
-  }  
+  }
 
   async delete(gameId: string): Promise<void> {
     const query = await this.gamesRepository
@@ -109,6 +109,28 @@ export class GameService {
       .leftJoinAndSelect("game.product", "product")
       .leftJoinAndSelect("game.tags", "tag")
       .getOne();
+  }
+
+  async getGameNotes(gameId: string) {
+    const averageNote = await this.gamesRepository.createQueryBuilder("game")
+      .leftJoin("game.rating", "rating")
+      .where("game.id = :id", { id: gameId })
+      .select("AVG(rating.note)", "averageNote")
+      .getRawOne();
+
+    const noteCount = await this.gamesRepository.createQueryBuilder("game")
+      .leftJoin("game.rating", "rating")
+      .where("game.id = :id", { id: gameId })
+      .select("rating.note", "note")
+      .addSelect("COUNT(rating.note)", "count")
+      .groupBy("rating.note")
+      .getRawMany();
+
+    return {
+      gameId: gameId,
+      averageNote: averageNote.averageNote,
+      noteCount: noteCount
+    };
   }
 
   async findOneName(name: string): Promise<Game | null> {

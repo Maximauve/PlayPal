@@ -44,12 +44,15 @@ export class GameController {
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
     const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
+    const stats = await Promise.all(data.map(game => this.gamesService.getGameNotes(game.id)));
+
     return {
       data,
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
+      stats
     };
   }
 
@@ -63,6 +66,18 @@ export class GameController {
   @ApiBadRequestResponse({ description: "UUID is invalid" })
   getOneGame(@GameRequest() game: Game): Game {
     return game;
+  }
+
+  @Get('/:gameId/notes')
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: "Get one game" })
+  @ApiParam({ name: 'gameId', description: 'Game id', required: true })
+  @ApiOkResponse({ description: "Game found successfully", type: Game })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
+  getOneGameNotes(@GameRequest() game: Game) {
+    return this.gamesService.getGameNotes(game.id);
   }
 
   @Post('')
