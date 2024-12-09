@@ -65,6 +65,7 @@ export class UserService {
       .leftJoinAndSelect("user.rating", "rating")
       .leftJoinAndSelect("user.loan", "loan")
       .leftJoinAndSelect("user.product", "product")
+      .addSelect("user.password")
       .getOne();
   }
 
@@ -75,6 +76,7 @@ export class UserService {
       .leftJoinAndSelect("user.rating", "rating")
       .leftJoinAndSelect("user.loan", "loan")
       .leftJoinAndSelect("user.product", "product")
+      .addSelect("user.password")
       .getOne();
     return user;
   }

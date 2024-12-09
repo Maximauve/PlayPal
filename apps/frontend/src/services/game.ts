@@ -32,7 +32,11 @@ export const gameApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Games'],
     }),
+
+    getGame: builder.query<Game, string>({
+      query: (id) => `games/${id}`,
+    }),
   }),
 });
 
-export const { useGetGamesQuery, useCreateGameMutation } = gameApi;
+export const { useGetGamesQuery, useCreateGameMutation, useGetGameQuery } = gameApi;
