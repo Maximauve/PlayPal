@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "navbar": {
+      "title": "PlayPal",
+      "dashboard": "Tableau de bord",
+      "game-list": "Liste des jeux",
+      "loan-list": "Liste des prêts",
+      "wishlist": "Liste de souhaits"
+    },
+    "game" :{
+      "add": "Ajouter un jeu"
+    }
+  }
+}
