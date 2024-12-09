@@ -31,5 +31,7 @@
   "WISH_CANT_CREATE": "Le souhait n'a pas pu être créé",
   "WISH_CANT_DELETE": "Le souhait n'a pas pu être supprimé",
   "PAGE_NOT_FOUND": "La page {page} n'a pas été trouvée",
-  "PRODUCT_ALREADY_RENTED": "Le produit est déjà loué"
+  "PRODUCT_ALREADY_RENTED": "Le produit est déjà loué",
+  "SOMETHING_WENT_WRONG": "Une erreur s'est produite. Veuillez réessayer",
+  "ALREADY_ON_WAITLIST": "Tu es déjà sur liste d'attente sur ce jeu"
 }

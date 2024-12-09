@@ -80,4 +80,11 @@ export class LoanController {
   async deleteLoan(@LoanRequest() loan: Loan): Promise<void> {
     await this.loanService.delete(loan.id);
   }
+
+  @Post('/return/:loanId')
+  @UseGuards(LoanGuard)
+  returnLoan(@LoanRequest() loan: Loan) {
+    console.log(loan);
+  }
+
 }

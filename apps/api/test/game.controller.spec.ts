@@ -11,6 +11,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 import { ProductService } from '@/product/service/product.service';
+import { RedisService } from '@/redis/service/redis.service';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -20,6 +21,7 @@ describe('GameController', () => {
   let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
   let mockProductService: Partial<ProductService>;
+  let mockRedisService: Partial<RedisService>;
 
   const mockGames: Game[] = [
     {
@@ -90,6 +92,8 @@ describe('GameController', () => {
 
     mockProductService = {}
 
+    mockRedisService = {}
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GameController],
       providers: [
@@ -99,6 +103,7 @@ describe('GameController', () => {
         { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
         { provide: ProductService, useValue: mockProductService },
+        { provide: RedisService, useValue: mockRedisService },
       ],
     }).compile();
 

@@ -45,4 +45,12 @@ export class RedisService {
   async del(key: string): Promise<void> {
     await this.redisClient.del(key);
   }
+
+  async push(key: string, value: string): Promise<void> {
+    await this.redisClient.lpush(key, value);
+  }
+
+  async lgetall(key: string) {
+    return this.redisClient.lrange(key, 0, -1);
+  }
 }
