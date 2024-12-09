@@ -10,6 +10,12 @@
 		"close": "fermer",
 		"search": "rechercher",
 		"confirm": "confirmer",
-		"validate": "valider"
+		"validate": "valider",
+		"about": "à propos",
+		"contact": "contact"
+	},
+	"copyright": {
+		"message": "© 2024 Playpal. All rights reserved",
+		"love": "Made with love"
 	}
 }

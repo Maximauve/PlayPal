@@ -22,9 +22,7 @@ export default function SearchPage(): React.JSX.Element {
   useEffect(() => {
     const tags: TagType[]= location.state?.tags;
     if (tags) {
-      tags.forEach((tag: TagType) => {
-        setSelectedTags((prevTags: TagType[]) => prevTags.some((t) => t.id === tag.id) ? prevTags.filter((t) => t.id !== tag.id) : [...prevTags, tag]);
-      });
+      setSelectedTags(tags);
     }
   }, [location.state?.tags]);
 
