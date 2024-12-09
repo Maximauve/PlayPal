@@ -1,4 +1,5 @@
 import account from "@/assets/translations/fr-FR/account.json";
+import admin from '@/assets/translations/fr-FR/admin.json';
 import auth from "@/assets/translations/fr-FR/auth.json";
 import common from '@/assets/translations/fr-FR/common.json';
 import home from '@/assets/translations/fr-FR/home.json';
@@ -11,7 +12,8 @@ const FR = {
   ...account,
   ...auth,
   ...validation,
-  ...search
+  ...search,
+  ...admin
 };
 
 export default FR;
