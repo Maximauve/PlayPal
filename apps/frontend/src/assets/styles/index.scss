@@ -7,6 +7,15 @@ body {
     color: theme('colors.text.light');
 }
 
+.admin {
+    display: inline-block;
+    background-color: theme('colors.background.light_dark');
+    color: theme('colors.text.light');
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+}
+
 .admin-layout {
     display: grid;
     grid-template-columns: 250px 1fr;
@@ -24,7 +33,7 @@ body {
         grid-column: 1 / 2;
         width: 100%;
         height: 100%;
-        background-color: theme('colors.background.light');
+        background-color: theme('colors.background.light_dark');
         border-radius: 15px;
         padding: 10px;
         box-shadow: 4px -4px 10px 0px rgba(187, 187, 187, 0.25), -4px 4px 10px 0px rgba(0, 0, 0, 0.25);
@@ -90,7 +99,7 @@ body {
         .add-game-button{
             grid-column: 2 / 3;
             grid-row: 1 / 2;
-            background-color: theme('colors.background.light');
+            background-color: theme('colors.background.light_dark');
             border-radius: 15px;
             padding: 10px;
             box-shadow: 4px -4px 10px 0px rgba(187, 187, 187, 0.25), -4px 4px 10px 0px rgba(0, 0, 0, 0.25);
@@ -99,7 +108,7 @@ body {
         .list {
             grid-column: 1 / 3;
             grid-row: 2 / 3;
-            background-color: theme('colors.background.light');
+            background-color: theme('colors.background.light_dark');
             border-radius: 15px;
             padding: 10px;
             box-shadow: 4px -4px 10px 0px rgba(187, 187, 187, 0.25), -4px 4px 10px 0px rgba(0, 0, 0, 0.25);
