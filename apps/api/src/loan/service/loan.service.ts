@@ -39,7 +39,7 @@ export class LoanService {
       .getOne();
   }
 
-  async create(loanDto: LoanDto, product: Product): Promise<Loan | null> {
+  async create(loanDto: LoanDto): Promise<Loan | null> {
     const user = await this.userRepository
       .createQueryBuilder("user")
       .where("user.id = :id", { id: loanDto.userId })

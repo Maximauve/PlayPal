@@ -51,7 +51,7 @@ export class LoanController {
     if (await this.loanService.checkProductNotRented(product.id, body)) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_ALREADY_RENTED"), HttpStatus.CONFLICT);
     }
-    const loan = await this.loanService.create(body, product);
+    const loan = await this.loanService.create(body);
     if (!loan) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
