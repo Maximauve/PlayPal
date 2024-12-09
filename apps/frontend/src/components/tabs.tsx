@@ -6,6 +6,7 @@ export interface TabProperties {
   label: string;
   isActive?: boolean;
   onClick?: () => void;
+  ytbLink?: string;
 }
 
 interface TabsProperties {
@@ -53,6 +54,21 @@ export const Tabs = ({ tabs, classes }: TabsProperties) => {
           </Fragment>
         ))}
       </div>
+      {/* Youtube iframe */}
+      {activeTab?.ytbLink && (
+        <div className="mt-4">
+          <iframe
+            width="100%"
+            height="250px"
+            src={`https://www.youtube-nocookie.com/embed/${activeTab.ytbLink}?mute=1`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
+      {/* Content */}
       <div className="mt-4">
         {activeTab?.content}
       </div>

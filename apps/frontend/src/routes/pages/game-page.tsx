@@ -1,3 +1,5 @@
+import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
@@ -32,7 +34,7 @@ export default function GamePage(): React.JSX.Element {
 
       setTabsItems([
         { label: "Description", content: game.description, isActive: true },
-        ...(game.rules ? game.rules.map((rule) => ({ label: rule.title || '', content: rule.description || '' })) : []),
+        ...(game.rules ? game.rules.map((rule) => ({ label: rule.title || '', content: rule.description || '', ytbLink: rule.youtubeId })) : []),
       ]);
     }
   }, [game, isLoading]);
@@ -54,7 +56,7 @@ export default function GamePage(): React.JSX.Element {
           {/* Product Image */}
           <div className="w-full md:w-1/2 p-2">
             <img
-              src="https://placehold.co/400x400?text=UNO"
+              src={game?.image}
               alt="Product"
               className="rounded-lg shadow-md"
             />
@@ -67,6 +69,21 @@ export default function GamePage(): React.JSX.Element {
 
             {/* Rating */}
             <Rating rating={3.4} nbRatings={game?.rating?.length} />
+
+            <div className='flex flex-col '>
+              <div className="flex items-center text-gray-500 text-sm mt-4">
+                <FontAwesomeIcon icon={faUserGroup} className="text-black mr-2" />
+                <p>De {game?.minPlayers} à {game?.maxPlayers} personnes</p>
+                <FontAwesomeIcon icon={faClock} className="text-black mr-2 ml-3" />
+                <p>{game?.duration}</p>
+                <FontAwesomeIcon icon={faFireFlameCurved} className="text-black mr-2 ml-3" />
+                <p>Difficulté {game?.difficulty}/5</p>
+              </div>
+              <div className="flex items-center text-gray-500 text-sm mt-2">
+                <FontAwesomeIcon icon={faCakeCandles} className="text-black mr-2" />
+                <p>{game?.minYear} ans et plus</p>
+              </div>
+            </div>
 
             {/* Availability */}
             <div className="mt-6 mb-4">
