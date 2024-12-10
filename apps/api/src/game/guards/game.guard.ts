@@ -28,8 +28,12 @@ export class GameGuard implements CanActivate {
         id: gameId 
       },
       relations: {
-        rating: true,
-        product: true
+        rating: {
+          user: true,
+        },
+        product: true,
+        tags: true,
+        rules: true,
       }
     });
     

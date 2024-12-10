@@ -5,6 +5,7 @@ import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
 import GameList from "@/components/game-list";
 import AdminGuard from "@/guard/admin-guard";
+import GamePage from "@/routes/pages/game-page";
 import HomePage from "@/routes/pages/home-page";
 import SearchPage from "@/routes/pages/search-page";
 import UserHistoryPage from "@/routes/pages/user-history-page";
@@ -84,7 +85,17 @@ const router = createBrowserRouter([
         element: <SearchPage />
       }
     ]
-  }
+  },
+  {
+    path: "/game/:id",
+    element: <MainLayout/>,
+    children: [
+      {
+        path: "",
+        element: <GamePage />
+      }
+    ]
+  },
 ]);
 
 export default router;
