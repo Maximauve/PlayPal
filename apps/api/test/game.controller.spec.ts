@@ -71,6 +71,7 @@ describe('GameController', () => {
       getAll: jest.fn().mockResolvedValue(mockGames),
       findOneGame: jest.fn(),
       findOneName: jest.fn(),
+      getGameNotes: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -113,11 +114,12 @@ describe('GameController', () => {
         total: mockGames.length,
         page: 1,
         limit: 10,
-        totalPages: 1
+        totalPages: 1,
+        stats: []
       }
 
-      jest.spyOn(mockGameService, 'getAll').mockResolvedValue(allResult);
 
+      jest.spyOn(mockGameService, 'getAll').mockResolvedValue(allResult);
       const result = await gameController.getAll();
       expect(result).toEqual(allResult);
     });
@@ -171,7 +173,7 @@ describe('GameController', () => {
 
     it('should update a game successfully', async () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
-      
+
       jest.spyOn(mockGameService, 'update').mockResolvedValue(updatedGame);
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 
