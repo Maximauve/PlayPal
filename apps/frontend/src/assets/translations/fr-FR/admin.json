@@ -9,6 +9,17 @@
     },
     "game" :{
       "add": "Ajouter un jeu"
+    },
+    "create": {
+      "game": {
+        "title": "Nom du jeu",
+        "description": "Description",
+        "minPlayers": "Nombre de joueurs minimum",
+        "maxPlayers": "Nombre de joueurs maximum",
+        "difficulty": "Difficulté",
+        "minYear": "Age minimum",
+        "duration": "Durée d'une partie"
+      }
     }
   }
 }

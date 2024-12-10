@@ -13,7 +13,7 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: WordingKey;
   required?: boolean;
-  type?: 'email' | 'password' | 'text';
+  type?: 'email' | 'number' | 'password' | 'text';
   value?: string;
 }
 
@@ -34,7 +34,7 @@ export default function TextInput({ name, isDisabled, error, label, onChange, pl
 
   return (
     <Fragment>
-      <div className='flex flex-col items-start'>
+      <div className='flex flex-col items-start w-full px-5'>
         { label && (
           <label htmlFor={`${name}-input`} className={'text-sm text-black ' + (required ? "after:content-['*']" : "")}>{i18n.t(label)}</label>
         )}

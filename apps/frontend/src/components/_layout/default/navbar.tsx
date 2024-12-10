@@ -2,8 +2,8 @@ import React, { Fragment, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 
 import DefaultProfile from "@/assets/images/default-profile-picture.jpg";
-import AuthModal from "@/components/auth-modal";
-import Modal from "@/components/modal";
+import AuthModal from "@/components/modals/auth-modal";
+import Modal from "@/components/modals/modal";
 import useAuth from "@/hooks/use-auth";
 import useModal from "@/hooks/use-modal";
 import useTranslation from "@/hooks/use-translation";
