@@ -10,7 +10,6 @@ import { TagGuard } from "@/tag/guards/tag.guard";
 import { TagService } from "@/tag/service/tag.service";
 import { TranslationService } from "@/translation/translation.service";
 
-@UseGuards(JwtAuthGuard)
 @ApiTags('tags')
 @Controller('/tags')
 export class TagController {
@@ -39,6 +38,7 @@ export class TagController {
     return tag;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('')
   @ApiOperation({ summary: 'Create a tag' })
   @ApiOkResponse({ type: Tag })
@@ -51,7 +51,8 @@ export class TagController {
     }
     return tag;
   }
-  
+
+  @UseGuards(JwtAuthGuard)
   @UseGuards(TagGuard)
   @Put('/:tagId')
   @ApiOperation({ summary: 'Update a tag' })
@@ -68,6 +69,7 @@ export class TagController {
     return tagUpdated;
   }
 
+  @UseGuards(JwtAuthGuard)
   @UseGuards(TagGuard)
   @Delete('/:tagId')
   @ApiOperation({ summary: 'Delete a tag' })

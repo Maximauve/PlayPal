@@ -20,6 +20,11 @@ export default {
           active : '#FFFFFF',
           hover : '#FFFFFF',
           default : '#2F2C34',
+        },
+        admin: {
+          background: {
+            light : '#2F2C34',
+          }
         }
       }
     },

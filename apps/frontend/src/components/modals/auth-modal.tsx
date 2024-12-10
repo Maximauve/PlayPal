@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import LoginForm from "@/components/form/login-form";
 import RegisterForm from "@/components/form/register-form";
-import FullModal from "@/components/full-modal";
+import FullModal from "@/components/modals/full-modal";
 import { type WordingKey } from "@/context/i18n/i18n-service";
 import { loginInitalValues, loginSchema } from "@/forms/login-schema";
 import { registerInitalValues, registerSchema } from "@/forms/register-schema";
