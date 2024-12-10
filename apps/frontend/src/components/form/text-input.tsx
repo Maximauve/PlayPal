@@ -13,7 +13,7 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: WordingKey;
   required?: boolean;
-  type?: 'email' | 'number' | 'password' | 'text';
+  type?: 'email' | 'password' | 'text';
   value?: string;
 }
 

@@ -22,7 +22,6 @@ export default function Select({
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
-    console.log(selectedValues);
     onChange(selectedValues);
   };
 

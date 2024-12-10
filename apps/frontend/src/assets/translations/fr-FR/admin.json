@@ -8,17 +8,19 @@
       "wishlist": "Liste de souhaits"
     },
     "game" :{
-      "add": "Ajouter un jeu"
+      "add": "Ajouter un jeu",
+      "sumbit": "Créer le jeu"
     },
     "create": {
       "game": {
-        "title": "Nom du jeu",
+        "name": "Nom du jeu",
         "description": "Description",
         "minPlayers": "Nombre de joueurs minimum",
         "maxPlayers": "Nombre de joueurs maximum",
         "difficulty": "Difficulté",
         "minYear": "Age minimum",
-        "duration": "Durée d'une partie"
+        "duration": "Durée d'une partie",
+        "brand": "Marque"
       }
     }
   }

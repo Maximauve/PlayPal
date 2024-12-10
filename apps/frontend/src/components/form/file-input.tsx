@@ -1,42 +1,31 @@
-import React, { Fragment, useRef } from "react";
+import { type CreateGamePayload } from "@playpal/schemas";
+import { type useFormik } from "formik";
+import React from "react";
 
-import useTranslation from "@/hooks/use-translation";
+import { type WordingKey } from "@/context/i18n/i18n-service";
 
 interface Props {
+  formik: ReturnType<typeof useFormik<CreateGamePayload>>;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
-  error?: { isError: boolean; message: string };
-  isDisabled?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
-  value?: string;
 }
 
 
-export default function FileInput({ name, isDisabled, error, required, value, onChange }: Props): React.JSX.Element {
-  const fileInputReference = useRef<HTMLInputElement>(null);
-
-  const i18n = useTranslation();
-
-  const handleEditClick = () => {
-    fileInputReference.current?.click();
-  };
+export default function FileInput({ name, handleFileChange, formik }: Props): React.JSX.Element {
 
   return (
-    <Fragment>
-      <input type="file" ref={fileInputReference} className="hidden" onChange={onChange}
+    <div>
+      <label htmlFor="image">Image</label>
+      <input
+        id={name}
         name={name}
-        src={value}
-        id={`${name}-input`}
-        disabled={isDisabled}
-        defaultValue={value}
-        required={required}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
       />
-      <div className="w-24 h-24 rounded-full overflow-hidden cursor-pointer" onClick={handleEditClick}>
-        <img src={value ?? "https://via.placeholder.com/150"} alt="Profile" className="w-full h-full object-cover" />
-      </div>
-      {error?.isError && (
-        <span className='text-red-600 text-sm w-full'>{i18n.t(error.message)}</span>
+      {formik.touched.image && formik.errors.image && (
+        <div className="error">{formik.errors.image as WordingKey}</div>
       )}
-    </Fragment>
+    </div>
   );
 }

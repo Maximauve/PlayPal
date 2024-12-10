@@ -8,4 +8,5 @@ export interface CreateGamePayload {
   minYear: number;
   brand: string;
   tagIds: string[];
+  image?: File;
 }

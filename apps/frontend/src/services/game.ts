@@ -22,6 +22,7 @@ export const gameApi = baseApi.injectEndpoints({
         }
         return `games?${parameters.toString()}`;
       },
+      providesTags: ['Games']
     }),
     createGame: builder.mutation<Game, CreateGamePayload>({
       query: (body: CreateGamePayload) => ({
@@ -29,6 +30,7 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ['Games'],
     }),
   }),
 });
