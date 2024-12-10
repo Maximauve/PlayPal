@@ -23,7 +23,10 @@ export const gameApi = baseApi.injectEndpoints({
         return `games?${parameters.toString()}`;
       },
     }),
+    getRecommendations: builder.query<GameResponse, number>({
+      query: (limit = 10) => `games/recommendations?limit=${limit}`,
+    }),
   }),
 });
 
-export const { useGetGamesQuery } = gameApi;
+export const { useGetGamesQuery, useGetRecommendationsQuery } = gameApi;

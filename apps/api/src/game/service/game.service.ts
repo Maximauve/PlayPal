@@ -48,6 +48,18 @@ export class GameService {
     return { data, total };
   }
 
+  async getRecommendations(limit : number): Promise<{ data: Game[] }>{
+    const data =  await this.gamesRepository.createQueryBuilder("game")
+      .leftJoinAndSelect("game.rating", "rating")
+      .leftJoinAndSelect("game.product", "product")
+      .leftJoinAndSelect("game.tags", "tags")
+      .orderBy("rating.note", "DESC")
+      .limit(limit)
+      .getMany();
+
+    return { data };
+  }
+
   async create(game: GameDto): Promise<Game | null> {
     const { tagIds, ...gameData } = game;
     const newGame = this.gamesRepository.create(gameData);

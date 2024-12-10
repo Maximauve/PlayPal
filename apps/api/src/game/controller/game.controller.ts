@@ -55,6 +55,16 @@ export class GameController {
       stats
     };
   }
+  
+  @Get('/recommendations')
+  @ApiOperation({ summary: "Get all games" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
+  async getRecommendations(@Query('limit') limit = 10) {
+    const data = await this.gamesService.getRecommendations(limit);
+
+    return data;
+  }
 
   @Get('/:gameId')
   @UseGuards(GameGuard)
@@ -70,7 +80,7 @@ export class GameController {
 
   @Get('/:gameId/notes')
   @UseGuards(GameGuard)
-  @ApiOperation({ summary: "Get one game" })
+  @ApiOperation({ summary: "Get one game average note and the count of each possible note" })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
   @ApiOkResponse({ description: "Game found successfully", type: Game })
   @ApiUnauthorizedResponse({ description: "User not connected" })
