@@ -1,10 +1,11 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
 
 import Breadcrumb, { type BreadcrumbItem } from '@/components/breadcrumb';
+import ReviewForm from '@/components/form/review-form';
 import { Rating } from '@/components/rating';
 import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
@@ -18,6 +19,8 @@ export default function GamePage(): React.JSX.Element {
   const id = useParams<{ id: string }>() as { id: string };
   const { data: game, isLoading } = useGetGameQuery(id.id);
 
+  const navigate = useNavigate();
+
   const [locDate, setLocDate] = useState<DateValueType>({
     startDate: null,
     endDate: null,
@@ -27,9 +30,9 @@ export default function GamePage(): React.JSX.Element {
   useEffect(() => {
     if (!isLoading && game) {
       setBreadcrumbItems([
-        { label: 'Home', isActive: false, onClick: () => console.log('Home') },
-        { label: 'Products', isActive: false, onClick: () => console.log('Products') },
-        { label: game.name },
+        { label: 'Home', isActive: false, onClick: () => navigate('/') },
+        { label: 'Products', isActive: false, onClick: () => navigate('/search') },
+        { label: game.name, isActive: true },
       ]);
 
       setTabsItems([
@@ -109,15 +112,15 @@ export default function GamePage(): React.JSX.Element {
             </div>
 
             {/* Action Buttons */}
-            <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full">
+            <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full hover:bg-gray-800">
               Rent this game
             </button>
             <div className="flex items-center justify-evenly text-sm text-gray-500">
-              <button className="flex items-center">
+              <button className="flex hover:underline items-center">
                 <span className="mr-1">🔗</span> Share
               </button>
               <span className="text-gray-400 font-bold">|</span>
-              <button className="flex items-center">
+              <button className="flex hover:underline items-center">
                 <span className="mr-1">❤️</span> Wishlist
               </button>
             </div>
@@ -131,6 +134,9 @@ export default function GamePage(): React.JSX.Element {
             <Tabs tabs={tabsItems} classes='bg-gray-200 w-full p-2 rounded-md text-sm' />
           </div>
           <div className="w-full md:w-1/2 p-2">
+            <div>
+              <ReviewForm onSubmit={() => {}} />
+            </div>
             {game?.rating && (
               game.rating.map((rating, index) => (
                 <div>

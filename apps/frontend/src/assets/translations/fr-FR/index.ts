@@ -3,6 +3,7 @@ import admin from '@/assets/translations/fr-FR/admin.json';
 import auth from "@/assets/translations/fr-FR/auth.json";
 import common from '@/assets/translations/fr-FR/common.json';
 import home from '@/assets/translations/fr-FR/home.json';
+import review from '@/assets/translations/fr-FR/review.json';
 import search from "@/assets/translations/fr-FR/search.json";
 import validation from '@/assets/translations/fr-FR/validation.json';
 
@@ -13,7 +14,8 @@ const FR = {
   ...auth,
   ...validation,
   ...search,
-  ...admin
+  ...admin,
+  ...review
 };
 
 export default FR;
