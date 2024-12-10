@@ -16,3 +16,4 @@ export { User } from './src/user/user.entity';
 export type { JwtPayload } from './src/user/jwt.interface';
 export { Role } from './src/user/role.enum';
 export { Wish } from './src/wish/wish.entity';
+export type { RatingDto } from './src/rating/rating.dto';

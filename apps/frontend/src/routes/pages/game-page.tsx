@@ -1,5 +1,8 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { type RatingDto } from '@playpal/schemas';
+import { useFormik } from 'formik';
+import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
@@ -10,23 +13,45 @@ import { Rating } from '@/components/rating';
 import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
 import { Tabs } from '@/components/tabs';
+import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
 import useTranslation from '@/hooks/use-translation';
 import { useGetGameQuery } from '@/services/game';
+import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
 
 export default function GamePage(): React.JSX.Element {
   const [tabsItems, setTabsItems] = useState<TabProperties[]>([]);
   const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItem[]>([]);
-  const id = useParams<{ id: string }>() as { id: string };
-  const { data: game, isLoading } = useGetGameQuery(id.id);
-
-  const navigate = useNavigate();
-
   const [locDate, setLocDate] = useState<DateValueType>({
     startDate: null,
     endDate: null,
   });
 
-  // if isLoading is false and game is ok, load the breadcrumb and tabs
+  const id = useParams<{ id: string }>() as { id: string };
+  const { data: game, isLoading } = useGetGameQuery(id.id);
+  const { data: ratings, refetch } = useGetRatingsQuery({ gameId: id.id });
+  const [addRating] = useAddRatingMutation();
+  const navigate = useNavigate();
+  const i18n = useTranslation();
+
+  const formik = useFormik<RatingDto>({
+    initialValues: {
+      note: reviewInitialValues.note,
+      comment: reviewInitialValues.comment,
+    },
+    validate: withZodSchema(reviewSchema),
+    onSubmit: async (values) => {
+      try {
+        await addRating({ gameId: id.id, body: values }).unwrap();
+        formik.resetForm();
+        refetch(); // Rafraîchir les évaluations après submit réussie
+      } catch (error) {
+        console.error("Add rating", error);
+      }
+    },
+    validateOnChange: true,
+    enableReinitialize: true,
+  });
+
   useEffect(() => {
     if (!isLoading && game) {
       setBreadcrumbItems([
@@ -40,13 +65,12 @@ export default function GamePage(): React.JSX.Element {
         ...(game.rules ? game.rules.map((rule) => ({ label: rule.title || '', content: rule.description || '', ytbLink: rule.youtubeId })) : []),
       ]);
     }
-  }, [game, isLoading]);
+  }, [game, isLoading, navigate]);
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  const i18n = useTranslation();
   return (
     <>
       <div className="p-6 max-w-5xl mx-auto">
@@ -134,13 +158,21 @@ export default function GamePage(): React.JSX.Element {
             <Tabs tabs={tabsItems} classes='bg-gray-200 w-full p-2 rounded-md text-sm' />
           </div>
           <div className="w-full md:w-1/2 p-2">
-            <div>
-              <ReviewForm onSubmit={() => {}} />
+            <div className='flex flex-col gap-4 mb-5 p-5 border border-gray-400 rounded-md'>
+              <h2 className='text-lg font-bold'>{i18n.t('review.addReview')}</h2>
+              <ReviewForm formik={formik}/>
+              <button
+                className='btn-primary bg-black text-white w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
+                type="button"
+                disabled={formik.isSubmitting}
+                onClick={() => formik.handleSubmit()}>
+                {i18n.t("review.submit")}
+              </button>
             </div>
-            {game?.rating && (
-              game.rating.map((rating, index) => (
-                <div>
-                  <Review key={index} rating={rating} />
+            {ratings && (
+              ratings.map((rating, index) => (
+                <div key={index}>
+                  <Review rating={rating} />
                   <hr className='my-3'/>
                 </div>
               ))

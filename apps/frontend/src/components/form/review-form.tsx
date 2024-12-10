@@ -1,36 +1,46 @@
-import { useFormik } from 'formik';
+import { type RatingDto } from '@playpal/schemas';
+import { type useFormik } from 'formik';
 import React, { useCallback } from 'react';
 
+import NumberInput from '@/components/form/number-input';
 import TextInput from '@/components/form/text-input';
 import { type WordingKey } from '@/context/i18n/i18n-service';
-import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
 
 interface Props {
-  onSubmit: (values: typeof reviewInitialValues) => void;
+  formik: ReturnType<typeof useFormik<RatingDto>>;
 }
 
-export default function ReviewForm({ onSubmit }: Props): React.JSX.Element {
-  const formik = useFormik({
-    initialValues: reviewInitialValues,
-    validationSchema: reviewSchema,
-    onSubmit,
-  });
+export default function ReviewForm({ formik }: Props): React.JSX.Element {
+  // const formik = useFormik({
+  //   initialValues: reviewInitialValues,
+  //   validationSchema: reviewSchema,
+  //   onSubmit,
+  // });
 
   const handleChange = useCallback((field: string, value: string) => {
     formik.setFieldValue(field, value);
     formik.setFieldTouched(field, true);
   }, [formik]);
 
+  const handleNumberChange = useCallback((field: string, value: number) => {
+    formik.setFieldValue(field, value);
+    formik.setFieldTouched(field, true);
+  }, [formik]);
+
   return (
-    <form onSubmit={formik.handleSubmit} className='flex flex-col gap-2'>
-      <TextInput
-        name='rating'
+    <div className='flex flex-col gap-2'>
+      {/* <NumberInput name='minPlayers' value={1} min={1} max={99} label='admin.create.game.minPlayers' onChange={(e) => handleNumberChange('minPlayers', Number.parseInt(e.target.value, 10))} error={{ isError: !!formik.touched.minPlayers && !!formik.errors.minPlayers, message: formik.errors.minPlayers as WordingKey }} /> */}
+      <NumberInput
+        name='note'
         label='review.rating'
-        type='text'
-        value={formik.values.rating.toString()}
+        value={1}
+        min={1}
+        max={5}
         required
-        onChange={(e) => handleChange('rating', e.target.value)}
-        error={{ isError: !!formik.touched.rating && !!formik.errors.rating, message: formik.errors.rating as WordingKey }}
+        onChange={(e) => handleNumberChange('note', Number.parseInt(e.target.value, 10))}
+        error={{ isError: !!formik.touched.note && !!formik.errors.note, message: formik.errors.note as WordingKey }}
+        classNameOverride='rounded-md text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 border-gray-200 '
+        placeholder={'review.notePlaceholder' as WordingKey}
       />
       <TextInput
         name='comment'
@@ -39,10 +49,9 @@ export default function ReviewForm({ onSubmit }: Props): React.JSX.Element {
         required
         onChange={(e) => handleChange('comment', e.target.value)}
         error={{ isError: !!formik.touched.comment && !!formik.errors.comment, message: formik.errors.comment as WordingKey }}
+        classNameOverride='rounded-md text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 border-gray-200 '
+        placeholder={'review.commentPlaceholder' as WordingKey}
       />
-      <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded'>
-        Submit Review
-      </button>
-    </form>
+    </div>
   );
 }

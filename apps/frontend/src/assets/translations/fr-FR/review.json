@@ -1,6 +1,10 @@
 {
     "review": {
         "rating": "Note",
-        "comment": "Commentaire"
+        "comment": "Commentaire",
+        "addReview": "Donnez votre avis",
+        "submit": "Envoyer",
+        "notePlaceholder": "Note sur 5",
+        "commentPlaceholder": "Votre commentaire"
     }
 }
