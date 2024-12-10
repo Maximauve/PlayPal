@@ -6,7 +6,7 @@ import { AllCards } from "@/components/all-cards";
 import Carousel from '@/components/carousel';
 import { TagsFilter } from '@/components/tags-filter';
 import useTranslation from '@/hooks/use-translation';
-import { useGetGamesQuery } from "@/services/game";
+import { useGetRecommendationsQuery } from "@/services/game";
 
 export default function HomePage(): React.JSX.Element {
   const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
@@ -23,11 +23,8 @@ export default function HomePage(): React.JSX.Element {
     navigate(`/search`, { state: { tags: selectedTags } });
   }, [selectedTags]);
 
-  const { data: gamesData } = useGetGamesQuery({
-    tags: selectedTags,
-    page: 1,
-    limit: 4
-  });
+  const { data: gamesData } = useGetRecommendationsQuery(4);
+  console.log(gamesData);
 
 
 
