@@ -12,6 +12,7 @@ export type I18nTranslations = {
         "USER_NOT_ADMIN": string;
         "PASSWORD_INCORRECT": string;
         "UNAUTHORIZED": string;
+        "PERMISSION_DENIED": string;
         "ID_INVALID": string;
         "GAME_NOT_FOUND": string;
         "GAME_CANT_CREATE": string;

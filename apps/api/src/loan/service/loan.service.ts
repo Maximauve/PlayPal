@@ -19,7 +19,15 @@ export class LoanService {
     private readonly translationsService: TranslationService
   ) { }
 
-  async getAllLoan(productId: string): Promise<Loan[]> {
+  async getAllLoan(): Promise<Loan[]> {
+    return this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect("loan.user", "user")
+      .leftJoinAndSelect("loan.product", "product")
+      .getMany();
+  }
+
+  async getAllByProduct(productId: string): Promise<Loan[]> {
     return this.loanRepository
       .createQueryBuilder('loan')
       .where("loan.productId = :id", { id: productId })
@@ -28,13 +36,12 @@ export class LoanService {
       .getMany();
   }
 
-  async getLoan(productId: string, loanId: string): Promise<Loan | null> {
+  async getLoan(loanId: string): Promise<Loan | null> {
     return this.loanRepository
       .createQueryBuilder("loan")
       .leftJoinAndSelect("loan.user", "user")
       .leftJoinAndSelect("loan.product", "product")
       .leftJoinAndSelect("product.game", "game")
-      .where("loan.productId = :productId", { productId: productId })
       .andWhere("loan.id = :loanId", { loanId: loanId })
       .getOne();
   }
@@ -75,13 +82,12 @@ export class LoanService {
     }
   }
 
-  async delete(productId: string, loanId: string): Promise<void> {
+  async delete(loanId: string): Promise<void> {
     const query = await this.loanRepository
       .createQueryBuilder()
       .delete()
       .from(Loan)
       .where("loan.id = :id", { id: loanId })
-      .andWhere('loan."productId" = :productId', { productId: productId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);

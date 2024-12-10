@@ -132,7 +132,7 @@ describe('LoanController', () => {
 
       jest.spyOn(mockLoanService, 'getAllLoan').mockResolvedValue(mockLoans);
 
-      const result = await loanController.getAllLoan(mockProduct);
+      const result = await loanController.getAllLoan();
       
       expect(result).toEqual(mockLoans);
     });
@@ -206,7 +206,7 @@ describe('LoanController', () => {
       jest.spyOn(mockLoanService, 'update').mockResolvedValue(undefined);
       jest.spyOn(mockLoanService, 'getLoan').mockResolvedValue(mockLoan);
 
-      const result = await loanController.updateLoan(mockProduct, mockLoan, loanUpdatedDto);
+      const result = await loanController.updateLoan(mockLoan, loanUpdatedDto);
       expect(result).toEqual(mockLoan);
       expect(mockLoanService.update).toHaveBeenCalledWith(validLoanId, loanUpdatedDto);
     });
@@ -217,9 +217,9 @@ describe('LoanController', () => {
 
       jest.spyOn(mockLoanService, 'delete').mockResolvedValue(undefined);
 
-      await expect(loanController.deleteLoan(mockProduct, mockLoan))
+      await expect(loanController.deleteLoan(mockLoan))
         .resolves.toBeUndefined();
-      expect(mockLoanService.delete).toHaveBeenCalledWith(validProductId, validLoanId);
+      expect(mockLoanService.delete).toHaveBeenCalledWith(validLoanId);
     });
   });
 });

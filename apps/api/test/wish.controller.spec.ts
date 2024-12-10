@@ -60,6 +60,7 @@ describe('WishController', () => {
         } as any;
 
         mockWishlistService = {
+            getAllWishes: jest.fn().mockResolvedValue([mockWish]),
             getAllWishesForGame: jest.fn().mockResolvedValue([mockWish]),
             getWish: jest.fn().mockResolvedValue(mockWish),
             create: jest.fn().mockResolvedValue(mockWish),
@@ -84,7 +85,7 @@ describe('WishController', () => {
 
     describe('getAllWishes', () => {
         it('should return all wishes for a valid gameId', async () => {
-            const result = await wishController.getAllWishes(mockWish);
+            const result = await wishController.getAllWishes();
             expect(result).toEqual([mockWish]);
         });
 

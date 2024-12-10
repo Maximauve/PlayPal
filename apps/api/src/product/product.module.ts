@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game, Product, User } from '@playpal/schemas';
 
 import { GameModule } from '@/game/game.module';
+import { LoanModule } from '@/loan/loan.module';
 import { ProductController } from '@/product/controller/product.controller';
 import { ProductService } from '@/product/service/product.service';
 import { RedisModule } from "@/redis/redis.module";
@@ -16,7 +17,8 @@ import { UsersModule } from '@/user/user.module';
     TypeOrmModule.forFeature([User]),
     forwardRef(() => RedisModule),
     forwardRef(() => UsersModule),
-    forwardRef(() => GameModule)
+    forwardRef(() => GameModule),
+    forwardRef(() => LoanModule)
   ],
   controllers: [ProductController],
   providers: [ProductService, TranslationService],

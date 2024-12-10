@@ -17,23 +17,15 @@ export class LoanGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithLoan>();
-    const gameId = request.params.gameId;
-    const productId = request.params.productId;
     const loanId = request.params.loanId;
 
-    if (!uuidRegex.test(productId) || !uuidRegex.test(gameId) || !uuidRegex.test(loanId)) {
+    if (!uuidRegex.test(loanId)) {
       throw new HttpException(await this.translationsService.translate("error.ID_INVALID"), HttpStatus.BAD_REQUEST);
     }
 
     const loan = await this.loanRepository.findOne({
       where: {
         id: loanId,
-        product: {
-          id: productId,
-          game: {
-            id: gameId
-          }
-        }
       },
       relations: {
         product: {

@@ -8,4 +8,7 @@ export class ProductDto {
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsEnum(State, { message: i18nValidationMessage<I18nTranslations>('validation.IS_STATE') })
   state: State;
+
+  @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
+  gameId: string;
 }
