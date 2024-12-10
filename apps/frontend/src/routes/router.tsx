@@ -85,7 +85,17 @@ const router = createBrowserRouter([
         element: <SearchPage />
       }
     ]
-  }
+  },
+  {
+    path: "/game/:id",
+    element: <MainLayout/>,
+    children: [
+      {
+        path: "",
+        element: <GamePage />
+      }
+    ]
+  },
 ]);
 
 export default router;
