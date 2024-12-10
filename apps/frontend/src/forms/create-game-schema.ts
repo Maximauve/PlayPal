@@ -4,11 +4,11 @@ import { z } from 'zod';
 export const createGameSchema = z.object({
   name: z.string().min(1, 'validation.required'),
   description: z.string().min(1, 'validation.required'),
-  minPlayers: z.number(),
-  maxPlayers: z.number(),
-  difficulty: z.number(),
+  minPlayers: z.number({ invalid_type_error: 'validation.required' }),
+  maxPlayers: z.number({ invalid_type_error: 'validation.required' }),
+  difficulty: z.number({ invalid_type_error: 'validation.required' }),
   duration: z.string().min(1, 'validation.required'),
-  minYear: z.number(),
+  minYear: z.number({ invalid_type_error: 'validation.required' }),
   brand: z.string().min(1, 'validation.required'),
   tagIds: z.array(z.string()).optional(),
   image: z

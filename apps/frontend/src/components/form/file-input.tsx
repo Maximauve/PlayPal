@@ -4,14 +4,14 @@ import React from "react";
 
 import { type WordingKey } from "@/context/i18n/i18n-service";
 
-interface Props {
+interface FileInputProps {
   formik: ReturnType<typeof useFormik<CreateGamePayload>>;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
 }
 
 
-export default function FileInput({ name, handleFileChange, formik }: Props): React.JSX.Element {
+export default function FileInput({ name, handleFileChange, formik }: FileInputProps): React.JSX.Element {
 
   return (
     <div>

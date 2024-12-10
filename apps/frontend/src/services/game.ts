@@ -1,4 +1,4 @@
-import { type CreateGamePayload, type Game, type Tag } from "@playpal/schemas";
+import { type Game, type Tag } from "@playpal/schemas";
 import { type GamePayload, type GameResponse } from "@playpal/schemas";
 
 import { baseApi } from "@/services/base";
@@ -24,8 +24,8 @@ export const gameApi = baseApi.injectEndpoints({
       },
       providesTags: ['Games']
     }),
-    createGame: builder.mutation<Game, CreateGamePayload>({
-      query: (body: CreateGamePayload) => ({
+    createGame: builder.mutation<Game, FormData>({
+      query: (body: FormData) => ({
         url: "/games",
         method: "POST",
         body,

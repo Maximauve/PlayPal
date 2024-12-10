@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { type WordingKey } from '@/context/i18n/i18n-service';
 import useTranslation from '@/hooks/use-translation';
 
-interface Props {
+interface NumberInputProps {
   name: string;
   error?: { isError: boolean; message: WordingKey };
   isDisabled?: boolean;
@@ -27,7 +27,7 @@ export default function NumberInput({
   value,
   max,
   min,
-}: Props): React.JSX.Element {
+}: NumberInputProps): React.JSX.Element {
   const i18n = useTranslation();
 
   return (
