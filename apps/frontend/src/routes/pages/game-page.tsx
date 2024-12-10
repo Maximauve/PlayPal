@@ -137,15 +137,15 @@ export default function GamePage(): React.JSX.Element {
 
             {/* Action Buttons */}
             <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full hover:bg-gray-800">
-              Rent this game
+              {i18n.t('game.details.addToRental')}
             </button>
             <div className="flex items-center justify-evenly text-sm text-gray-500">
               <button className="flex hover:underline items-center">
-                <span className="mr-1">🔗</span> Share
+                <span className="mr-1">🔗</span> {i18n.t('game.details.share')}
               </button>
               <span className="text-gray-400 font-bold">|</span>
               <button className="flex hover:underline items-center">
-                <span className="mr-1">❤️</span> Wishlist
+                <span className="mr-1">❤️</span> {i18n.t('game.details.wishlist')}
               </button>
             </div>
           </div>

@@ -1,0 +1,12 @@
+{
+    "game": {
+        "create": {
+
+        },
+        "details": {
+            "addToRental": "Louer ce jeu",
+            "share": "Partager",
+            "wishlist": "Liste de souhaits"
+        }
+    }
+}
