@@ -5,7 +5,6 @@ import AllGame from "@/assets/images/all-games.png";
 import { Rating } from '@/components/rating';
 import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
-// import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
 
 interface CardProps {
   game: GameWithStats;
