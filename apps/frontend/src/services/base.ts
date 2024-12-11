@@ -8,6 +8,6 @@ export const baseApi = createApi({
     },
     credentials: "include",
   }),
-  tagTypes: [],
+  tagTypes: ["Games"],
   endpoints: () => ({}),
 });

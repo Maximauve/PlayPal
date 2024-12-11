@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Us
 import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Tag } from "@playpal/schemas";
 
-import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { AdminGuard } from "@/auth/guards/admin.guard";
 import { TagRequest } from "@/tag/decorators/tag.decorator";
 import { TagDto } from "@/tag/dto/tag.dto";
 import { TagUpdatedDto } from "@/tag/dto/tagUpdated.dto";
@@ -10,7 +10,6 @@ import { TagGuard } from "@/tag/guards/tag.guard";
 import { TagService } from "@/tag/service/tag.service";
 import { TranslationService } from "@/translation/translation.service";
 
-@UseGuards(JwtAuthGuard)
 @ApiTags('tags')
 @Controller('/tags')
 export class TagController {
@@ -39,6 +38,7 @@ export class TagController {
     return tag;
   }
 
+  @UseGuards(AdminGuard)
   @Post('')
   @ApiOperation({ summary: 'Create a tag' })
   @ApiOkResponse({ type: Tag })
@@ -51,7 +51,8 @@ export class TagController {
     }
     return tag;
   }
-  
+
+  @UseGuards(AdminGuard)
   @UseGuards(TagGuard)
   @Put('/:tagId')
   @ApiOperation({ summary: 'Update a tag' })
@@ -68,6 +69,7 @@ export class TagController {
     return tagUpdated;
   }
 
+  @UseGuards(AdminGuard)
   @UseGuards(TagGuard)
   @Delete('/:tagId')
   @ApiOperation({ summary: 'Delete a tag' })

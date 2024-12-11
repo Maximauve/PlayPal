@@ -1,4 +1,4 @@
-import { type Tag } from "@playpal/schemas";
+import { type Game, type Tag } from "@playpal/schemas";
 import { type GamePayload, type GameResponse } from "@playpal/schemas";
 
 import { baseApi } from "@/services/base";
@@ -22,8 +22,17 @@ export const gameApi = baseApi.injectEndpoints({
         }
         return `games?${parameters.toString()}`;
       },
+      providesTags: ['Games']
+    }),
+    createGame: builder.mutation<Game, FormData>({
+      query: (body: FormData) => ({
+        url: "/games",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ['Games'],
     }),
   }),
 });
 
-export const { useGetGamesQuery } = gameApi;
+export const { useGetGamesQuery, useCreateGameMutation } = gameApi;

@@ -2,6 +2,9 @@
 	"validation": {
 		"email": "Cet email est invalide.",
 		"passwordMissmatch": "Les mots de passes ne correspondent pas.",
-		"required": "Veuillez remplir ce champ."
+		"required": "Veuillez remplir ce champ.",
+		"invalid_image": "Le fichier n'est pas une image",
+		"min_number": "Le nombre doit être supérieur ou égale à 1",
+		"min_max": "Le nombre maximum de joueurs ne peut pas être plus grand que le minimum"
 	}
 }
