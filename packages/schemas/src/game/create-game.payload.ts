@@ -1,11 +1,11 @@
 export interface CreateGamePayload {
   name: string;
   description: string;
-  minPlayers: number;
-  maxPlayers: number;
-  difficulty: number;
+  minPlayers: number | null;
+  maxPlayers: number | null;
+  difficulty: number | null;
   duration: string;
-  minYear: number;
+  minYear: number | null;
   brand: string;
   tagIds: string[];
   image?: File;

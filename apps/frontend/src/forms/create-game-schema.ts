@@ -6,27 +6,44 @@ import { z } from 'zod';
 export const createGameSchema = z.object({
   name: z.string().min(1, 'validation.required'),
   description: z.string().min(1, 'validation.required'),
-  minPlayers: z.number({ invalid_type_error: 'validation.required' }),
-  maxPlayers: z.number({ invalid_type_error: 'validation.required' }),
-  difficulty: z.number({ invalid_type_error: 'validation.required' }),
+  minPlayers: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number')
+  ),
+  maxPlayers: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number')
+  ),
+  difficulty: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number')
+  ),
   duration: z.string().min(1, 'validation.required'),
-  minYear: z.number({ invalid_type_error: 'validation.required' }),
+  minYear: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number')
+  ),
   brand: z.string().min(1, 'validation.required'),
   tagIds: z.array(z.string()).optional(),
   image: z
     .any()
     .refine((file) => file instanceof File, 'validation.invalid_image')
     .optional(),
-});
+}).refine(
+  (data) => data.maxPlayers >= data.minPlayers,
+  {
+    message: 'min_max',
+  }
+);
 
 export const createGameInitalValues: CreateGamePayload = {
   name: '',
   description: '',
-  minPlayers: 1,
-  maxPlayers: 2,
-  difficulty: 1,
+  minPlayers: null,
+  maxPlayers: null,
+  difficulty: null,
   duration: '',
-  minYear: 3,
+  minYear: null,
   brand: '',
   tagIds: [],
   image: undefined,

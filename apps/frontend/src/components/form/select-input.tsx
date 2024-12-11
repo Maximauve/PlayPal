@@ -10,7 +10,7 @@ interface SelectProps {
   label?: string;
 }
 
-export default function Select({
+export default function SelectInput({
   id,
   name,
   options,
