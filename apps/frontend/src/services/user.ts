@@ -6,6 +6,7 @@ export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     refreshUser: builder.query<User, void>({
       query: () => "/users/me",
+      providesTags: ['User']
     }),
     getUserLoans: builder.query<Loan[], void>({
       query: () => "/users/me/loans",

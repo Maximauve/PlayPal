@@ -41,14 +41,13 @@ export class GameService {
 
     const data: GameWithStats[] = games.map((game: Game) => {
       if (game.rating && game.rating.length > 0) {
-        const averageRating = this.getAverageRating(game.rating);
-        return { ...game, averageRating };
+        const averageRating = this.getAverageRating(game.rating) ?? 0;
+        const roundedAverage = Math.round(averageRating * 10) / 10;
+        return { ...game, averageRating: roundedAverage };
       } else {
         return { ...game, averageRating: null };
       }
-
-    }
-    );
+    });
 
     await Promise.all(data.map(async (game) => {
       game.tags = await this.gamesRepository

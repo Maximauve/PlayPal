@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type RatingDto } from '@playpal/schemas';
+import { type Product, type RatingDto } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
@@ -28,9 +28,9 @@ export default function GamePage(): React.JSX.Element {
     endDate: null,
   });
 
-  const id = useParams<{ id: string }>() as { id: string };
-  const { data: game, isLoading } = useGetGameQuery(id.id);
-  const { data: ratings } = useGetRatingsQuery({ gameId: id.id });
+  const parameters = useParams<{ id: string }>() as { id: string };
+  const { data: game, isLoading } = useGetGameQuery(parameters.id);
+  const { data: ratings } = useGetRatingsQuery({ gameId: parameters.id });
   const [addRating] = useAddRatingMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
@@ -43,7 +43,7 @@ export default function GamePage(): React.JSX.Element {
     validate: withZodSchema(reviewSchema),
     onSubmit: async (values) => {
       try {
-        await addRating({ gameId: id.id, body: values }).unwrap();
+        await addRating({ gameId: parameters.id, body: values }).unwrap();
         formik.resetForm();
         toast.success(i18n.t("notify.create.rating.success") as ToastContent<string>, {
           position: "top-right",
@@ -83,13 +83,11 @@ export default function GamePage(): React.JSX.Element {
   return (
     <>
       <div className="p-6 max-w-5xl mx-auto">
-        {/* Breadcrumb */}
         <nav className="mb-4 text-sm text-gray-500">
           <Breadcrumb items={breadcrumbItems} separator=">" />
         </nav>
 
         <div className="flex flex-wrap">
-          {/* Product Image */}
           <div className="w-full md:w-1/2 p-2">
             <img
               src={game?.image}
@@ -98,13 +96,11 @@ export default function GamePage(): React.JSX.Element {
             />
           </div>
 
-          {/* Product Details */}
           <div className="w-full md:w-1/2 p-2">
             <h1 className="text-2xl font-bold text-black">{game?.name}</h1>
             <p className="text-gray-500 mb-2">By {game?.brand}</p>
 
-            {/* Rating */}
-            <Rating rating={3.4} nbRatings={game?.rating?.length} />
+            <Rating rating={game?.averageRating ?? 0} nbRatings={game?.rating?.length} />
 
             <div className='flex flex-col '>
               <div className="flex items-center text-gray-500 text-sm mt-4">
@@ -121,10 +117,8 @@ export default function GamePage(): React.JSX.Element {
               </div>
             </div>
 
-            {/* Availability */}
             <div className="mt-6 mb-4">
-              {/* if at least one product is available */}
-              {game?.product?.some((product) => product.available) ? (
+              {game?.product?.some((product: Product) => product.available) ? (
                 <span className="bg-green-700 text-white px-2 py-1 rounded">
                   {i18n.t('card.inStock')}
                 </span>
@@ -135,7 +129,6 @@ export default function GamePage(): React.JSX.Element {
               )}
             </div>
 
-            {/* Date Picker */}
             <div className="mb-4">
               <Datepicker
                 value={locDate}
@@ -144,7 +137,6 @@ export default function GamePage(): React.JSX.Element {
               />
             </div>
 
-            {/* Action Buttons */}
             <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full hover:bg-gray-800">
               {i18n.t('game.details.addToRental')}
             </button>

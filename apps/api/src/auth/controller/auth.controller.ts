@@ -63,6 +63,14 @@ export class AuthController {
     }
     return this.authService.login(user);
   }
+
+  @Post('/logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiOkResponse({ description: 'User has been successfully logged out' })
+  logout(@Res() response: Response) {
+    response.clearCookie('access_token');
+    response.status(HttpStatus.OK).send();
+  }
 }
 
 async function hashPassword(plaintextPassword: string) {

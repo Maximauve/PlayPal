@@ -10,7 +10,6 @@ import FullModal from "@/components/modals/full-modal";
 import { type WordingKey } from "@/context/i18n/i18n-service";
 import { loginInitalValues, loginSchema } from "@/forms/login-schema";
 import { registerInitalValues, registerSchema } from "@/forms/register-schema";
-import useAuth from '@/hooks/use-auth';
 import useTranslation from "@/hooks/use-translation";
 import { useLoginMutation, useRegisterMutation } from '@/services/auth';
 
@@ -39,7 +38,6 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
   const i18n = useTranslation();
   const [ register ] = useRegisterMutation();
   const [ login ] = useLoginMutation();
-  const { refreshUser } = useAuth();
 
   useEffect(() => {
     if (isRegisterMode) {
@@ -68,7 +66,6 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
     }
     try {
       login(values as LoginDto).unwrap();
-      refreshUser();
       closeModal();
       toast.success(i18n.t("notify.login.success") as ToastContent<string>, {
         position: "top-right",
