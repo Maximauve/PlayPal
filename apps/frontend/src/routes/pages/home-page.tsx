@@ -30,16 +30,16 @@ export default function HomePage(): React.JSX.Element {
       <h1 className="text-3xl font-bold text-center text-black my-4">{i18n.t('home.catchphrase')} </h1>
       <Carousel />
 
-      <div className="w-full flex flex-col px-32 items-start bg-stone-300 mt-12">
+      <div className="w-full flex flex-col px-12 items-start bg-stone-300 mt-12">
         <h2 className="text-xl font-bold text-center text-black my-4">{i18n.t('home.tagSearch')}</h2>
         <TagsFilter selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
       </div>
 
-      <div className="w-full flex flex-col px-32 mb-12 items-start">
+      <div className="w-full flex flex-col px-12 mb-12 items-start">
         <h2 className="text-xl font-bold text-center text-black underline decoration-red-700 decoration-5 my-4">{i18n.t('home.recommendations')}</h2>
         <AllCards games={gamesData} />
-        <div className="w-full flex px-32 items-end mt-4">
-          <NavLink to="/search" className="text-xs  p-1 px-12 font-bold text-center bg-black"> <span>{i18n.t('home.allGames')} -&gt;</span></NavLink>
+        <div className="w-full flex px-32 justify-center mt-4">
+          <NavLink to="/search" className="text-xl px-12 text-center bg-black font-bold text-white rounded-md py-2"> <span>{i18n.t('home.allGames')}</span></NavLink>
         </div>
       </div>
     </>

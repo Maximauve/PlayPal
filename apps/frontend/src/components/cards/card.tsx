@@ -1,5 +1,6 @@
 
 import { type GameWithStats } from '@playpal/schemas';
+import { useNavigate } from 'react-router-dom';
 
 import AllGame from "@/assets/images/all-games.png";
 import { Rating } from '@/components/rating';
@@ -16,6 +17,7 @@ export const Card = ({
   inStock = false
 }: CardProps) => {
   const i18n = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex flex-col">
       <img
@@ -38,7 +40,7 @@ export const Card = ({
         <TagsContainer tags={game.tags}/>
       </div>
       <div className="flex justify-center relative mb-3 mt-auto">
-        <button className="w-4/5 bg-black p-3 rounded-md">{i18n.t("card.open")}</button>
+        <button className="w-4/5 bg-black p-3 rounded-md" onClick={() => navigate(`/game/${game.id}`)}>{i18n.t("card.open")}</button>
       </div>
     </div>
   );
