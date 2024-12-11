@@ -14,6 +14,7 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { Game, Product } from "@playpal/schemas";
+import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
@@ -44,6 +45,7 @@ export class GameController {
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
     const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
+    
     return {
       data,
       total,
@@ -51,6 +53,15 @@ export class GameController {
       limit,
       totalPages: Math.ceil(total / limit),
     };
+  }
+  
+  @Get('/recommendations')
+  @ApiOperation({ summary: "Get the most liked games" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
+  async getRecommendations(@Query('limit') limit = 10) {
+    const data = await this.gamesService.getRecommendations(limit);
+    return data;
   }
 
   @Get('/:gameId')
@@ -61,8 +72,21 @@ export class GameController {
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiNotFoundResponse({ description: "Game not found" })
   @ApiBadRequestResponse({ description: "UUID is invalid" })
-  getOneGame(@GameRequest() game: Game): Game {
-    return game;
+  async getOneGame(@GameRequest() game: Game): Promise<GameWithStats> {
+    const data = await this.gamesService.getGameWithStats(game);
+    return data;
+  }
+
+  @Get('/:gameId/notes')
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: "Get one game average note and the count of each possible note" })
+  @ApiParam({ name: 'gameId', description: 'Game id', required: true })
+  @ApiOkResponse({ description: "Game found successfully", type: Game })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
+  getOneGameNotes(@GameRequest() game: Game) {
+    return this.gamesService.getGameNotes(game.id);
   }
 
   @Post('')

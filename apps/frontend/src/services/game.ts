@@ -36,7 +36,10 @@ export const gameApi = baseApi.injectEndpoints({
     getGame: builder.query<Game, string>({
       query: (id) => `games/${id}`,
     }),
+    getRecommendations: builder.query<GameResponse, number>({
+      query: (limit = 10) => `games/recommendations?limit=${limit}`,
+    }),
   }),
 });
 
-export const { useGetGamesQuery, useCreateGameMutation, useGetGameQuery } = gameApi;
+export const { useGetGamesQuery, useGetRecommendationsQuery, useCreateGameMutation, useGetGameQuery } = gameApi;
