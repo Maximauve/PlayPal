@@ -1,10 +1,12 @@
 import { type CreateGamePayload } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
+import { toast, type ToastContent } from "react-toastify";
 
 import CreateGameForm from "@/components/form/create-game-form";
 import FullModal from "@/components/modals/full-modal";
 import { createGameInitalValues, createGameSchema } from "@/forms/create-game-schema";
+import useTranslation from "@/hooks/use-translation";
 import { useCreateGameMutation } from "@/services/game";
 
 interface CreateGameModalProps {
@@ -15,6 +17,7 @@ interface CreateGameModalProps {
 export default function CreateGameModal({ isVisible, onClose }: CreateGameModalProps) {
 
   const [ createGame ] = useCreateGameMutation();
+  const i18n = useTranslation();
 
   const handleSubmit = async (values: CreateGamePayload) => {
     try {
@@ -34,12 +37,24 @@ export default function CreateGameModal({ isVisible, onClose }: CreateGameModalP
       }
       try {
         await createGame(formData).unwrap();
+        toast.success(i18n.t("notify.create.game.success") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } catch (error) {
         console.error('Erreur lors de la création du jeu:', error);
+        toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
       onClose();
     } catch (error) {
       console.error('Failed to create game:', error);
+      toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 

@@ -2,6 +2,7 @@ import { type RegisterDto } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React from 'react';
+import { toast, type ToastContent } from 'react-toastify';
 
 import EditUserForm from '@/components/form/edit-user-form';
 import { editUserInitialValues, editUserSchema } from '@/forms/edit-user-schema';
@@ -29,17 +30,21 @@ export default function UserProfilePage(): React.JSX.Element {
     enableReinitialize: true,
   });
 
-  const handleSubmit = (values: Partial<RegisterDto>) => {    
-    editUser({ id: data?.id || "", body: values }).then(({ error }) => {
-      if (error) {
-        console.error("Edit user", error);
-        throw new Error("Edit user failed");
-      }
+  const handleSubmit = (values: Partial<RegisterDto>) => {
+    try {
+      editUser({ id: data?.id || "", body: values }).unwrap();
       refreshUser();
-      return;
-    }).catch((error) => {
-      console.error("Edit user", error);
-    });
+      toast.success(i18n.t("notify.update.user.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error("Error edit user", error);
+      toast.error(i18n.t("notify.update.user.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
     return;
   };
 
