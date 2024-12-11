@@ -17,7 +17,7 @@ export class User {
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, select: false })
   password: string;
 
   @Column({ type: 'varchar', default: Role.Customer })

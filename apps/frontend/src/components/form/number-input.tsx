@@ -3,8 +3,9 @@ import React, { Fragment } from 'react';
 import { type WordingKey } from '@/context/i18n/i18n-service';
 import useTranslation from '@/hooks/use-translation';
 
-interface NumberInputProps {
+interface Props {
   name: string;
+  classNameOverride?: string;
   error?: { isError: boolean; message: WordingKey };
   isDisabled?: boolean;
   label?: WordingKey;
@@ -27,7 +28,8 @@ export default function NumberInput({
   value,
   max,
   min,
-}: NumberInputProps): React.JSX.Element {
+  classNameOverride,
+}: Props): React.JSX.Element {
   const i18n = useTranslation();
 
   return (
@@ -46,10 +48,10 @@ export default function NumberInput({
         <div className='relative w-full'>
           <input
             className={
-              'rounded-sm text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 ' +
-              (error?.isError
-                ? 'border-red-600 focus-visible:outline-red-600'
-                : 'border-gray-400')
+              (classNameOverride ?? 'rounded-sm text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 ') +
+                (error?.isError
+                  ? 'border-red-600 focus-visible:outline-red-600'
+                  : 'border-gray-400')
             }
             type='number'
             name={name}
