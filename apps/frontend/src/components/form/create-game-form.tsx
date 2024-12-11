@@ -24,7 +24,6 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      console.log(file);
       formik.setFieldValue('image', file);
     }
   };

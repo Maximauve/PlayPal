@@ -36,18 +36,17 @@ export default function TagHeader() {
   }, [formik]);
 
   return (
-    <div>
+    <form onSubmit={formik.handleSubmit}>
       <h1 className="text-center text-2xl my-4">{i18n.t("admin.tag.title")}</h1>
       <TextInput value={formik.values.name} name='tag-name' type='text' onChange={(e) => handleChange('name', e.target.value)} error={{ isError: !!formik.touched.name && !!formik.errors.name, message: formik.errors.name as WordingKey }} />
       <div className="w-full flex justify-center items-center mt-4">
         <button className="rounded-md bg-blue-600 py-1 px-3 text-white hover:scale-105 active:scale-100 disabled:bg-gray-500 flex flex-row gap-2"
           disabled={formik.isSubmitting}
-          type="button"
-          onClick={() => formik.handleSubmit()}
+          type="submit"
         >
           {i18n.t("admin.tag.submit")}
         </button>
       </div>
-    </div>
+    </form>
   );
 }

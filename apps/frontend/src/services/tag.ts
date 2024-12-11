@@ -16,7 +16,14 @@ export const tagApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Tags']
     }),
+    deleteTag: builder.mutation<null, string>({
+      query: (id: string) => ({
+        url: `/tags/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ['Tags']
+    })
   }),
 });
 
-export const { useGetTagsQuery, useCreateTagMutation } = tagApi;
+export const { useGetTagsQuery, useCreateTagMutation, useDeleteTagMutation } = tagApi;
