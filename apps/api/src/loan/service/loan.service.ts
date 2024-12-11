@@ -27,6 +27,14 @@ export class LoanService {
       .leftJoinAndSelect("loan.product", "product")
       .getMany();
   }
+  async getAllWaitingLoans(): Promise<Loan[]> {
+    return this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect("loan.user", "user")
+      .leftJoinAndSelect("loan.product", "product")
+      .where("loan.status = 'WAITING'")
+      .getMany();
+  }
 
   async getAllByProduct(productId: string): Promise<Loan[]> {
     return this.loanRepository
