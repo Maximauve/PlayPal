@@ -16,7 +16,7 @@ export class ProductService {
     private gameRepository: Repository<Game>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly translationsService: TranslationService
+    private readonly translationsService: TranslationService,
   ) { }
 
   async getAllProducts(): Promise<Product[]> {

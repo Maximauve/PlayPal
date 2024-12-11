@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Game, Loan, Product, Rating, Role, Rule, State, Tag, User, Wish } from '@playpal/schemas';
+import { Game, Loan, LoanStatus, Product, Rating, Role, Rule, State, Tag, User, Wish } from '@playpal/schemas';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -39,10 +39,10 @@ export class FixturesService implements OnModuleInit {
       const savedTags = await this.loadFixturesTags();
       const savedGames = await this.loadFixturesGames(savedTags);
       await this.loadFixturesRatings(savedUsers, savedGames);
-      const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
-      await this.loadFixturesLoans(savedUsers, savedProduct);
       await this.loadFixturesRules(savedGames);
       await this.loadFixturesWish(savedUsers, savedGames);
+      const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
+      await this.loadFixturesLoans(savedUsers, savedProduct);
     }
   }
 
@@ -60,7 +60,7 @@ export class FixturesService implements OnModuleInit {
       { 
         username: 'customer', 
         email: 'customer@example.com',
-        password: '$2y$10$hd4tQ9pRo4BCKlPDMZYBU.QDbS89.Vvhy16ZEZK1dlErDHihnrtDO', // Customer01
+        password: '$2b$10$tFgoM14Bej7BBf5cf/2sNux84fD726bFSchlVA6TzEengvh5lK5NS', // Customer01
         role: Role.Customer,
         rating: [],
         loan: [],
@@ -69,7 +69,7 @@ export class FixturesService implements OnModuleInit {
       { 
         username: 'customer2', 
         email: 'customer2@example.com',
-        password: '$2y$10$hd4tQ9pRo4BCKlPDMZYBU.QDbS89.Vvhy16ZEZK1dlErDHihnrtDO', // Customer01
+        password: '$2b$10$tFgoM14Bej7BBf5cf/2sNux84fD726bFSchlVA6TzEengvh5lK5NS', // Customer01
         role: Role.Customer,
         rating: [],
         loan: [],
@@ -168,21 +168,17 @@ export class FixturesService implements OnModuleInit {
         available: false,
         user: customer,
         game: skyjo,
-        loan: []
       },
       { 
         state: State.GOOD,
         available: false,
         user: customer2,
         game: galerapagos,
-        loan: []
       },
       { 
         state: State.BROKEN,
-        available: true,
-        user: null,
+        available: false,
         game: skyjo,
-        loan: []
       },
     ]);
 
@@ -205,11 +201,13 @@ export class FixturesService implements OnModuleInit {
         endDate: futureDate1,
         product: skyjo,
         user: customer,
+        status: LoanStatus.DONE
       },
       {
         endDate: futureDate2,
         product: galerapagos,
         user: customer2,
+        status: LoanStatus.USING
       },
     ]);
   

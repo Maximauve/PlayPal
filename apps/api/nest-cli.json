@@ -5,10 +5,15 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "watchAssets": true,
-    "plugins": ["@nestjs/swagger"],
+    "plugins": [
+      "@nestjs/swagger"
+    ],
     "assets": [
-      { 
+      {
         "include": "i18n/**/*"
+      },
+      {
+        "include": "mail/templates/**/*"
       }
     ]
   }

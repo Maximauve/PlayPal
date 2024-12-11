@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 
 import { Product } from '../product/product.entity';
 import { User } from '../user/user.entity';
+import { LoanStatus } from './loanStatus.enum';
 
 @Entity()
 export class Loan {
@@ -21,4 +22,7 @@ export class Loan {
     onDelete: 'SET NULL' 
   })
   product: Product | null;
+
+  @Column({ type: 'varchar', nullable: false })
+  status: LoanStatus;
 }

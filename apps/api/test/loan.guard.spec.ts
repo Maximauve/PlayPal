@@ -3,7 +3,7 @@ import { LoanGuard } from '@/loan/guards/loan.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Loan, State, Role } from '@playpal/schemas';
+import { Loan, State, Role, LoanStatus } from '@playpal/schemas';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common';
 
@@ -57,6 +57,7 @@ describe('LoanGuard', () => {
       role: Role.Customer,
       creationDate: new Date()
     },
+    status: LoanStatus.USING
   };
 
   beforeEach(async () => {

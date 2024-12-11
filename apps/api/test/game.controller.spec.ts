@@ -8,10 +8,10 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
+import { Tag, Game, Role, GameResponse, GameWithStats } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 import { ProductService } from '@/product/service/product.service';
-import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
+import { RedisService } from '@/redis/service/redis.service';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -21,6 +21,7 @@ describe('GameController', () => {
   let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
   let mockProductService: Partial<ProductService>;
+  let mockRedisService: Partial<RedisService>;
 
   const mockGames: GameWithStats[] = [
     {
@@ -95,6 +96,8 @@ describe('GameController', () => {
 
     mockProductService = {}
 
+    mockRedisService = {}
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GameController],
       providers: [
@@ -104,6 +107,7 @@ describe('GameController', () => {
         { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
         { provide: ProductService, useValue: mockProductService },
+        { provide: RedisService, useValue: mockRedisService },
       ],
     }).compile();
 
