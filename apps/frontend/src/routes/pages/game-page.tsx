@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type RatingDto } from '@playpal/schemas';
+import { type Product, type RatingDto } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
@@ -118,7 +118,7 @@ export default function GamePage(): React.JSX.Element {
             </div>
 
             <div className="mt-6 mb-4">
-              {game?.product?.some((product) => product.available) ? (
+              {game?.product?.some((product: Product) => product.available) ? (
                 <span className="bg-green-700 text-white px-2 py-1 rounded">
                   {i18n.t('card.inStock')}
                 </span>
