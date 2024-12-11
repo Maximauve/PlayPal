@@ -6,7 +6,10 @@ export const registerSchema = z.object({
   password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\dA-Za-z])([\dA-Za-z]|[^\dA-Za-z]){12,45}$/, "validation.password_invalid"),
   confirmPassword: z.string(),
   username: z.string().min(1, "validation.required"),
-  profilePicture: z.string().optional()
+  image: z
+    .any()
+    .refine((file) => file instanceof File, 'validation.invalid_image')
+    .optional(),
 }).refine(data => data.password === data.confirmPassword, { path: ['confirmPassword'], message: "validation.passwordMissmatch" });
 
 export const registerInitalValues: RegisterDto = {
@@ -14,4 +17,5 @@ export const registerInitalValues: RegisterDto = {
   password: '',
   confirmPassword: '',
   username: '',
+  image: undefined
 };

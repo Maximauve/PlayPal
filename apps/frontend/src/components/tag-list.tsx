@@ -11,9 +11,9 @@ export default function TagList() {
   const [ deleteTag ] = useDeleteTagMutation();
   const i18n = useTranslation();
 
-  const removeTag = (tag: TagType) => {
+  const removeTag = async (tag: TagType) => {
     try {
-      deleteTag(tag.id).unwrap();
+      await deleteTag(tag.id).unwrap();
       toast.success(i18n.t("notify.delete.tag.success") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

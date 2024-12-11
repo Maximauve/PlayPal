@@ -6,7 +6,6 @@ import { toast, type ToastContent } from 'react-toastify';
 
 import EditUserForm from '@/components/form/edit-user-form';
 import { editUserInitialValues, editUserSchema } from '@/forms/edit-user-schema';
-import useAuth from '@/hooks/use-auth';
 import useTranslation from '@/hooks/use-translation';
 import { useEditUserMutation, useRefreshUserQuery } from '@/services/user';
 
@@ -16,12 +15,11 @@ export default function UserProfilePage(): React.JSX.Element {
   const i18n = useTranslation();
 
   const [editUser] = useEditUserMutation();
-  const { refreshUser } = useAuth();
   const formik = useFormik<Partial<RegisterDto>>({
     initialValues: {
       username: data?.username || editUserInitialValues.username,
       email: data?.email || editUserInitialValues.email,
-      profilePicture: data?.image || editUserInitialValues.profilePicture,
+      image: data?.image || editUserInitialValues.image,
     },
     validate: withZodSchema(editUserSchema),
     onSubmit: (values) => handleSubmit(values),
@@ -30,10 +28,18 @@ export default function UserProfilePage(): React.JSX.Element {
     enableReinitialize: true,
   });
 
-  const handleSubmit = (values: Partial<RegisterDto>) => {
+  const handleSubmit = async (values: Partial<RegisterDto>) => {
     try {
-      editUser({ id: data?.id || "", body: values }).unwrap();
-      refreshUser();
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (key !== 'image' && typeof value == "string") {
+          formData.append(key, String(value));
+        }
+      });
+      if ((values as RegisterDto).image instanceof File) {
+        formData.append('image', (values as RegisterDto).image as Blob);
+      }
+      await editUser({ id: data?.id || "", body: formData }).unwrap();
       toast.success(i18n.t("notify.update.user.success") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
@@ -50,19 +56,18 @@ export default function UserProfilePage(): React.JSX.Element {
 
   return (
     <div className="user-profile-page h-full flex align-center justify-center text-4xl">
-      <div className="w-1/3 flex flex-col align-center justify-center" >
-        {/* <img src={DefaultProfile} className="cursor-pointer w-40 h-40 rounded-full active:scale-100" /> */}
+      <form onSubmit={formik.handleSubmit} className="w-1/3 flex flex-col align-center justify-center" >
         <EditUserForm formik={formik} />
         <div className='mt-4'>
           <button
             className='btn-primary bg-black w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
-            type="button"
+            type="submit"
             disabled={formik.isSubmitting}
-            onClick={() => formik.handleSubmit()}>
+          >
             {i18n.t("common.validate")}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
