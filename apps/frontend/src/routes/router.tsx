@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
+import GameLayout from "@/components/_layout/admin/game-layout";
+import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
-import GameList from "@/components/game-list";
 import AdminGuard from "@/guard/admin-guard";
 import GamePage from "@/routes/pages/game-page";
 import HomePage from "@/routes/pages/home-page";
@@ -54,15 +55,15 @@ const router = createBrowserRouter([
       },
       {
         path: "game",
-        element: <GameList />,
+        element: <GameLayout />,
       },
       {
         path: "loan",
         element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
       },
       {
-        path: "wishlist",
-        element: <div>Wishlist</div>, // Remplacez par un vrai composant
+        path: "tag",
+        element: <TagLayout />, // Remplacez par un vrai composant
       },
     ],
   },

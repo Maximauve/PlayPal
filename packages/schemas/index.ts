@@ -8,6 +8,7 @@ export { State } from './src/product/state.enum';
 export { Rating } from './src/rating/rating.entity';
 export { Rule } from './src/rule/rule.entity';
 export { Tag } from './src/tag/tag.entity';
+export type { TagPayload } from './src/tag/tag.payload';
 export type { LightUser } from './src/user/lightUser.interface';
 export type { RegisterDto } from './src/user/register.dto';
 export type { LoginDto } from './src/user/login.dto';

@@ -9,7 +9,7 @@ import CreateGameModal from '@/components/modals/create-game-modal';
 import useTranslation from '@/hooks/use-translation';
 import { useGetGamesQuery } from '@/services/game';
 
-export default function GameList( ) {
+export default function GameLayout() {
   const i18n = useTranslation();
 
   const { isLoading, data } = useGetGamesQuery({} as GamePayload);
