@@ -13,11 +13,11 @@ export default {
       colors: {
         background : {
           dark : '#2C2830',
-          light : '#FFFFFF',
+          light : '#F0F0F0',
         },
         text : {
-          light : '#2C2830',
-          dark : '#FFFFFF',
+          light : '#FFFFFF',
+          dark : '#2C2830',
         },
         button : {
           active : '#FFFFFF',

@@ -69,7 +69,7 @@ export const Tabs = ({ tabs, classes }: TabsProperties) => {
         </div>
       )}
       {/* Content */}
-      <div className="mt-4">
+      <div className="mt-4 text-black">
         {activeTab?.content}
       </div>
     </div>
