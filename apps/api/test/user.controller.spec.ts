@@ -78,8 +78,9 @@ describe('UserController', () => {
   });
 
   describe('getMe', () => {
-    it('should return the current user', () => {
-      expect(userController.getMe(mockUser)).toEqual(mockUser);
+    it('should return the current user', async () => {
+      jest.spyOn(mockUserService, 'findOneUser').mockResolvedValue(mockUser);
+      expect(await userController.getMe(mockUser)).toEqual(mockUser);
     });
   });
 
