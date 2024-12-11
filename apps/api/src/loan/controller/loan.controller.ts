@@ -37,7 +37,7 @@ export class LoanController {
     return this.loanService.getAllLoan();
   }
 
-  @Get('')
+  @Get('/waiting')
   @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Get all loan of a product" })
   @ApiOkResponse({ description: "Loans found successfully", type: Loan, isArray: true })

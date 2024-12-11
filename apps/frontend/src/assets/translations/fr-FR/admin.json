@@ -5,8 +5,10 @@
       "dashboard": "Tableau de bord",
       "game-list": "Liste des jeux",
       "loan-list": "Liste des prêts",
-      "tag": "Liste des tags",
-      "product-list": "Liste des produits"
+      "product-list": "Liste des produits",
+      "loan-ongoing": "Prêts en cours",
+      "loan-waiting": "Demandes de prêts",
+      "tag": "Liste des tags"
     },
     "game": {
       "add": "Ajouter un jeu",
