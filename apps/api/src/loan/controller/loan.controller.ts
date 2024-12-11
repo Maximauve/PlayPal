@@ -37,6 +37,14 @@ export class LoanController {
     return this.loanService.getAllLoan();
   }
 
+  @Get('')
+  @UseGuards(AdminGuard)
+  @ApiOperation({ summary: "Get all loan of a product" })
+  @ApiOkResponse({ description: "Loans found successfully", type: Loan, isArray: true })
+  async getAllWaitingLoans(): Promise<Loan[]> {
+    return this.loanService.getAllWaitingLoans();
+  }
+
   @Get("/:loanId")
   @UseGuards(LoanGuard)
   @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })

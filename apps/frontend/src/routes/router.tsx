@@ -7,6 +7,7 @@ import ProductLayout from "@/components/_layout/admin/product-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
+import LoanList from "@/components/loan-list";
 import AdminGuard from "@/guard/admin-guard";
 import GamePage from "@/routes/pages/game-page";
 import HomePage from "@/routes/pages/home-page";
@@ -22,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <HomePage />
+      },
+      {
+        path: "/games/:id",
+        element: <GamePage/>
+      },
+      {
+        path: "/search/",
+        element: <SearchPage/>
       },
       {
         path: "/user/",
@@ -57,11 +66,11 @@ const router = createBrowserRouter([
       },
       {
         path: "loan",
-        element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
+        element: <LoanList />,
       },
       {
         path: "tag",
-        element: <TagLayout />, // Remplacez par un vrai composant
+        element: <TagLayout />,
       },
       {
         path: "products",
@@ -69,26 +78,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/search/",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <SearchPage />
-      }
-    ]
-  },
-  {
-    path: "/games/:id",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <GamePage />
-      }
-    ]
-  },
+  
 ]);
 
 export default router;
