@@ -25,7 +25,7 @@ export const Card = ({
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="text-lg font-bold truncate text-black">{game.name}</h3>
+            <h3 className="text-lg font-bold truncate text-wrap text-black">{game.name}</h3>
             <p className="text-gray-500 font-medium">{game.brand}</p>
           </div>
           <span className={`${inStock ? 'bg-green-700' : 'bg-red-600'} text-white text-xs px-2 py-1 rounded`}>{inStock ? i18n.t("card.inStock") : i18n.t("card.notStock")}</span>

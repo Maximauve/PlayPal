@@ -91,7 +91,7 @@ export default function GamePage(): React.JSX.Element {
 
           {/* Product Details */}
           <div className="w-full md:w-1/2 p-2">
-            <h1 className="text-2xl font-bold">{game?.name}</h1>
+            <h1 className="text-2xl font-bold text-black">{game?.name}</h1>
             <p className="text-gray-500 mb-2">By {game?.brand}</p>
 
             {/* Rating */}
@@ -159,7 +159,7 @@ export default function GamePage(): React.JSX.Element {
           </div>
           <div className="w-full md:w-1/2 p-2">
             <div className='flex flex-col gap-4 mb-5 p-5 border border-gray-400 rounded-md'>
-              <h2 className='text-lg font-bold'>{i18n.t('review.addReview')}</h2>
+              <h2 className='text-lg font-bold text-black'>{i18n.t('review.addReview')}</h2>
               <ReviewForm formik={formik}/>
               <button
                 className='btn-primary bg-black text-white w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
