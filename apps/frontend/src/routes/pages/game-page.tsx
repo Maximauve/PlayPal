@@ -118,7 +118,7 @@ export default function GamePage(): React.JSX.Element {
             </div>
 
             <div className="mt-6 mb-4">
-              {game?.product?.some((product) => product.available as boolean) ? (
+              {game?.product?.some((product) => product.available) ? (
                 <span className="bg-green-700 text-white px-2 py-1 rounded">
                   {i18n.t('card.inStock')}
                 </span>
