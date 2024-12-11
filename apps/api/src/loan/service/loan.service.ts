@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Loan, Product, User } from "@playpal/schemas";
+import { Loan, LoanStatus, Product, User } from "@playpal/schemas";
 import { Repository } from "typeorm";
 
-import { LoanDto } from "@/loan/dto/loan.dto";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
+import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
 
 @Injectable()
@@ -16,7 +16,8 @@ export class LoanService {
     private productRepository: Repository<Product>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly translationsService: TranslationService
+    private readonly translationsService: TranslationService,
+    private readonly productService: ProductService,
   ) { }
 
   async getAllLoan(): Promise<Loan[]> {
@@ -46,24 +47,10 @@ export class LoanService {
       .getOne();
   }
 
-  async create(loanDto: LoanDto): Promise<Loan | null> {
-    const user = await this.userRepository
-      .createQueryBuilder("user")
-      .where("user.id = :id", { id: loanDto.userId })
-      .getOne();
-    if (!user) {
-      throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
-
-    const product = await this.productRepository
-      .createQueryBuilder("product")
-      .where("product.id = :id", { id: loanDto.productId })
-      .getOne();
-    if (!product) {
-      throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async create(user: User, product: Product, endDate: Date, status: LoanStatus): Promise<Loan | null> {
     const loan = this.loanRepository.create({
-      ...loanDto,
+      endDate,
+      status,
       user,
       product
     });
@@ -94,38 +81,14 @@ export class LoanService {
     }
   }
 
-  async findActiveLoansForProduct(productId: string): Promise<Loan[]> {
-    const currentDate = new Date();
-  
-    return this.loanRepository.createQueryBuilder('loan')
-      .leftJoinAndSelect('loan.product', 'product')
-      .where('product.id = :productId', { productId })
-      .andWhere('loan.startDate <= :currentDate', { currentDate })
-      .andWhere('loan.endDate >= :currentDate', { currentDate })
-      .orderBy('loan.startDate', 'ASC') 
-      .getMany();
+  async getProductAvailable(gameId: string): Promise<Product | null> {
+    const products = await this.productService.getAllProductsByGameId(gameId);
+    const product = products.find((p) => p.available);
+    return product ?? null;
   }
 
-  async checkProductNotRented(productId: string, newLoan: LoanDto) {
-    const existingLoans = await this.findActiveLoansForProduct(productId);
-  
-    const now = new Date();
-    const newStartDate = now;
-    const newEndDate = new Date(newLoan.endDate);
-
-  
-    for (const existingLoan of existingLoans) {
-      const existingStartDate = new Date(existingLoan.startDate);
-      const existingEndDate = new Date(existingLoan.endDate);
-  
-      if (
-        (newStartDate >= existingStartDate && newStartDate < existingEndDate) ||
-        (newEndDate > existingStartDate && newEndDate <= existingEndDate) ||
-        (newStartDate <= existingStartDate && newEndDate >= existingEndDate)
-      ) {
-        return true;
-      }
-    }
-    return false;
+  async endLoan(loan: Loan): Promise<Loan | null> {
+    loan.status = LoanStatus.DONE;
+    return this.loanRepository.save(loan);
   }
 }

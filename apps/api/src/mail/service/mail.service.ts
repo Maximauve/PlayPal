@@ -20,7 +20,7 @@ export class MailService {
         user: to,
         game: {
           ...game,
-          url: `${process.env.VITE_API_BASE_URL}/games/${game.id}`,
+          url: `${process.env.FRONT_BASE_URL}/games/${game.id}`,
         },
         config: {
           appName: 'Playpal',

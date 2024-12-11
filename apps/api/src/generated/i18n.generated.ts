@@ -41,6 +41,9 @@ export type I18nTranslations = {
         "PRODUCT_ALREADY_RENTED": string;
         "SOMETHING_WENT_WRONG": string;
         "ALREADY_ON_WAITLIST": string;
+        "ALREADY_RETURNED_LOAN": string;
+        "CANT_RETURN_LOAN_YOU_DONT_HAVE": string;
+        "ALREADY_RENTING_GAME": string;
     };
     "user": {
         "HELLO": string;

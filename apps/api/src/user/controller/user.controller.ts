@@ -51,13 +51,13 @@ export class UserController {
   @ApiOperation({ summary: 'Return my user informations' })
   @ApiOkResponse({ description: "User's loans found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
-  async getMyLoans(@CurrentUser() user: User): Promise<Loan[] | []> {
+  async getMyLoans(@CurrentUser() user: User): Promise<Loan[]> {
     const userFull = await this.userService.findOneUserWithLoans(user.id);
     if (!userFull) {
       throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
     if (!userFull.loan) {
-      return [] as Loan[];
+      return [];
     }
     
     return userFull.loan;

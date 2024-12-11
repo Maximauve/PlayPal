@@ -33,5 +33,8 @@
   "PAGE_NOT_FOUND": "La page {page} n'a pas été trouvée",
   "PRODUCT_ALREADY_RENTED": "Le produit est déjà loué",
   "SOMETHING_WENT_WRONG": "Une erreur s'est produite. Veuillez réessayer",
-  "ALREADY_ON_WAITLIST": "Tu es déjà sur liste d'attente sur ce jeu"
+  "ALREADY_ON_WAITLIST": "Tu es déjà sur liste d'attente sur ce jeu",
+  "ALREADY_RETURNED_LOAN": "Ce jeu a déjà été rendu",
+  "CANT_RETURN_LOAN_YOU_DONT_HAVE": "Tu ne peux pas rendre un jeu que tu n'as pas encore eu",
+  "ALREADY_RENTING_GAME": "Tu loues déjà ce jeu, tu ne peux pas te mettre sur liste d'attente"
 }

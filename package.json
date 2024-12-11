@@ -27,7 +27,7 @@
     "prepare": "husky",
     "dev:api": "cd apps/api && nest start --watch",
     "dev:frontend": "cd apps/frontend && vite",
-    "up": "docker-compose up -d",
+    "up": "docker compose up -d",
     "lint:api": "cd apps/api && yarn run eslint .",
     "lint:frontend": "cd apps/frontend && eslint .",
     "lint": "yarn lint:api && yarn lint:frontend",

@@ -18,6 +18,7 @@ import { Game, GameWithStats, Product, User } from "@playpal/schemas";
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { FileUploadService } from '@/files/files.service';
 import { ParseFilePipeDocument } from '@/files/files.validator';
 import { GameRequest } from '@/game/decorators/game.decorator';
@@ -168,6 +169,7 @@ export class GameController {
 
   @Post('/waiting/:gameId')
   @UseGuards(GameGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Subscribe for availability of a game' })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
   @ApiOkResponse({ description: 'User has been successfully put on the waiting list' })
@@ -177,8 +179,13 @@ export class GameController {
   @ApiBadRequestResponse({ description: "UUID is invalid" })
   @HttpCode(HttpStatus.OK)
   async subscribe(@GameRequest() game: Game, @CurrentUser() user: User)  {
-    if (!await this.productService.hasProductAvailable(game.id)) {
+    if (await this.gamesService.hasProductAvailable(game.id)) {
       throw new HttpException('', HttpStatus.RESET_CONTENT);
+    }
+
+    const products = await this.productService.getAllProductsByGameId(game.id);
+    if ( products.some(product => product.user?.id === user.id)) {
+      throw new ForbiddenException(await this.translationsService.translate('error.ALREADY_RENTING_GAME'));
     }
 
     try {

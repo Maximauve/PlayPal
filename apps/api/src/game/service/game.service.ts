@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game, Rating } from "@playpal/schemas";
-import { GameWithStats } from "@playpal/schemas/dist/src/game/game.stats";
+import { Game, Rating, GameWithStats, Product } from "@playpal/schemas";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
@@ -14,7 +13,9 @@ export class GameService {
     @InjectRepository(Game)
     private gamesRepository: Repository<Game>,
     private tagsRepository: TagService,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>
   ) { }
 
   async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: GameWithStats[]; total: number }> {
@@ -185,4 +186,14 @@ export class GameService {
 
     return { ...game, averageRating, count: count.noteCount };
   };
+
+  async hasProductAvailable(gameId: string): Promise<boolean> {
+    const query = await this.productRepository
+      .createQueryBuilder("product")
+      .where("product.gameId = :gameId", { gameId: gameId })
+      .andWhere("product.available = TRUE")
+      .getCount();
+
+    return query > 0;
+  }
 }

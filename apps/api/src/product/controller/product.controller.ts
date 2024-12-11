@@ -23,7 +23,7 @@ export class ProductController {
     private readonly usersService: UserService,
     private readonly translationsService: TranslationService,
     private readonly productService: ProductService,
-    private readonly loanService: LoanService
+    private readonly loanService: LoanService,
   ) { }
 
   @Get('')

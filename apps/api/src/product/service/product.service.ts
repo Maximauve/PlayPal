@@ -16,7 +16,7 @@ export class ProductService {
     private gameRepository: Repository<Game>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly translationsService: TranslationService
+    private readonly translationsService: TranslationService,
   ) { }
 
   async getAllProducts(): Promise<Product[]> {
@@ -97,15 +97,5 @@ export class ProductService {
     product.user = null;
     product.available = true;
     return this.productRepository.save(product);
-  }
-
-  async hasProductAvailable(gameId: string): Promise<boolean> {
-    const query = await this.productRepository
-      .createQueryBuilder("product")
-      .where("product.gameId = :gameId", { gameId: gameId })
-      .andWhere("product.available = TRUE")
-      .getCount();
-
-    return query > 0;
   }
 }
