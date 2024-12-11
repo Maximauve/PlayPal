@@ -148,12 +148,18 @@ describe('AuthController', () => {
 
       jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(false);
       jest.spyOn(mockUserService, 'create').mockResolvedValue(mockCreatedUser);
+      jest.spyOn(mockAuthService, 'login').mockReturnValue({ accessToken: 'test-token' });
 
-      const result = await authController.register(registerDto, response);
+      await authController.register(registerDto, response)
 
       expect(mockUserService.checkUnknownUser).toHaveBeenCalledWith(registerDto);
       expect(mockUserService.create).toHaveBeenCalled();
-      expect(result).toEqual({ accessToken: 'test-token' });
+      expect(response.cookie).toHaveBeenCalledWith(
+        'access_token',
+        'test-token',
+        expect.objectContaining({ httpOnly: true })
+      );
+      expect(mockSend).toHaveBeenCalledWith({ accessToken: 'test-token' });
     });
 
     it('should throw ConflictException for existing user', async () => {
