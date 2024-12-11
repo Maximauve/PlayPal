@@ -4,7 +4,8 @@
       "title": "PlayPal",
       "dashboard": "Tableau de bord",
       "game-list": "Liste des jeux",
-      "loan-list": "Liste des prêts",
+      "loan-ongoing": "Prêts en cours",
+      "loan-waiting": "Demandes de prêts",
       "tag": "Liste des tags"
     },
     "game" :{

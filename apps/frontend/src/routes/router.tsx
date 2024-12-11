@@ -2,10 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
 import GameLayout from "@/components/_layout/admin/game-layout";
+import LoanLayout from "@/components/_layout/admin/loan-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
-import LoanList from "@/components/loan-list";
 import AdminGuard from "@/guard/admin-guard";
 import GamePage from "@/routes/pages/game-page";
 import HomePage from "@/routes/pages/home-page";
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <SearchPage/>
       },
       {
-        path: "/user/",
+        path: "user",
         element: <UserPageLayout />,
         children: [
           {
@@ -43,11 +43,24 @@ const router = createBrowserRouter([
             element: <UserHistoryPage />
           },
         ]
-      }
+      },
+      {
+        path: "search",
+        element: <SearchPage />
+      },
+      {
+        path: "game",
+        children: [
+          {
+            path: ":id",
+            element: <GamePage />
+          }
+        ]
+      },
     ]
   },
   {
-    path: "/admin/",
+    path: "/admin",
     element: (
       <AdminGuard>
         <AdminLayout/>
@@ -64,15 +77,14 @@ const router = createBrowserRouter([
       },
       {
         path: "loan",
-        element: <LoanList />,
+        element: <LoanLayout />,
       },
       {
         path: "tag",
-        element: <TagLayout />,
+        element: <TagLayout />, // Remplacez par un vrai composant
       },
     ],
   },
-  
 ]);
 
 export default router;

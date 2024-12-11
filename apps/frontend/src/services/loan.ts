@@ -7,7 +7,10 @@ export const loanApi = baseApi.injectEndpoints({
     getLoans: builder.query<Loan[], void>({
       query: () => "/loan",
     }),
+    getWaintingLoans: builder.query<Loan[], void>({
+      query: () => "/loan/waiting",
+    }),
   }),
 });
 
-export const { useGetLoansQuery } = loanApi;
+export const { useGetLoansQuery, useGetWaintingLoansQuery } = loanApi;
