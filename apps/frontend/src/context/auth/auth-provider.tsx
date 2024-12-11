@@ -36,7 +36,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }
 
     if (data) {
-      setUser({ username: data.username });
+      setUser({ username: data.username, role: data.role });
     } 
 
   }, [isError, isLoading, data, error]);

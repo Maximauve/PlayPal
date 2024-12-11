@@ -1,0 +1,31 @@
+{
+  "admin": {
+    "navbar": {
+      "title": "PlayPal",
+      "dashboard": "Tableau de bord",
+      "game-list": "Liste des jeux",
+      "loan-list": "Liste des prêts",
+      "tag": "Liste des tags"
+    },
+    "game" :{
+      "add": "Ajouter un jeu",
+      "sumbit": "Créer le jeu"
+    },
+    "create": {
+      "game": {
+        "name": "Nom du jeu",
+        "description": "Description",
+        "minPlayers": "Nombre de joueurs minimum",
+        "maxPlayers": "Nombre de joueurs maximum",
+        "difficulty": "Difficulté",
+        "minYear": "Age minimum",
+        "duration": "Durée d'une partie",
+        "brand": "Marque"
+      }
+    },
+    "tag": {
+      "title": "Ajouter un tag",
+      "submit": "Créer le tag"
+    }
+  }
+}

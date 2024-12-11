@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset='utf-8'>
+		<title>Votre jeu est disponible</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1'>
+	</head>
+
+	<body>
+		<h1>Votre jeu est disponible</h1>
+		<p>Bonjour <%= user.username %>,</p>
+		<p>Votre jeu "<%= game.name %>" est maintenant disponible sur la plateforme.</p>
+		<p>Vous pouvez le réserver en cliquant sur le lien suivant :
+			<a href="<%= game.url %>">
+				<%= game.url %>
+			</a>
+		</p>
+		<p>À bientôt sur la plateforme !</p>
+		<p>
+			L'équipe de <%= config.appName %>
+		</p>
+	</body>
+
+</html>

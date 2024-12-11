@@ -1,0 +1,46 @@
+{
+  "notify": {
+    "create": {
+      "tag": {
+        "success": "Votre tag a bien été créé",
+        "error": "Un problème est survenu lors de la création du tag"
+      },
+      "game": {
+        "success": "Votre jeu a bien été créé",
+        "error": "Un problème est survenu lors de la création du jeu"
+      },
+      "product": {
+        "success": "Votre produit a bien été créé",
+        "error": "Un problème est survenu lors de la création du produit"
+      },
+      "loan": {
+        "success": "Votre prêt a bien été créé",
+        "error": "Un problème est survenu lors de la création du prêt"
+      },
+      "rating": {
+        "success": "Votre évaluation a bien été créée",
+        "error": "Un problème est survenu lors de la création de l'évaluation"
+      }
+    },
+    "delete": {
+      "tag": {
+        "success": "Votre tag a bien été supprimé",
+        "error": "Un problème est survenu lors de la suppression du tag"
+      }
+    },
+    "update": {
+      "user": {
+        "success": "Votre compte a bien été mis à jour",
+        "error": "Un problème est survenu lors de la mise à jour de votre compte"
+      }
+    },
+    "register": {
+      "success": "Votre compte a été créé, vous pouvez vous connectez",
+      "error": "Un problème est survenu lors de la création de votre compte"
+    },
+    "login": {
+      "success": "Vous êtes connecté",
+      "error": "Un problème est survenu lors de votre connexion"
+    }
+  }
+}

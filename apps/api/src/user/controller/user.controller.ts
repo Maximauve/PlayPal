@@ -10,7 +10,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Role, User } from '@playpal/schemas';
+import { Loan, Role, User } from '@playpal/schemas';
 import { Express } from "express";
 
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
@@ -44,8 +44,23 @@ export class UserController {
   @ApiOkResponse({ description: "User found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
   getMe(@CurrentUser() user: User): User {
-    console.log(user);
     return user;
+  }
+
+  @Get('/me/loans')
+  @ApiOperation({ summary: 'Return my user informations' })
+  @ApiOkResponse({ description: "User's loans found successfully", type: User })
+  @ApiNotFoundResponse({ description: "User not found" })
+  async getMyLoans(@CurrentUser() user: User): Promise<Loan[]> {
+    const userFull = await this.userService.findOneUserWithLoans(user.id);
+    if (!userFull) {
+      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+    if (!userFull.loan) {
+      return [];
+    }
+    
+    return userFull.loan;
   }
 
   @Get("/:userId")
@@ -83,7 +98,7 @@ export class UserController {
     }
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     await this.userService.update(user.id, body);
     const userUpdated = await this.userService.findOneUser(user.id);

@@ -5,6 +5,7 @@ import { Game, Loan, Product, User } from '@playpal/schemas';
 
 import { LoanController } from '@/loan/controller/loan.controller';
 import { LoanService } from '@/loan/service/loan.service';
+import { ProductModule } from '@/product/product.module';
 import { RedisModule } from "@/redis/redis.module";
 import { TranslationService } from '@/translation/translation.service';
 
@@ -14,6 +15,7 @@ import { TranslationService } from '@/translation/translation.service';
     TypeOrmModule.forFeature([Game]),
     TypeOrmModule.forFeature([User]),
     forwardRef(() => RedisModule),
+    forwardRef(() => ProductModule)
   ],
   controllers: [LoanController],
   providers: [LoanService, TranslationService],

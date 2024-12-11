@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Loan, Product, User } from "@playpal/schemas";
+import { Loan, LoanStatus, Product, User } from "@playpal/schemas";
 import { Repository } from "typeorm";
 
-import { LoanDto } from "@/loan/dto/loan.dto";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
+import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
 
 @Injectable()
@@ -16,10 +16,19 @@ export class LoanService {
     private productRepository: Repository<Product>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly translationsService: TranslationService
+    private readonly translationsService: TranslationService,
+    private readonly productService: ProductService,
   ) { }
 
-  async getAllLoan(productId: string): Promise<Loan[]> {
+  async getAllLoan(): Promise<Loan[]> {
+    return this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect("loan.user", "user")
+      .leftJoinAndSelect("loan.product", "product")
+      .getMany();
+  }
+
+  async getAllByProduct(productId: string): Promise<Loan[]> {
     return this.loanRepository
       .createQueryBuilder('loan')
       .where("loan.productId = :id", { id: productId })
@@ -28,28 +37,22 @@ export class LoanService {
       .getMany();
   }
 
-  async getLoan(productId: string, loanId: string): Promise<Loan | null> {
+  async getLoan(loanId: string): Promise<Loan | null> {
     return this.loanRepository
       .createQueryBuilder("loan")
       .leftJoinAndSelect("loan.user", "user")
       .leftJoinAndSelect("loan.product", "product")
       .leftJoinAndSelect("product.game", "game")
-      .where("loan.productId = :productId", { productId: productId })
       .andWhere("loan.id = :loanId", { loanId: loanId })
       .getOne();
   }
 
-  async create(loanDto: LoanDto): Promise<Loan | null> {
-    const user = await this.userRepository
-      .createQueryBuilder("user")
-      .where("user.id = :id", { id: loanDto.userId })
-      .getOne();
-    if (!user) {
-      throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
+  async create(user: User, product: Product, endDate: Date, status: LoanStatus): Promise<Loan | null> {
     const loan = this.loanRepository.create({
-      ...loanDto,
-      user
+      endDate,
+      status,
+      user,
+      product
     });
     return this.loanRepository.save(loan);
   }
@@ -66,16 +69,26 @@ export class LoanService {
     }
   }
 
-  async delete(productId: string, loanId: string): Promise<void> {
+  async delete(loanId: string): Promise<void> {
     const query = await this.loanRepository
       .createQueryBuilder()
       .delete()
       .from(Loan)
       .where("loan.id = :id", { id: loanId })
-      .andWhere('loan."productId" = :productId', { productId: productId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
+  }
+
+  async getProductAvailable(gameId: string): Promise<Product | null> {
+    const products = await this.productService.getAllProductsByGameId(gameId);
+    const product = products.find((p) => p.available);
+    return product ?? null;
+  }
+
+  async endLoan(loan: Loan): Promise<Loan | null> {
+    loan.status = LoanStatus.DONE;
+    return this.loanRepository.save(loan);
   }
 }

@@ -1,8 +1,9 @@
 import React, { Fragment, useCallback } from "react";
+import { NavLink } from "react-router-dom";
 
 import DefaultProfile from "@/assets/images/default-profile-picture.jpg";
-import AuthModal from "@/components/auth-modal";
-import Modal from "@/components/modal";
+import AuthModal from "@/components/modals/auth-modal";
+import Modal from "@/components/modals/modal";
 import useAuth from "@/hooks/use-auth";
 import useModal from "@/hooks/use-modal";
 import useTranslation from "@/hooks/use-translation";
@@ -13,7 +14,6 @@ export default function Navbar(): React.JSX.Element {
   const i18n = useTranslation();
 
   const { user } = useAuth();
-
   const handleConnect = useCallback(() => {
     closeModal();
     openLoginModal();
@@ -22,7 +22,9 @@ export default function Navbar(): React.JSX.Element {
   return (
     <Fragment>
       <nav className="w-full flex flex-row justify-between bg-gray-400 px-4 py-2">
-        <div></div>
+        <div className="flex items-center"> 
+          <NavLink to="/" className="text-white text-3xl font-bold">Playpal</NavLink>
+        </div>
         <div className="flex flex-row justify-end">
           {/* WishList */}
           <div></div>
@@ -36,7 +38,7 @@ export default function Navbar(): React.JSX.Element {
         <div className="px-2 pb-3 gap-3 flex flex-col items-center justify-start">
           { user ? (
             <Fragment>
-              <p>Voir mon profil</p>
+              <NavLink to="/user/profile" className="text-sm">{i18n.t("account.account")}</NavLink>
             </Fragment>
           ) : (
             <Fragment>

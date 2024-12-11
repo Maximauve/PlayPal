@@ -5,13 +5,13 @@ import { UserService } from '@/user/service/user.service';
 import { TranslationService } from '@/translation/translation.service';
 import { GameService } from '@/game/service/game.service';
 import { Product, State, User, Role, Game } from '@playpal/schemas';
-import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { ProductDto } from '@/product/dto/product.dto';
 import { AssignDto } from '@/product/dto/assign.dto';
 import { Repository } from 'typeorm';
 
 import { getRepositoryToken } from '@nestjs/typeorm';import { ProductUpdatedDto } from '@/product/dto/productUpdated.dto';
+import { LoanService } from '@/loan/service/loan.service';
 
 describe('ProductController', () => {
   let productController: ProductController;
@@ -21,6 +21,7 @@ describe('ProductController', () => {
   let mockGameService: Partial<GameService>;
   let mockGameRepository: Partial<Repository<Game>>;
   let mockProductRepository: Partial<Repository<Product>>;
+  let mockLoanService: Partial<LoanService>;
 
   const validGameId = "456e7890-e89b-12d3-a456-426614174003";
   const validProductId = "123e4567-e89b-12d3-a456-426614174001";
@@ -66,8 +67,17 @@ describe('ProductController', () => {
   const mockProducts: Product[] = [mockProduct];
 
   beforeEach(async () => {
+    mockGameRepository = {
+      findOne: jest.fn().mockResolvedValue(mockGame),
+    };
+
+    mockProductRepository = {
+      findOne: jest.fn().mockResolvedValue(mockProduct),
+      find: jest.fn().mockResolvedValue(mockProducts),
+    };
+
     mockProductService = {
-      getAllProduct: jest.fn().mockResolvedValue(mockProducts),
+      getAllProducts: jest.fn().mockResolvedValue(mockProducts),
       getProduct: jest.fn().mockResolvedValue(mockProduct),
       create: jest.fn().mockResolvedValue(mockProduct),
       assign: jest.fn().mockResolvedValue(mockProduct),
@@ -89,6 +99,8 @@ describe('ProductController', () => {
       findOneGame: jest.fn().mockResolvedValue(mockProduct.game),
     };
 
+    mockLoanService = {}
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductController],
       providers: [
@@ -98,6 +110,7 @@ describe('ProductController', () => {
         { provide: GameService, useValue: mockGameService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
         { provide: getRepositoryToken(Product), useValue: mockProductRepository },
+        { provide: LoanService, useValue: mockLoanService },
       ],
     }).compile();
 
@@ -106,9 +119,9 @@ describe('ProductController', () => {
 
   describe('getAllProduct', () => {
     it('should return all products for a valid gameId', async () => {
-      jest.spyOn(mockProductService, 'getAllProduct').mockResolvedValue(mockProducts);
+      jest.spyOn(mockProductService, 'getAllProducts').mockResolvedValue(mockProducts);
 
-      const result = await productController.getAllProduct(mockGame);
+      const result = await productController.getAllProduct();
       expect(result).toEqual(mockProducts);
     });
   });
@@ -122,21 +135,21 @@ describe('ProductController', () => {
 
   describe('createProduct', () => {
     it('should create a product for a valid gameId', async () => {
-      const productDto: ProductDto = { state: State.LIKE_NEW };
+      const productDto: ProductDto = { state: State.LIKE_NEW, gameId: mockGame.id };
 
       jest.spyOn(mockProductService, 'create').mockResolvedValue(mockProduct);
 
-      const result = await productController.createProduct(mockUser, mockGame, productDto);
+      const result = await productController.createProduct(productDto);
       expect(result).toEqual(mockProduct);
     });
 
     it('should throw HttpException with 500 status if product creation fails', async () => {
-      const productDto: ProductDto = { state: State.LIKE_NEW };
+      const productDto: ProductDto = { state: State.LIKE_NEW, gameId: mockGame.id };
 
       jest.spyOn(mockProductService, 'create').mockResolvedValue(null);
 
-      await expect(productController.createProduct(mockUser, mockGame, productDto)).rejects.toThrow(HttpException);
-      await expect(productController.createProduct(mockUser, mockGame, productDto)).rejects.toMatchObject({
+      await expect(productController.createProduct(productDto)).rejects.toThrow(HttpException);
+      await expect(productController.createProduct(productDto)).rejects.toMatchObject({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     });
@@ -182,7 +195,7 @@ describe('ProductController', () => {
 
       jest.spyOn(mockProductService, 'update').mockResolvedValue();
 
-      const result = await productController.updateProduct(mockGame, mockProduct, productUpdatedDto);
+      const result = await productController.updateProduct(mockProduct, productUpdatedDto);
       expect(result).toEqual(mockProduct);
       expect(mockProductService.update).toHaveBeenCalledWith(validProductId, productUpdatedDto);
     });
@@ -193,8 +206,8 @@ describe('ProductController', () => {
 
       jest.spyOn(mockProductService, 'delete').mockResolvedValue(undefined);
 
-      await expect(productController.deleteProduct(mockGame, mockProduct)).resolves.toBeUndefined();
-      expect(mockProductService.delete).toHaveBeenCalledWith(validGameId, validProductId);
+      await expect(productController.deleteProduct(mockProduct)).resolves.toBeUndefined();
+      expect(mockProductService.delete).toHaveBeenCalledWith(validProductId);
     });
   });
 });

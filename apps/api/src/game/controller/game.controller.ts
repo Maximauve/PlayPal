@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -10,12 +10,14 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiResetContentResponse,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Game } from "@playpal/schemas";
+import { Game, GameWithStats, Product, User } from "@playpal/schemas";
 import { Express } from 'express';
 
+import { AdminGuard } from '@/auth/guards/admin.guard';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { FileUploadService } from '@/files/files.service';
 import { ParseFilePipeDocument } from '@/files/files.validator';
@@ -24,20 +26,46 @@ import { GameDto } from '@/game/dto/game.dto';
 import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { GameGuard } from '@/game/guards/game.guard';
 import { GameService } from "@/game/service/game.service";
+import { ProductService } from '@/product/service/product.service';
+import { RedisService } from '@/redis/service/redis.service';
 import { TranslationService } from '@/translation/translation.service';
+import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 
-@UseGuards(JwtAuthGuard)
+
 @ApiTags('games')
 @Controller('games')
 export class GameController {
-  constructor(private readonly gamesService: GameService, private readonly translationsService: TranslationService, private readonly fileUploadService: FileUploadService) { }
+  constructor(
+    private readonly gamesService: GameService,
+    private readonly translationsService: TranslationService,
+    private readonly fileUploadService: FileUploadService,
+    private readonly productService: ProductService,
+    private readonly redisService: RedisService,
+  ) { }
 
   @Get('')
   @ApiOperation({ summary: "Get all games" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
-  async getAll() {
-    return this.gamesService.getAll();
+  async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
+    const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
+    
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+  
+  @Get('/recommendations')
+  @ApiOperation({ summary: "Get the most liked games" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
+  async getRecommendations(@Query('limit') limit = 10) {
+    const data = await this.gamesService.getRecommendations(limit);
+    return data;
   }
 
   @Get('/:gameId')
@@ -48,11 +76,25 @@ export class GameController {
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiNotFoundResponse({ description: "Game not found" })
   @ApiBadRequestResponse({ description: "UUID is invalid" })
-  getOneGame(@GameRequest() game: Game): Game {
-    return game;
+  async getOneGame(@GameRequest() game: Game): Promise<GameWithStats> {
+    const data = await this.gamesService.getGameWithStats(game);
+    return data;
+  }
+
+  @Get('/:gameId/notes')
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: "Get one game average note and the count of each possible note" })
+  @ApiParam({ name: 'gameId', description: 'Game id', required: true })
+  @ApiOkResponse({ description: "Game found successfully", type: Game })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
+  getOneGameNotes(@GameRequest() game: Game) {
+    return this.gamesService.getGameNotes(game.id);
   }
 
   @Post('')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Create a game" })
   @ApiConsumes('multipart/form-data')
@@ -67,7 +109,7 @@ export class GameController {
     }
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     const game = await this.gamesService.create(body);
     if (!game) {
@@ -77,6 +119,7 @@ export class GameController {
   }
 
   @Put('/:gameId')
+  @UseGuards(AdminGuard)
   @UseGuards(GameGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: "Update a game" })
@@ -100,6 +143,7 @@ export class GameController {
   }
 
   @Delete('/:gameId')
+  @UseGuards(AdminGuard)
   @UseGuards(GameGuard)
   @ApiOperation({ summary: 'Delete a game' })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
@@ -112,5 +156,56 @@ export class GameController {
       await this.fileUploadService.deleteFile(game.image);
     }
     await this.gamesService.delete(game.id);
+  }
+
+  @Get('/:gameId/products')
+  @UseGuards(AdminGuard)
+  @UseGuards(GameGuard)
+  @ApiOperation({ summary: "Get all product of a game" })
+  @ApiOkResponse({ description: "Products found successfully", type: Product, isArray: true })
+  async getAllProduct(@Param("gameId") gameId: string): Promise<Product[]> {
+    return this.productService.getAllProductsByGameId(gameId);
+  }
+
+  @Post('/waiting/:gameId')
+  @UseGuards(GameGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Subscribe for availability of a game' })
+  @ApiParam({ name: 'gameId', description: 'Game id', required: true })
+  @ApiOkResponse({ description: 'User has been successfully put on the waiting list' })
+  @ApiResetContentResponse({ description: 'A game is already available to rent' })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiBadRequestResponse({ description: "UUID is invalid" })
+  @HttpCode(HttpStatus.OK)
+  async subscribe(@GameRequest() game: Game, @CurrentUser() user: User)  {
+    if (await this.gamesService.hasProductAvailable(game.id)) {
+      throw new HttpException('', HttpStatus.RESET_CONTENT);
+    }
+
+    const products = await this.productService.getAllProductsByGameId(game.id);
+    if ( products.some(product => product.user?.id === user.id)) {
+      throw new ForbiddenException(await this.translationsService.translate('error.ALREADY_RENTING_GAME'));
+    }
+
+    try {
+      if (await this.redisService.exists(`game-waiting-${game.id}`)) {
+        const userIds =  await this.redisService.lgetall(`game-waiting-${game.id}`);
+        if (userIds.includes(user.id)) {
+          throw new ForbiddenException(await this.translationsService.translate('error.ALREADY_ON_WAITLIST'));
+        }
+        this.redisService.push(`game-waiting-${game.id}`, user.id);
+      } else {
+        this.redisService.push(`game-waiting-${game.id}`, user.id);
+      }
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        throw error;
+      }
+      console.error(error);
+      throw new InternalServerErrorException(await this.translationsService.translate('error.SOMETHING_WENT_WRONG'));
+    }
+
+    return;
   }
 }

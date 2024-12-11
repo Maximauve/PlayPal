@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsArray, IsEmpty, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 import { i18nValidationMessage } from "nestjs-i18n";
 
@@ -12,14 +13,17 @@ export class GameDto {
   @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
   description: string;
 
+  @Transform(({ value }: { value: string }) => Number.parseInt(value, 10), { toClassOnly: true }) // in form-data, only string are allowed
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsInt({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_INT') })
   minPlayers: number;
 
+  @Transform(({ value }: { value: string }) => Number.parseInt(value, 10), { toClassOnly: true })
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsInt({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_INT') })
   maxPlayers: number;
 
+  @Transform(({ value }: { value: string }) => Number.parseInt(value, 10), { toClassOnly: true })
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsInt({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_INT') })
   difficulty: number;
@@ -28,6 +32,7 @@ export class GameDto {
   @IsString({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_STRING') })
   duration: string;
 
+  @Transform(({ value }: { value: string }) => Number.parseInt(value, 10), { toClassOnly: true })
   @IsNotEmpty({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY') })
   @IsInt({ message: i18nValidationMessage<I18nTranslations>('validation.NOT_INT') })
   minYear: number;

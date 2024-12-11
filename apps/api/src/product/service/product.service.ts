@@ -16,10 +16,19 @@ export class ProductService {
     private gameRepository: Repository<Game>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly translationsService: TranslationService
+    private readonly translationsService: TranslationService,
   ) { }
 
-  async getAllProduct(gameId: string): Promise<Product[]> {
+  async getAllProducts(): Promise<Product[]> {
+    return this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect("product.user", "user")
+      .leftJoinAndSelect("product.game", "game")
+      .leftJoinAndSelect("product.loan", "loan")
+      .getMany();
+  }
+  
+  async getAllProductsByGameId(gameId: string): Promise<Product[]> {
     return this.productRepository
       .createQueryBuilder('product')
       .where("product.gameId = :id", { id: gameId })
@@ -29,31 +38,23 @@ export class ProductService {
       .getMany();
   }
 
-  async getProduct(gameId: string, productId: string): Promise<Product | null> {
+  async getProduct(productId: string): Promise<Product | null> {
     return this.productRepository
       .createQueryBuilder("product")
       .leftJoinAndSelect("product.user", "user")
       .leftJoinAndSelect("product.game", "game")
       .leftJoinAndSelect("product.loan", "loan")
-      .where("product.gameId = :gameId", { gameId: gameId })
       .andWhere("product.id = :productId", { productId: productId })
       .getOne();
   }
 
-  async create(gameId: string, userId: string, productDto: ProductDto): Promise<Product | null> {
+  async create(productDto: ProductDto): Promise<Product | null> {
     const game = await this.gameRepository
       .createQueryBuilder("game")
-      .where("game.id = :id", { id: gameId })
+      .where("game.id = :id", { id: productDto.gameId })
       .getOne();
     if (!game) {
       throw new HttpException(await this.translationsService.translate("error.GAME_NOT_FOUND"), HttpStatus.NOT_FOUND);
-    }
-    const user = await this.userRepository
-      .createQueryBuilder("user")
-      .where("user.id = :id", { id: userId })
-      .getOne();
-    if (!user) {
-      throw new HttpException(await this.translationsService.translate("error.USER_NOT_FOUND"), HttpStatus.NOT_FOUND);
     }
     const product = this.productRepository.create({
       ...productDto,
@@ -74,13 +75,12 @@ export class ProductService {
     }
   }
 
-  async delete(gameId: string, productId: string): Promise<void> {
+  async delete(productId: string): Promise<void> {
     const query = await this.productRepository
       .createQueryBuilder()
       .delete()
       .from(Product)
       .where("product.id = :id", { id: productId })
-      .andWhere('product."gameId" = :gameId', { gameId: gameId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"), HttpStatus.NOT_FOUND);

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { Game, Loan, Product, Rating, Rule, Tag, User, Wish } from '@playpal/schemas';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
@@ -9,11 +10,13 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'node:path';
 
 import { AuthModule } from '@/auth/auth.module';
-import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter'; 
+import { AuthExceptionFilter } from '@/auth/exception-filter/exception-filter';
+import { EventModule } from '@/event/events.module';
 import { FileUploadModule } from '@/files/files.module';
 import { FixturesModule } from '@/fixtures/fixture.module';
 import { GameModule } from '@/game/game.module';
 import { LoanModule } from '@/loan/loan.module';
+import { MailModule } from '@/mail/mail.module';
 import { ProductModule } from '@/product/product.module';
 import { RatingModule } from '@/rating/rating.module';
 import { RedisModule } from '@/redis/redis.module';
@@ -62,6 +65,7 @@ import { WishModule } from '@/wish/wish.module';
         AcceptLanguageResolver,
       ],
     }),
+    EventEmitterModule.forRoot(),
     RedisModule,
     UsersModule,
     AuthModule,
@@ -73,7 +77,9 @@ import { WishModule } from '@/wish/wish.module';
     RuleModule,
     FileUploadModule,
     WishModule,
-    FixturesModule
+    FixturesModule,
+    MailModule,
+    EventModule,
   ],
   controllers: [],
   providers: [TranslationService, {

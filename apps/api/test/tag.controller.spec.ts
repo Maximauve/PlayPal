@@ -60,6 +60,9 @@ describe('TagController', () => {
   };
 
   beforeEach(async () => {
+    mockTagRepository = {};
+    mockGameRepository = {};
+    
     mockTagService = {
       getAll: jest.fn().mockResolvedValue(mockTags),
       getOne: jest.fn(),

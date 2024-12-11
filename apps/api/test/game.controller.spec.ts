@@ -8,8 +8,10 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag, Game, Role } from '@playpal/schemas';
+import { Tag, Game, Role, GameResponse, GameWithStats } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
+import { ProductService } from '@/product/service/product.service';
+import { RedisService } from '@/redis/service/redis.service';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -18,8 +20,10 @@ describe('GameController', () => {
   let mockTranslationService: Partial<TranslationService>;
   let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
+  let mockProductService: Partial<ProductService>;
+  let mockRedisService: Partial<RedisService>;
 
-  const mockGames: Game[] = [
+  const mockGames: GameWithStats[] = [
     {
       id: "568931ed-d87e-4bf1-b477-2f1aea83e3da",
       name: "6-qui-prends",
@@ -32,7 +36,8 @@ describe('GameController', () => {
       brand: "Gigamic",
       rating: [],
       tags: [],
-      rules: []
+      rules: [],
+      averageRating: 4.5,
     },
     {
       id: "109ebba9-9823-45bf-88b5-889c621d58f9",
@@ -46,7 +51,8 @@ describe('GameController', () => {
       brand: "Magilano",
       rating: [],
       tags: [],
-      rules: []
+      rules: [],
+      averageRating: 4.2,
     }
   ];
 
@@ -60,10 +66,17 @@ describe('GameController', () => {
   }
 
   beforeEach(async () => {
+    mockGameRepository = {
+      findOne: jest.fn().mockResolvedValue(mockGames[0]),
+      find: jest.fn().mockResolvedValue(mockGames),
+    };
+
     mockGameService = {
       getAll: jest.fn().mockResolvedValue(mockGames),
       findOneGame: jest.fn(),
       findOneName: jest.fn(),
+      getGameNotes: jest.fn(),
+      getGameWithStats: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -77,6 +90,14 @@ describe('GameController', () => {
       translate: jest.fn().mockImplementation(key => `Translated: ${key}`),
     };
 
+    mockFileUploadService = {
+      uploadFile: jest.fn().mockResolvedValue({ fileUrl: 'http://mockfileurl.com' })
+    };
+
+    mockProductService = {}
+
+    mockRedisService = {}
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GameController],
       providers: [
@@ -85,6 +106,8 @@ describe('GameController', () => {
         { provide: TranslationService, useValue: mockTranslationService },
         { provide: FileUploadService, useValue: mockFileUploadService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
+        { provide: ProductService, useValue: mockProductService },
+        { provide: RedisService, useValue: mockRedisService },
       ],
     }).compile();
 
@@ -93,15 +116,27 @@ describe('GameController', () => {
 
   describe('getAll', () => {
     it('should return all games', async () => {
+
+      const allResult: GameResponse = {
+        data: mockGames,
+        total: mockGames.length,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      }
+
+
+      jest.spyOn(mockGameService, 'getAll').mockResolvedValue(allResult);
       const result = await gameController.getAll();
-      expect(result).toEqual(mockGames);
+      expect(result).toEqual(allResult);
     });
   });
 
   describe('getOneGame', () => {
 
     it('should return a specific game by ID', async () => {
-      const result = gameController.getOneGame(mockGames[0]);
+      jest.spyOn(mockGameService, 'getGameWithStats').mockResolvedValue(mockGames[0]);  
+      const result = await gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
     });
   });
@@ -146,7 +181,7 @@ describe('GameController', () => {
 
     it('should update a game successfully', async () => {
       const updatedGame = { ...mockGames[0], ...updateGameDto };
-      
+
       jest.spyOn(mockGameService, 'update').mockResolvedValue(updatedGame);
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(updatedGame);
 

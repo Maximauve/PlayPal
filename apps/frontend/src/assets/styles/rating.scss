@@ -1,0 +1,24 @@
+@use "sass:math";
+
+.stars {
+  -webkit-background-clip: text;
+  background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.value-0 {
+	background-image: linear-gradient(90deg, theme('colors.yellow.400') 0%, theme('colors.gray.300') 0%);
+}
+
+@for $i from 1 through 5 {
+	$value: #{math.div($i, 5) * 100%};
+	.value-#{$i} {
+		background-image: linear-gradient(90deg, theme('colors.yellow.400') $value, theme('colors.gray.300') $value);
+	}
+	@for $j from 1 through 9 {
+		$value: #{math.div(math.div($i * 10 + $j, 10), 5) * 100%};
+		.value-#{$i}\.#{$j} {
+			background-image: linear-gradient(90deg, theme('colors.yellow.400') $value, theme('colors.gray.300') $value);
+    }
+  }
+}

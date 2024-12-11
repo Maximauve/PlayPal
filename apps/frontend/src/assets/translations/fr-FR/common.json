@@ -9,6 +9,13 @@
 		"add": "ajouter",
 		"close": "fermer",
 		"search": "rechercher",
-		"confirm": "confirmer"
+		"confirm": "confirmer",
+		"validate": "valider",
+		"about": "à propos",
+		"contact": "contact"
+	},
+	"copyright": {
+		"message": "© 2024 Playpal. Tous droits réservés.",
+		"love": "Fait avec ❤️ par Playpal"
 	}
 }

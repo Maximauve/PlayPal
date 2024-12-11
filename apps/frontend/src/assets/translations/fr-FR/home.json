@@ -1,5 +1,18 @@
 {
 	"home": {
-		"title": "Bienvenue sur notre site"
+		"title": "Playpal",
+		"subtitle": "Jouez plus, dépensez moins",
+		"catchphrase": "Jouez plus, dépensez moins avec Playpal !",
+		"tagSearch": "Rechercher par catégorie",
+		"recommendations": "Recommendations",
+		"allGames": "Tout nos jeux"
+	},
+	"card": {
+		"open": "Decouvrir",
+		"rating": "avis",
+		"inStock": "En stock",
+		"notStock": "Indisponible",
+		"loanStartDate": "Date de début du prêt",
+		"loanEndDate": "Date de fin du prêt"
 	}
 }

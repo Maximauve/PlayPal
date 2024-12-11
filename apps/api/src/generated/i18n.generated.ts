@@ -12,6 +12,7 @@ export type I18nTranslations = {
         "USER_NOT_ADMIN": string;
         "PASSWORD_INCORRECT": string;
         "UNAUTHORIZED": string;
+        "PERMISSION_DENIED": string;
         "ID_INVALID": string;
         "GAME_NOT_FOUND": string;
         "GAME_CANT_CREATE": string;
@@ -36,6 +37,13 @@ export type I18nTranslations = {
         "WISH_NOT_FOUND": string;
         "WISH_CANT_CREATE": string;
         "WISH_CANT_DELETE": string;
+        "PAGE_NOT_FOUND": string;
+        "PRODUCT_ALREADY_RENTED": string;
+        "SOMETHING_WENT_WRONG": string;
+        "ALREADY_ON_WAITLIST": string;
+        "ALREADY_RETURNED_LOAN": string;
+        "CANT_RETURN_LOAN_YOU_DONT_HAVE": string;
+        "ALREADY_RENTING_GAME": string;
     };
     "user": {
         "HELLO": string;
