@@ -6,4 +6,5 @@ export type GameResponse = {
   page: number;
   limit: number;
   totalPages: number;
+  stats: any[];
 }
