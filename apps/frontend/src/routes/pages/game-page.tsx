@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
 import { toast, type ToastContent } from 'react-toastify';
 
+import DefaultImage from "@/assets/images/all-games.png";
 import Breadcrumb, { type BreadcrumbItem } from '@/components/breadcrumb';
 import ReviewForm from '@/components/form/review-form';
 import Loader from '@/components/loader';
@@ -90,7 +91,7 @@ export default function GamePage(): React.JSX.Element {
         <div className="flex flex-wrap">
           <div className="w-full md:w-1/2 p-2">
             <img
-              src={game?.image}
+              src={game?.image ?? DefaultImage}
               alt="Product"
               className="rounded-lg shadow-md"
             />

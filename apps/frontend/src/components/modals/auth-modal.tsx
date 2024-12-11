@@ -47,10 +47,19 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
     }
   }, [isRegisterMode]);
 
-  const handleSubmit = (values: LoginDto | RegisterDto) => {
+  const handleSubmit = async (values: LoginDto | RegisterDto) => {
     if (isRegisterMode) {
       try {
-        register(values as RegisterDto).unwrap();
+        const formData = new FormData();
+        Object.entries(values).forEach(([key, value]) => {
+          if (key !== 'image') {
+            formData.append(key, String(value));
+          }
+        });
+        if ((values as RegisterDto).image instanceof File) {
+          formData.append('image', (values as RegisterDto).image as Blob);
+        }
+        await register(formData).unwrap();
         closeModal();
         toast.success(i18n.t("notify.register.success") as ToastContent<string>, {
           position: "top-right",
@@ -63,21 +72,22 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
         });
         console.error(error);
       };
+    } else {
+      try {
+        await login(values as LoginDto).unwrap();
+        closeModal();
+        toast.success(i18n.t("notify.login.success") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error(i18n.t("notify.login.error") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      };
     }
-    try {
-      login(values as LoginDto).unwrap();
-      closeModal();
-      toast.success(i18n.t("notify.login.success") as ToastContent<string>, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(i18n.t("notify.login.error") as ToastContent<string>, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    };
   };
 
   const formik = useFormik<LoginDto | RegisterDto>({

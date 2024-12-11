@@ -43,8 +43,8 @@ export class UserController {
   @ApiOperation({ summary: 'Return my user informations' })
   @ApiOkResponse({ description: "User found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
-  getMe(@CurrentUser() user: User): User {
-    return user;
+  getMe(@CurrentUser() user: User): Promise<User | null> {
+    return this.userService.findOneUser(user.id);
   }
 
   @Get('/me/loans')

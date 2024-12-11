@@ -22,9 +22,9 @@ export default function TagHeader() {
     validateOnBlur: false,
   });
 
-  const handleSubmit = (values: TagPayload) => {
+  const handleSubmit = async (values: TagPayload) => {
     try {
-      createTag(values).unwrap();
+      await createTag(values).unwrap();
       formik.resetForm({ values: createTagInitialValues });
       toast.success(i18n.t("notify.create.tag.success") as ToastContent<string>, {
         position: "top-right",
