@@ -2,6 +2,7 @@ export { Game } from './src/game/game.entity';
 export type { GamePayload } from './src/game/game.payload';
 export type { GameResponse } from './src/game/game.response';
 export type { CreateGamePayload } from './src/game/create-game.payload';
+export type { GameWithStats } from './src/game/game.stats';
 export { Loan } from './src/loan/loan.entity';
 export { Product } from './src/product/product.entity';
 export { State } from './src/product/state.enum';

@@ -2,6 +2,7 @@ import { type LoginDto, type RegisterDto } from '@playpal/schemas';
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import React, { useCallback, useEffect, useState } from "react";
+import { toast, type ToastContent } from 'react-toastify';
 
 import LoginForm from "@/components/form/login-form";
 import RegisterForm from "@/components/form/register-form";
@@ -50,31 +51,36 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
 
   const handleSubmit = (values: LoginDto | RegisterDto) => {
     if (isRegisterMode) {
-      register(values as RegisterDto).then(({ error }) => {
-        if (error) {
-          console.error("Register", error);
-          throw new Error("Register failed");
-        }
+      try {
+        register(values as RegisterDto).unwrap();
         closeModal();
-        return;
-      }).catch((error) => {
+        toast.success(i18n.t("notify.register.success") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } catch (error) {
+        toast.error(i18n.t("notify.register.error") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
         console.error(error);
-      });
-      return;
+      };
     }
-    login(values as LoginDto).then(({ error }) => {
-      if (error) {
-        console.error("Login", error);
-        throw new Error("Login failed");
-      }
-      return;
-    }).then(() => {
+    try {
+      login(values as LoginDto).unwrap();
       refreshUser();
       closeModal();
-      return;
-    }).catch((error) => {
+      toast.success(i18n.t("notify.login.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
       console.error(error);
-    });
+      toast.error(i18n.t("notify.login.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    };
   };
 
   const formik = useFormik<LoginDto | RegisterDto>({

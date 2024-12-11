@@ -6,6 +6,7 @@ export const ratingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getRatings: builder.query<Rating[], { gameId: string }>({
       query: ({ gameId }) => `/games/${gameId}/rating`,
+      providesTags: ['Ratings']
     }),
     addRating: builder.mutation<Rating, { body: RatingDto, gameId: string }>({
       query: ({ gameId, body }) => ({
@@ -13,6 +14,7 @@ export const ratingApi = baseApi.injectEndpoints({
         method: "POST",
         body: body,
       }),
+      invalidatesTags: ['Ratings']
     }),
   }),
 

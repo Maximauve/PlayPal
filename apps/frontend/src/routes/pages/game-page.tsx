@@ -6,9 +6,11 @@ import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
+import { toast, type ToastContent } from 'react-toastify';
 
 import Breadcrumb, { type BreadcrumbItem } from '@/components/breadcrumb';
 import ReviewForm from '@/components/form/review-form';
+import Loader from '@/components/loader';
 import { Rating } from '@/components/rating';
 import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
@@ -28,7 +30,7 @@ export default function GamePage(): React.JSX.Element {
 
   const id = useParams<{ id: string }>() as { id: string };
   const { data: game, isLoading } = useGetGameQuery(id.id);
-  const { data: ratings, refetch } = useGetRatingsQuery({ gameId: id.id });
+  const { data: ratings } = useGetRatingsQuery({ gameId: id.id });
   const [addRating] = useAddRatingMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
@@ -43,9 +45,16 @@ export default function GamePage(): React.JSX.Element {
       try {
         await addRating({ gameId: id.id, body: values }).unwrap();
         formik.resetForm();
-        refetch(); // Rafraîchir les évaluations après submit réussie
+        toast.success(i18n.t("notify.create.rating.success") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } catch (error) {
-        console.error("Add rating", error);
+        console.error("Error add rating", error);
+        toast.error(i18n.t("notify.create.rating.error") as ToastContent<string>, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     },
     validateOnChange: true,
@@ -68,7 +77,7 @@ export default function GamePage(): React.JSX.Element {
   }, [game, isLoading, navigate]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (

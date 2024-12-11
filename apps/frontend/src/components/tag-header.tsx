@@ -2,6 +2,7 @@ import { type TagPayload } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { useCallback }  from "react";
+import { toast, type ToastContent } from "react-toastify";
 
 import TextInput from "@/components/form/text-input";
 import { type WordingKey } from "@/context/i18n/i18n-service";
@@ -25,8 +26,16 @@ export default function TagHeader() {
     try {
       createTag(values).unwrap();
       formik.resetForm({ values: createTagInitialValues });
+      toast.success(i18n.t("notify.create.tag.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } catch (error) {
       console.error("Error create tag :", error);
+      toast.error(i18n.t("notify.create.tag.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
