@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game, Rating, GameWithStats, Product } from "@playpal/schemas";
+import { Game, GameWithStats, Product, Rating } from "@playpal/schemas";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
