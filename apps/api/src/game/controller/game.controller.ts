@@ -56,7 +56,7 @@ export class GameController {
   }
   
   @Get('/recommendations')
-  @ApiOperation({ summary: "Get all games" })
+  @ApiOperation({ summary: "Get the most liked games" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getRecommendations(@Query('limit') limit = 10) {

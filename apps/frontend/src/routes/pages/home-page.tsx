@@ -24,9 +24,6 @@ export default function HomePage(): React.JSX.Element {
   }, [selectedTags]);
 
   const { data: gamesData } = useGetRecommendationsQuery(4);
-  console.log(gamesData);
-
-
 
   return (
     <>
