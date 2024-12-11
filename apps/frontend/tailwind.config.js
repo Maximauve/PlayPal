@@ -16,8 +16,8 @@ export default {
           light : '#FFFFFF',
         },
         text : {
-          light : '#2C2830',
-          dark : '#FFFFFF',
+          light : '#FFFFFF',
+          dark : '#2C2830',
         },
         button : {
           active : '#FFFFFF',
