@@ -16,13 +16,13 @@ export const Review = ({ rating }: ReviewProperties) => {
       />
       <div className="flex-1">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold">{rating.user.username}</h3>
+          <h3 className="text-lg font-bold text-black">{rating.user.username}</h3>
           <span className="text-gray-500 text-sm">{new Date(rating.creationDate).toLocaleDateString()}</span></div>
         <div className="flex items-center gap-1 mb-2">
           <span className={`stars value-${rating.note}`}>★★★★★</span>
           <span className="text-gray-600 text-sm"> ・ {rating.note}</span>
         </div>
-        <p>{rating.comment}</p>
+        <p className="text-black">{rating.comment}</p>
       </div>
     </div>
   );

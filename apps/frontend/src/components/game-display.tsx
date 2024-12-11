@@ -1,5 +1,6 @@
 import { type Game, type GameResponse } from "@playpal/schemas";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import image from "@/assets/images/all-games.png";
 
@@ -9,12 +10,14 @@ interface GameDisplayProperties {
 }
 
 export default function GameDisplay({ games, displayMode }: GameDisplayProperties) : React.JSX.Element {
+  const navigate = useNavigate();
   return (
     <div className={displayMode === "card" ? "game-card" : "game-list"} >
       {games?.data && games.data.map((game: Game) => (
         <div
           key={game.id}
           className={displayMode === "card" ? "game-card-item" : "game-list-item"}
+          onClick={() => navigate(`/game/${game.id}`)}
         >
           {game.image ? (
             <img className={displayMode === "list" ? "hidden" : ""} src={game.image} alt={game.name} />

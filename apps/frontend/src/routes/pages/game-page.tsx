@@ -17,6 +17,7 @@ import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
 import { Tabs } from '@/components/tabs';
 import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
+import useAuth from '@/hooks/use-auth';
 import useTranslation from '@/hooks/use-translation';
 import { useGetGameQuery } from '@/services/game';
 import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
@@ -35,6 +36,7 @@ export default function GamePage(): React.JSX.Element {
   const [addRating] = useAddRatingMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
+  const { user } = useAuth();
 
   const formik = useFormik<RatingDto>({
     initialValues: {
@@ -93,7 +95,7 @@ export default function GamePage(): React.JSX.Element {
             <img
               src={game?.image ?? DefaultImage}
               alt="Product"
-              className="rounded-lg shadow-md"
+              className="rounded-lg shadow-md w-full"
             />
           </div>
 
