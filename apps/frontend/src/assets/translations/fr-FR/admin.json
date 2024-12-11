@@ -5,7 +5,7 @@
       "dashboard": "Tableau de bord",
       "game-list": "Liste des jeux",
       "loan-list": "Liste des prêts",
-      "wishlist": "Liste de souhaits"
+      "tag": "Liste des tags"
     },
     "game" :{
       "add": "Ajouter un jeu",
@@ -22,6 +22,10 @@
         "duration": "Durée d'une partie",
         "brand": "Marque"
       }
+    },
+    "tag": {
+      "title": "Ajouter un tag",
+      "submit": "Créer le tag"
     }
   }
 }

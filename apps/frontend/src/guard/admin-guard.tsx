@@ -22,6 +22,10 @@ const AdminGuard = ({ children }: AdminGuardProps) => {
   if (user?.loading) {
     return <Loader />;
   }
+  
+  if (!user?.loading && !user) {
+    navigate('/');
+  }
 
   return <>{children}</>;
 };

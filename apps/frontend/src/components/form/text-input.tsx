@@ -51,7 +51,7 @@ export default function TextInput({ name, isDisabled, error, label, onChange, pl
           id={`${name}-input`}
           disabled={isDisabled}
           onChange={onChange}
-          defaultValue={value}
+          value={value}
           required={required}
           placeholder={placeholder ? i18n.t(placeholder) : undefined}
           />

@@ -5,6 +5,7 @@
 		"required": "Veuillez remplir ce champ.",
 		"invalid_image": "Le fichier n'est pas une image",
 		"min_number": "Le nombre doit être supérieur ou égale à 1",
-		"min_max": "Le nombre maximum de joueurs ne peut pas être plus grand que le minimum"
-	}
+		"password_invalid": "Le mot de passe est invalide, il doit faire 12 caractères et contenir au moins une minuscule, une majuscule, un nombre et un caractère spécial"
+	},
+	"Required": "Veuillez remplir ce champ."
 }

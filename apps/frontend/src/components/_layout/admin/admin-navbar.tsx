@@ -31,10 +31,10 @@ export default function AdminNavbar(): React.JSX.Element {
           {i18n.t("admin.navbar.loan-list")}
         </NavLink>
         <NavLink
-          to="/admin/wishlist"
+          to="/admin/tag"
           className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
         >
-          {i18n.t("admin.navbar.wishlist")}
+          {i18n.t("admin.navbar.tag")}
         </NavLink>      
       </div>
     </main>
