@@ -14,6 +14,7 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { Game, Product } from "@playpal/schemas";
+import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
@@ -44,15 +45,13 @@ export class GameController {
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
     const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
-    const stats = await Promise.all(data.map(game => this.gamesService.getGameNotes(game.id)));
-
+    
     return {
       data,
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
-      stats
     };
   }
   
@@ -62,7 +61,6 @@ export class GameController {
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
   async getRecommendations(@Query('limit') limit = 10) {
     const data = await this.gamesService.getRecommendations(limit);
-
     return data;
   }
 
@@ -74,8 +72,9 @@ export class GameController {
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiNotFoundResponse({ description: "Game not found" })
   @ApiBadRequestResponse({ description: "UUID is invalid" })
-  getOneGame(@GameRequest() game: Game): Game {
-    return game;
+  async getOneGame(@GameRequest() game: Game): Promise<GameWithStats> {
+    const data = await this.gamesService.getGameWithStats(game);
+    return data;
   }
 
   @Get('/:gameId/notes')

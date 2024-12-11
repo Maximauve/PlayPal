@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game } from "@playpal/schemas";
+import { Game, Rating } from "@playpal/schemas";
+import { GameWithStats } from "@playpal/schemas/dist/src/game/game.stats";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
@@ -16,7 +17,7 @@ export class GameService {
     private translationService: TranslationService
   ) { }
 
-  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: Game[]; total: number }> {
+  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: GameWithStats[]; total: number }> {
     const query = this.gamesRepository.createQueryBuilder('game')
       .leftJoinAndSelect('game.rating', 'rating')
       .leftJoinAndSelect('game.product', 'product')
@@ -32,10 +33,21 @@ export class GameService {
     }
     const offset = (page - 1) * limit;
     const total = await query.getCount();
-    const data = await query
+    const games: Game[] = await query
       .skip(offset)
       .take(limit)
       .getMany();
+
+    const data: GameWithStats[] = games.map((game: Game) => {
+      if (game.rating && game.rating.length > 0) {
+        const averageRating = this.getAverageRating(game.rating);
+        return { ...game, averageRating };
+      } else {
+        return { ...game, averageRating: null };
+      }
+
+    }
+    );
 
     await Promise.all(data.map(async (game) => {
       game.tags = await this.gamesRepository
@@ -48,14 +60,24 @@ export class GameService {
     return { data, total };
   }
 
-  async getRecommendations(limit : number): Promise<{ data: Game[] }>{
-    const data =  await this.gamesRepository.createQueryBuilder("game")
+  async getRecommendations(limit: number): Promise<{ data: Game[] }> {
+    const games: Game[] = await this.gamesRepository.createQueryBuilder("game")
       .leftJoinAndSelect("game.rating", "rating")
       .leftJoinAndSelect("game.product", "product")
       .leftJoinAndSelect("game.tags", "tags")
       .orderBy("rating.note", "DESC")
       .limit(limit)
       .getMany();
+
+    const data: GameWithStats[] = games.map((game: Game) => {
+      if (game.rating && game.rating.length > 0) {
+        const averageRating = this.getAverageRating(game.rating);
+        return { ...game, averageRating };
+      } else {
+        return { ...game, averageRating: null };
+      }
+
+    });
 
     return { data };
   }
@@ -124,11 +146,6 @@ export class GameService {
   }
 
   async getGameNotes(gameId: string) {
-    const averageNote = await this.gamesRepository.createQueryBuilder("game")
-      .leftJoin("game.rating", "rating")
-      .where("game.id = :id", { id: gameId })
-      .select("AVG(rating.note)", "averageNote")
-      .getRawOne();
 
     const noteCount = await this.gamesRepository.createQueryBuilder("game")
       .leftJoin("game.rating", "rating")
@@ -139,8 +156,6 @@ export class GameService {
       .getRawMany();
 
     return {
-      gameId: gameId,
-      averageNote: averageNote.averageNote,
       noteCount: noteCount
     };
   }
@@ -153,4 +168,21 @@ export class GameService {
       .leftJoinAndSelect("game.product", "product")
       .getOne();
   }
+
+  getAverageRating(ratings: Rating[]): number | null {
+    if (!ratings || ratings.length === 0) {
+      return null;
+    }
+    return ratings.reduce((accumulator, rating) => accumulator + rating.note, 0) / ratings.length;
+  }
+
+  async getGameWithStats(game: Game): Promise<GameWithStats> {
+    if (!game.rating || game.rating.length === 0) {
+      return { ...game, averageRating: null };
+    }
+    const averageRating = this.getAverageRating(game.rating);
+    const count = await this.getGameNotes(game.id);
+
+    return { ...game, averageRating, count: count.noteCount };
+  };
 }

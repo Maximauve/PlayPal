@@ -1,10 +1,9 @@
-import { Game } from "./game.entity";
+import { GameWithStats } from "./game.stats";
 
 export type GameResponse = {
-  data: Game[];
+  data: GameWithStats[];
   total: number;
   page: number;
   limit: number;
   totalPages: number;
-  stats: any[];
 }

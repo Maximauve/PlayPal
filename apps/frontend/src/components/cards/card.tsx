@@ -1,12 +1,14 @@
-import { type Game } from '@playpal/schemas';
+
+import { type GameWithStats } from '@playpal/schemas';
 
 import AllGame from "@/assets/images/all-games.png";
 import { Rating } from '@/components/rating';
 import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
+// import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
 
 interface CardProps {
-  game: Game;
+  game: GameWithStats;
   inStock?: boolean;
 }
 
@@ -31,7 +33,7 @@ export const Card = ({
           <span className={`${inStock ? 'bg-green-700' : 'bg-red-600'} text-white text-xs px-2 py-1 rounded`}>{inStock ? i18n.t("card.inStock") : i18n.t("card.notStock")}</span>
         </div>
         <div className="flex items-center gap-1 my-2">
-          <Rating rating={Math.round((Math.random() * 4 + 1) * 10) / 10} /> {/* todo : dynamiser */}
+          <Rating rating={game.averageRating || 0} />
           <span className="text-gray-600 text-sm"> - {game?.rating?.length ?? 0} {i18n.t("card.rating")}</span>
         </div>
         <TagsContainer tags={game.tags}/>

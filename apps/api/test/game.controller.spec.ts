@@ -11,6 +11,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 import { ProductService } from '@/product/service/product.service';
+import { GameWithStats } from '@playpal/schemas/dist/src/game/game.stats';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -21,7 +22,7 @@ describe('GameController', () => {
   let mockGameRepository: Partial<Repository<Game>>;
   let mockProductService: Partial<ProductService>;
 
-  const mockGames: Game[] = [
+  const mockGames: GameWithStats[] = [
     {
       id: "568931ed-d87e-4bf1-b477-2f1aea83e3da",
       name: "6-qui-prends",
@@ -34,7 +35,8 @@ describe('GameController', () => {
       brand: "Gigamic",
       rating: [],
       tags: [],
-      rules: []
+      rules: [],
+      averageRating: 4.5,
     },
     {
       id: "109ebba9-9823-45bf-88b5-889c621d58f9",
@@ -48,7 +50,8 @@ describe('GameController', () => {
       brand: "Magilano",
       rating: [],
       tags: [],
-      rules: []
+      rules: [],
+      averageRating: 4.2,
     }
   ];
 
@@ -72,6 +75,7 @@ describe('GameController', () => {
       findOneGame: jest.fn(),
       findOneName: jest.fn(),
       getGameNotes: jest.fn(),
+      getGameWithStats: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -115,7 +119,6 @@ describe('GameController', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        stats: []
       }
 
 
@@ -128,7 +131,8 @@ describe('GameController', () => {
   describe('getOneGame', () => {
 
     it('should return a specific game by ID', async () => {
-      const result = gameController.getOneGame(mockGames[0]);
+      jest.spyOn(mockGameService, 'getGameWithStats').mockResolvedValue(mockGames[0]);  
+      const result = await gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
     });
   });
