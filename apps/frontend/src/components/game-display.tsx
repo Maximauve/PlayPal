@@ -17,7 +17,7 @@ export default function GameDisplay({ games, displayMode }: GameDisplayPropertie
         <div
           key={game.id}
           className={displayMode === "card" ? "game-card-item" : "game-list-item"}
-          onClick={() => navigate(`/game/${game.id}`)}
+          onClick={() => navigate(`/games/${game.id}`)}
         >
           {game.image ? (
             <img className={displayMode === "list" ? "hidden" : ""} src={game.image} alt={game.name} />

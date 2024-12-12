@@ -9,7 +9,8 @@
     },
     "game" :{
       "add": "Ajouter un jeu",
-      "sumbit": "Créer le jeu"
+      "sumbit": "Créer le jeu",
+      "edit": "Modifier le jeu"
     },
     "create": {
       "game": {
