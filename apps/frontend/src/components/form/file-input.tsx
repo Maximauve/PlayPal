@@ -8,7 +8,7 @@ interface FileInputProps {
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   error?: { isError: boolean; message: WordingKey };
-  imageUrl?: string; // Option to pass a URL for the image
+  imageUrl?: string;
 }
 
 export default function FileInput({ name, handleFileChange, error, imageUrl }: FileInputProps): React.JSX.Element {
@@ -37,7 +37,7 @@ export default function FileInput({ name, handleFileChange, error, imageUrl }: F
             id={name}
             name={name}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleFileSelect}
             className="absolute inset-0 opacity-0 cursor-pointer"
           />
