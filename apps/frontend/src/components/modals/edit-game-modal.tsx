@@ -23,6 +23,8 @@ export default function EditGameModal({ isVisible, onClose, gameData }: EditGame
   const handleSubmit = async (values: EditGamePayload) => {
     try {
       const formData = new FormData();
+      // partial type
+       
       Object.entries(values).forEach(([key, value]) => {
         if (key !== 'image' && key !== "tagIds") {
           formData.append(key, String(value));
