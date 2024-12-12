@@ -116,7 +116,6 @@ export class GameService {
   
     const { tagIds, ...gameData } = game;
   
-    // Update the fields directly on the existingGame instance
     Object.assign(existingGame, gameData);
   
     if (tagIds) {
@@ -130,29 +129,26 @@ export class GameService {
       existingGame.tags = tags;
     }
   
-    // Save the updated entity
     await this.gamesRepository.save(existingGame);
   
-    return this.findOneGame(gameId); // have relations in response
+    return this.findOneGame(gameId);
   }
 
   async delete(gameId: string): Promise<void> {
     const game = await this.gamesRepository.findOne({
       where: { id: gameId },
-      relations: ['rating', 'product', 'wish', 'rules', 'tags'], // Include all related entities
+      relations: ['rating', 'product', 'wish', 'rules', 'tags'],
     });
   
     if (!game) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
-  
-    // Clear ManyToMany relations
+
     if (game.tags && game.tags.length > 0) {
       game.tags = [];
       await this.gamesRepository.save(game);
     }
-  
-    // Now delete the game
+
     const query = await this.gamesRepository
       .createQueryBuilder()
       .delete()
