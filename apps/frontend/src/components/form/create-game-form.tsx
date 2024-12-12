@@ -81,7 +81,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
           disabled={formik.isSubmitting}
           type="submit"
         >
-          {i18n.t("admin.game.sumbit")}
+          {i18n.t("admin.game.submit")}
         </button>
       </div>
     </form>
