@@ -34,7 +34,7 @@ export default function Navbar(): React.JSX.Element {
         </div>
         <div className="flex flex-row justify-end">
           <div className="cursor-pointer" onClick={toggleModal}>
-            <img src={user?.profilePicture ?? DefaultProfile} className="w-12 h-12 rounded-full hover:scale-105 active:scale-100" />
+            <img src={user?.image ?? DefaultProfile} className="w-12 h-12 rounded-full hover:scale-105 active:scale-100" />
           </div>
         </div>
       </nav>
@@ -42,7 +42,7 @@ export default function Navbar(): React.JSX.Element {
         <div className="px-2 pb-3 gap-3 flex flex-col items-center justify-start">
           { user ? (
             <Fragment>
-              <NavLink to="/user/profile" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.account")}</NavLink>
+              <NavLink to="/user" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.account")}</NavLink>
               <button className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center" onClick={handleLogout}>{i18n.t("account.logout")}</button>
             </Fragment>
           ) : (

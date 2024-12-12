@@ -48,20 +48,25 @@ export class AuthController {
     description: "The user was successfully registered and an access token has been returned", 
     type: LoginResponse 
   })
-  async register(@Body() body: RegisterDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<{ accessToken: string }> {
+  async register(@Body() body: RegisterDto, @Res() response: Response, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<{}> {
     if (await this.userService.checkUnknownUser(body)) {
       throw new HttpException(await this.translationService.translate('error.USER_EXIST'), HttpStatus.CONFLICT);
     }
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     body.password = await hashPassword(body.password);
     const user = await this.userService.create(body);
     if (!user) {
       throw new HttpException(await this.translationService.translate('error.USER_CANT_CREATE'), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return this.authService.login(user);
+    const { accessToken } = this.authService.login(user);
+    response.cookie('access_token', accessToken, {
+      expires: expirationTime,
+      httpOnly: true
+    });
+    return response.send({ accessToken });
   }
 
   @Post('/logout')

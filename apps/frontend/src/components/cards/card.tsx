@@ -40,7 +40,7 @@ export const Card = ({
         <TagsContainer tags={game.tags}/>
       </div>
       <div className="flex justify-center relative mb-3 mt-auto">
-        <button className="w-4/5 bg-black p-3 rounded-md" onClick={() => navigate(`/game/${game.id}`)}>{i18n.t("card.open")}</button>
+        <button className="w-4/5 bg-black p-3 rounded-md" onClick={() => navigate(`/games/${game.id}`)}>{i18n.t("card.open")}</button>
       </div>
     </div>
   );

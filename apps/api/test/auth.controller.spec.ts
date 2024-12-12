@@ -143,14 +143,23 @@ describe('AuthController', () => {
         rating: []
       };
 
+      const mockSend = jest.fn();
+      const response = { cookie: jest.fn(), send: mockSend} as unknown as Response;
+
       jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(false);
       jest.spyOn(mockUserService, 'create').mockResolvedValue(mockCreatedUser);
+      jest.spyOn(mockAuthService, 'login').mockReturnValue({ accessToken: 'test-token' });
 
-      const result = await authController.register(registerDto);
+      await authController.register(registerDto, response)
 
       expect(mockUserService.checkUnknownUser).toHaveBeenCalledWith(registerDto);
       expect(mockUserService.create).toHaveBeenCalled();
-      expect(result).toEqual({ accessToken: 'test-token' });
+      expect(response.cookie).toHaveBeenCalledWith(
+        'access_token',
+        'test-token',
+        expect.objectContaining({ httpOnly: true })
+      );
+      expect(mockSend).toHaveBeenCalledWith({ accessToken: 'test-token' });
     });
 
     it('should throw ConflictException for existing user', async () => {
@@ -162,8 +171,11 @@ describe('AuthController', () => {
 
       jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(true);
 
-      await expect(authController.register(registerDto)).rejects.toThrow(HttpException);
-      await expect(authController.register(registerDto)).rejects.toMatchObject({
+      const mockSend = jest.fn();
+      const response = { cookie: jest.fn(), send: mockSend} as unknown as Response;
+
+      await expect(authController.register(registerDto, response)).rejects.toThrow(HttpException);
+      await expect(authController.register(registerDto, response)).rejects.toMatchObject({
         status: HttpStatus.CONFLICT,
       });
     });
@@ -178,8 +190,11 @@ describe('AuthController', () => {
       jest.spyOn(mockUserService, 'checkUnknownUser').mockResolvedValue(false);
       jest.spyOn(mockUserService, 'create').mockResolvedValue(null);
 
-      await expect(authController.register(registerDto)).rejects.toThrow(HttpException);
-      await expect(authController.register(registerDto)).rejects.toMatchObject({
+      const mockSend = jest.fn();
+      const response = { cookie: jest.fn(), send: mockSend} as unknown as Response;
+
+      await expect(authController.register(registerDto, response)).rejects.toThrow(HttpException);
+      await expect(authController.register(registerDto, response)).rejects.toMatchObject({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     });

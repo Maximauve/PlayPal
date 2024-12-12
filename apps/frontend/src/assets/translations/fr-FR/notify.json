@@ -35,12 +35,12 @@
       }
     },
     "register": {
-      "success": "Votre compte a été créé, vous pouvez vous connectez",
+      "success": "Votre compte a été créé",
       "error": "Un problème est survenu lors de la création de votre compte"
     },
     "login": {
       "success": "Vous êtes connecté",
-      "error": "Un problème est survenu lors de votre connexion"
+      "error": "Identifiant invalides"
     }
   }
 }

@@ -75,7 +75,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
           message: formik.errors.tagIds as WordingKey,
         }}
       />
-      <FileInput name="image" handleFileChange={handleFileChange} formik={formik}/>
+      <FileInput name="image" handleFileChange={handleFileChange} error={{ isError: !!formik.touched.image && !!formik.errors.image, message: formik.errors.image as WordingKey }}/>
       <div className="w-full flex justify-center items-center mt-4">
         <button className="rounded-md bg-blue-600 py-1 px-3 text-white hover:scale-105 active:scale-100 disabled:bg-gray-500 flex flex-row gap-2"
           disabled={formik.isSubmitting}

@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <UserPageLayout />,
         children: [
           {
-            path: "profile",
+            path: "",
             element: <UserProfilePage />
           },
           {
@@ -47,10 +47,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
-      },
-      {
-        path: "dashboard",
         element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
       },
       {

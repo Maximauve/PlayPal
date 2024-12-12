@@ -5,7 +5,8 @@
 		"required": "Veuillez remplir ce champ.",
 		"invalid_image": "Le fichier n'est pas une image",
 		"min_number": "Le nombre doit être supérieur ou égale à 1",
-		"password_invalid": "Le mot de passe est invalide, il doit faire 12 caractères et contenir au moins une minuscule, une majuscule, un nombre et un caractère spécial"
+		"password_invalid": "Le mot de passe est invalide, il doit faire 12 caractères et contenir au moins une minuscule, une majuscule, un nombre et un caractère spécial",
+		"invalid_url": "URL est invalid"
 	},
 	"Required": "Veuillez remplir ce champ."
 }

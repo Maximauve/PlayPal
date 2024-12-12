@@ -41,7 +41,7 @@ export default function TextInput({ name, isDisabled, error, label, onChange, pl
         )}
         <div className='relative w-full'>
           <input className={
-            (classNameOverride ?? 'rounded-sm text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 ') +
+            (classNameOverride ?? 'rounded-sm text-black bg-white border disabled:bg-gray-500 w-full py-1 pl-2 text-lg ') +
                 (error?.isError
                   ? 'border-red-600 focus-visible:outline-red-600'
                   : 'border-gray-400')
