@@ -9,5 +9,8 @@ export class LoanDto {
   gameId: string;
 
   @IsDateString()
+  startDate: Date;
+
+  @IsDateString()
   endDate: Date;
 }

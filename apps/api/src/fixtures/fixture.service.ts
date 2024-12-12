@@ -198,12 +198,14 @@ export class FixturesService implements OnModuleInit {
   
     const loans = this.loanRepository.create([
       {
+        startDate: new Date(),
         endDate: futureDate1,
         product: skyjo,
         user: customer,
         status: LoanStatus.DONE
       },
       {
+        startDate: new Date(),
         endDate: futureDate2,
         product: galerapagos,
         user: customer2,

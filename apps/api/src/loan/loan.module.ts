@@ -8,6 +8,7 @@ import { LoanService } from '@/loan/service/loan.service';
 import { ProductModule } from '@/product/product.module';
 import { RedisModule } from "@/redis/redis.module";
 import { TranslationService } from '@/translation/translation.service';
+import { UserService } from '@/user/service/user.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Loan]),
@@ -18,7 +19,7 @@ import { TranslationService } from '@/translation/translation.service';
     forwardRef(() => ProductModule)
   ],
   controllers: [LoanController],
-  providers: [LoanService, TranslationService],
+  providers: [LoanService, TranslationService, UserService],
   exports: [LoanService],
 })
 export class LoanModule { }

@@ -11,9 +11,12 @@ export class Loan {
 
   @Column({ type: 'timestamptz', nullable: false })
   endDate: Date;
+  
+  @Column({ type: 'timestamptz', nullable: false })
+  startDate: Date;
 
   @CreateDateColumn()
-  startDate: Date;
+  createDate: Date;
 
   @ManyToOne(() => User, user => user.loan, { nullable : true })
   user: User | null;

@@ -1,4 +1,4 @@
-import { type Loan } from "@playpal/schemas";
+import { type Loan, type LoanDto } from "@playpal/schemas";
 
 import { baseApi } from "@/services/base";
 
@@ -10,7 +10,14 @@ export const loanApi = baseApi.injectEndpoints({
     getWaintingLoans: builder.query<Loan[], void>({
       query: () => "/loan/waiting",
     }),
+    createLoan: builder.mutation<Loan, LoanDto>({
+      query: (body) => ({
+        url: "/loan",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetLoansQuery, useGetWaintingLoansQuery } = loanApi;
+export const { useGetLoansQuery, useGetWaintingLoansQuery, useCreateLoanMutation } = loanApi;
