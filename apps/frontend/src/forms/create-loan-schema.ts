@@ -20,7 +20,7 @@ export const createLoanSchema = z.object({
     }
   )
   .refine(
-    (data) => new Date(data.startDate) <= new Date(),
+    (data) => new Date(data.startDate) >= new Date(),
     {
       message: 'start_date',
     }

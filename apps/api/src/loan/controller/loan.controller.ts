@@ -71,6 +71,7 @@ export class LoanController {
     if (!loan) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    await this.productService.assign(product, user);
     return loan;
   }
 
@@ -90,6 +91,29 @@ export class LoanController {
     return loanUpdated;
   }
 
+  @UsePipes(ValidationPipe)
+  @Put("/:loanId/decline")
+  @UseGuards(LoanGuard)
+  @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
+  @ApiOperation({ summary: "Update a loan" })
+  @ApiOkResponse({ description: "Loan updated successfully", type: Loan })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  async declineLoan(@LoanRequest() loan: Loan): Promise<Loan> {
+
+    await this.loanService.declineLoan(loan.id);
+    const loanUpdated = await this.loanService.getLoan(loan.id);
+    if (!loanUpdated) {
+      throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    }
+    const product = loanUpdated.product;
+    if (!product) {
+      throw new NotFoundException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"));
+    }
+    await this.productService.unassign(product);
+
+    return loanUpdated;
+  }
+
   @Delete("/:loanId")
   @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
   @ApiOperation({ summary: "Delete a loan" })
@@ -102,7 +126,7 @@ export class LoanController {
   @Post('/return/:loanId')
   @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
   @ApiOperation({ summary: 'Returns the loans and unassigns it from the attached user' })
-  @ApiOkResponse({ description : 'The loan has been successfuly returned' })
+  @ApiOkResponse({ description: 'The loan has been successfuly returned' })
   @ApiNotFoundResponse({ description: 'Loan or attached product not found' })
   @ApiInternalServerErrorResponse({ description: 'The loan could not been updated' })
   @HttpCode(HttpStatus.OK)
