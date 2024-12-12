@@ -11,7 +11,9 @@ export class Wish {
   @ManyToOne(() => User, user => user.wish)
   user: User;
 
-  @ManyToOne( () => Game, game => game.wish)
+  @ManyToOne( () => Game, game => game.wish, {
+    onDelete: 'CASCADE',
+  })
   game: Game;
 
   @CreateDateColumn()

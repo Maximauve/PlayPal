@@ -21,4 +21,4 @@ export type { JwtPayload } from './src/user/jwt.interface';
 export { Role } from './src/user/role.enum';
 export { Wish } from './src/wish/wish.entity';
 export type { RatingDto } from './src/rating/rating.dto';
-export type { UpdateGamePayload } from './src/game/update-game-payload';
+export type { EditGamePayload } from './src/game/update-game.payload';

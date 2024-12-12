@@ -20,7 +20,7 @@ import { Tabs } from '@/components/tabs';
 import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
 import useAuth from '@/hooks/use-auth';
 import useTranslation from '@/hooks/use-translation';
-import { useGetGameQuery } from '@/services/game';
+import { useDeleteGameMutation, useGetGameQuery } from '@/services/game';
 import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
 
 export default function GamePage(): React.JSX.Element {
@@ -36,6 +36,7 @@ export default function GamePage(): React.JSX.Element {
   const { data: game, isLoading } = useGetGameQuery(parameters.id);
   const { data: ratings } = useGetRatingsQuery({ gameId: parameters.id });
   const [addRating] = useAddRatingMutation();
+  const [deleteGame] = useDeleteGameMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
   const { user } = useAuth();
@@ -66,6 +67,24 @@ export default function GamePage(): React.JSX.Element {
     enableReinitialize: true,
   });
 
+  // handle delete game
+  const handleDeleteGame = async () => {
+    try {
+      await deleteGame(parameters.id).unwrap();
+      toast.success(i18n.t("notify.delete.game.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/search");
+    } catch (error) {
+      console.error("Error delete game", error);
+      toast.error(i18n.t("notify.delete.game.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
   useEffect(() => {
     if (!isLoading && game) {
       setBreadcrumbItems([
@@ -81,13 +100,13 @@ export default function GamePage(): React.JSX.Element {
     }
   }, [game, isLoading, navigate]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   const onClose = () => {
     setIsVisible(false);
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -112,12 +131,19 @@ export default function GamePage(): React.JSX.Element {
             <Rating rating={game?.averageRating ?? 0} nbRatings={game?.rating?.length} />
 
             {user && user.role === Role.Admin && (
-              <button
-                className="bg-black text-white px-6 py-2 rounded my-4 hover:bg-gray-800"
-                onClick={() => setIsVisible(true)}
-              >
-                {i18n.t('game.details.edit')}
-              </button>
+              <div className="flex flex-row">
+                <button
+                  className="bg-black text-white px-6 py-2 rounded my-4 hover:bg-gray-800 w-1/3 mr-2"
+                  onClick={() => setIsVisible(true)}
+                >
+                  {i18n.t('game.details.edit')}
+                </button>
+                <button
+                  className="bg-red-600 text-white px-6 py-2 rounded my-4 hover:bg-red-800 w-1/2"
+                  onClick={handleDeleteGame}>
+                  {i18n.t('game.details.delete')}
+                </button>
+              </div>
             )}
 
             <div className='flex flex-col '>
