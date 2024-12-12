@@ -142,17 +142,12 @@ export default function GamePage(): React.JSX.Element {
   useEffect(() => {
     if (locDate && locDate.startDate && locDate.endDate) {
       loanFormik.setFieldValue('startDate', locDate.startDate.toISOString());
-      console.log(locDate.startDate.toISOString());
       loanFormik.setFieldTouched('startDate', true);
       loanFormik.setFieldValue('endDate', locDate.endDate.toISOString());
-      console.log(locDate.endDate.toISOString());
       loanFormik.setFieldTouched('endDate', true);
     }
-  }, [locDate]);
+  }, [locDate, loanFormik.values]);
 
-  useEffect(() => {
-    console.log(loanFormik.values);
-  }, [loanFormik.values]);  
 
   if (isLoading) {
     return <Loader />;
