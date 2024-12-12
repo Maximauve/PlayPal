@@ -29,8 +29,8 @@ export default function LoanDisplay({ loan }: LoanDisplayProperties): React.JSX.
         <div className="flex items-start justify-between">
           {game &&
             <div className="flex flex-col">
-              <h3 className="text-lg font-bold truncate text-black">{game?.name}</h3>
-              <p className="text-gray-500">{game?.brand}</p>
+              <h3 className="text-lg font-bold truncate text-black">{game.name}</h3>
+              <p className="text-gray-500">{game.brand}</p>
               <p className="text-gray-500">{loan.user?.username}</p>
             </div>
           }
