@@ -1,4 +1,4 @@
-import { type LoginDto, type RegisterDto } from '@playpal/schemas';
+import { type ApiError, type LoginDto, type RegisterDto } from '@playpal/schemas';
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import React, { useCallback, useEffect, useState } from "react";

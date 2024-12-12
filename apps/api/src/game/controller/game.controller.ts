@@ -14,7 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Game, GameWithStats, Product, User } from "@playpal/schemas";
+import { Game, Product, User } from "@playpal/schemas";
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
@@ -68,6 +68,15 @@ export class GameController {
     return data;
   }
 
+  @Get('/last')
+  @ApiOperation({ summary: "Get three last games" })
+  @ApiOkResponse({ description: "Game found successfully", type: Game, isArray: true })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  getThreeLastGame() {
+    return this.gamesService.getThreeLastGames();
+  }
+
   @Get('/:gameId')
   @UseGuards(GameGuard)
   @ApiOperation({ summary: "Get one game" })
@@ -76,9 +85,8 @@ export class GameController {
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiNotFoundResponse({ description: "Game not found" })
   @ApiBadRequestResponse({ description: "UUID is invalid" })
-  async getOneGame(@GameRequest() game: Game): Promise<GameWithStats> {
-    const data = await this.gamesService.getGameWithStats(game);
-    return data;
+  async getOneGame(@GameRequest() game: Game): Promise<Game | null> {
+    return this.gamesService.findOneGame(game.id);
   }
 
   @Get('/:gameId/notes')

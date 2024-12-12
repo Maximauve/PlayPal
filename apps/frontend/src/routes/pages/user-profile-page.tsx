@@ -1,4 +1,4 @@
-import { type RegisterDto } from '@playpal/schemas';
+import { type ApiError, type RegisterDto } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React from 'react';
@@ -44,8 +44,8 @@ export default function UserProfilePage(): React.JSX.Element {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch {
-      toast.error(i18n.t("notify.update.user.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });

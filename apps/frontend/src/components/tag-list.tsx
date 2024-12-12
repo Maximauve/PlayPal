@@ -1,4 +1,4 @@
-import { type Tag as TagType } from "@playpal/schemas";
+import { type ApiError, type Tag as TagType } from "@playpal/schemas";
 import { toast, type ToastContent } from "react-toastify";
 
 import { Tag } from "@/components/tag";
@@ -18,8 +18,14 @@ export default function TagList() {
         position: "top-right",
         autoClose: 3000,
       });
+<<<<<<< HEAD
     } catch {
       toast.error(i18n.t("notify.delete.tag.error") as ToastContent<string>, {
+=======
+    } catch (error) {
+      console.error("Error delete tag :", error);
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
+>>>>>>> eb424e6 (feat(wishlist): add wishlist page and carousel)
         position: "top-right",
         autoClose: 3000,
       });

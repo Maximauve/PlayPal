@@ -1,4 +1,4 @@
-import { type CreateGamePayload } from "@playpal/schemas";
+import { type ApiError, type CreateGamePayload } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { toast, type ToastContent } from "react-toastify";

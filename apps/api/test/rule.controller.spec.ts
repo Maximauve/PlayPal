@@ -44,7 +44,9 @@ describe('RuleController', () => {
         brand: "Magilano",
         rating: [],
         tags: [],
-        rules: []
+        rules: [],
+        averageRating: 2,
+        count: []
     };
 
     const mockRule: Rule = {

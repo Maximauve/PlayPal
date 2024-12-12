@@ -8,7 +8,7 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag, Game, Role, GameResponse, GameWithStats } from '@playpal/schemas';
+import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 import { ProductService } from '@/product/service/product.service';
 import { RedisService } from '@/redis/service/redis.service';
@@ -23,7 +23,7 @@ describe('GameController', () => {
   let mockProductService: Partial<ProductService>;
   let mockRedisService: Partial<RedisService>;
 
-  const mockGames: GameWithStats[] = [
+  const mockGames: Game[] = [
     {
       id: "568931ed-d87e-4bf1-b477-2f1aea83e3da",
       name: "6-qui-prends",
@@ -38,6 +38,7 @@ describe('GameController', () => {
       tags: [],
       rules: [],
       averageRating: 4.5,
+      count: []
     },
     {
       id: "109ebba9-9823-45bf-88b5-889c621d58f9",
@@ -53,6 +54,7 @@ describe('GameController', () => {
       tags: [],
       rules: [],
       averageRating: 4.2,
+      count: []
     }
   ];
 
@@ -76,7 +78,6 @@ describe('GameController', () => {
       findOneGame: jest.fn(),
       findOneName: jest.fn(),
       getGameNotes: jest.fn(),
-      getGameWithStats: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -135,7 +136,7 @@ describe('GameController', () => {
   describe('getOneGame', () => {
 
     it('should return a specific game by ID', async () => {
-      jest.spyOn(mockGameService, 'getGameWithStats').mockResolvedValue(mockGames[0]);  
+      jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGames[0]);  
       const result = await gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
     });

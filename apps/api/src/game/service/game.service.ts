@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game, GameWithStats, Product, Rating } from "@playpal/schemas";
+import { Game, Product } from "@playpal/schemas";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
@@ -18,7 +18,7 @@ export class GameService {
     private productRepository: Repository<Product>
   ) { }
 
-  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: GameWithStats[]; total: number }> {
+  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: Game[]; total: number }> {
     const query = this.gamesRepository.createQueryBuilder('game')
       .leftJoinAndSelect('game.rating', 'rating')
       .leftJoinAndSelect('game.product', 'product')
@@ -39,17 +39,7 @@ export class GameService {
       .take(limit)
       .getMany();
 
-    const data: GameWithStats[] = games.map((game: Game) => {
-      if (game.rating && game.rating.length > 0) {
-        const averageRating = this.getAverageRating(game.rating) ?? 0;
-        const roundedAverage = Math.round(averageRating * 10) / 10;
-        return { ...game, averageRating: roundedAverage };
-      } else {
-        return { ...game, averageRating: null };
-      }
-    });
-
-    await Promise.all(data.map(async (game) => {
+    await Promise.all(games.map(async (game) => {
       game.tags = await this.gamesRepository
         .createQueryBuilder('game')
         .relation('tags')
@@ -57,7 +47,7 @@ export class GameService {
         .loadMany();
     })); // tags are not loaded at all when they are filtered
 
-    return { data, total };
+    return { data: games, total };
   }
 
   async getRecommendations(limit: number): Promise<{ data: Game[] }> {
@@ -69,17 +59,7 @@ export class GameService {
       .limit(limit)
       .getMany();
 
-    const data: GameWithStats[] = games.map((game: Game) => {
-      if (game.rating && game.rating.length > 0) {
-        const averageRating = this.getAverageRating(game.rating);
-        return { ...game, averageRating };
-      } else {
-        return { ...game, averageRating: null };
-      }
-
-    });
-
-    return { data };
+    return { data: games };
   }
 
   async create(game: GameDto): Promise<Game | null> {
@@ -186,6 +166,18 @@ export class GameService {
     };
   }
 
+  async getThreeLastGames(): Promise<Game[]> {
+    return this.gamesRepository
+      .createQueryBuilder("game")
+      .where("game.image IS NOT NULL AND game.image != ''")
+      .orderBy("game.id", "DESC")
+      .leftJoinAndSelect("game.rating", "rating")
+      .leftJoinAndSelect("game.product", "product")
+      .leftJoinAndSelect("game.tags", "tag")
+      .take(3)
+      .getMany();
+  }
+
   async findOneName(name: string): Promise<Game | null> {
     return this.gamesRepository
       .createQueryBuilder("game")
@@ -194,23 +186,6 @@ export class GameService {
       .leftJoinAndSelect("game.product", "product")
       .getOne();
   }
-
-  getAverageRating(ratings: Rating[]): number | null {
-    if (!ratings || ratings.length === 0) {
-      return null;
-    }
-    return ratings.reduce((accumulator, rating) => accumulator + rating.note, 0) / ratings.length;
-  }
-
-  async getGameWithStats(game: Game): Promise<GameWithStats> {
-    if (!game.rating || game.rating.length === 0) {
-      return { ...game, averageRating: null };
-    }
-    const averageRating = this.getAverageRating(game.rating);
-    const count = await this.getGameNotes(game.id);
-
-    return { ...game, averageRating, count: count.noteCount };
-  };
 
   async hasProductAvailable(gameId: string): Promise<boolean> {
     const query = await this.productRepository

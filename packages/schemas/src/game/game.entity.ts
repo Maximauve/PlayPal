@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterInsert, AfterLoad, AfterUpdate, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Product } from '../product/product.entity';
 import { Rating } from '../rating/rating.entity';
@@ -64,4 +64,49 @@ export class Game {
       onDelete: 'CASCADE',
   })
   rules?: Rule[];
+
+  averageRating: number | null;
+  count: { rating: number; count: number }[];
+
+  @AfterInsert()
+  @AfterUpdate()
+  @AfterLoad()
+  private calculateStats() {
+    if (this.rating && this.rating.length > 0) {
+      const total = this.rating.reduce((sum, rating) => sum + rating.note, 0);
+      this.averageRating = parseFloat((total / this.rating.length).toFixed(1));
+      const countMap = this.rating.reduce((acc, rating) => {
+        acc[rating.note] = (acc[rating.note] || 0) + 1;
+        return acc;
+      }, {} as Record<number, number>);
+
+      this.count = Object.entries(countMap).map(([rating, count]) => ({
+        rating: parseInt(rating, 10),
+        count
+      }));
+    } else {
+      this.averageRating = null;
+      this.count = [];
+    }
+  }
+}
+
+export interface GameWithStats {
+  id: string;
+  name: string;
+  description: string;
+  minPlayers: number;
+  maxPlayers: number;
+  difficulty: number;
+  duration: string;
+  minYear: number;
+  brand: string;
+  image?: string;
+  rating?: Rating[];
+  product?: Product[];
+  wish?: Wish[];
+  tags: Tag[];
+  rules?: Rule[];
+  averageRating: number | null;
+  count: { rating: number; count: number }[];
 }
