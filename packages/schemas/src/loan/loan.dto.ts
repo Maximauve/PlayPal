@@ -1,5 +1,5 @@
 export interface LoanDto {
-    productId: string;
+    gameId: string;
     startDate: string;
     endDate: string;
 }

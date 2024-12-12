@@ -28,7 +28,7 @@ export const createLoanSchema = z.object({
 
 
 export const createLoanInitialValues = {
-  productId: '',
+  gameId: '',
   startDate: "",
   endDate: "",
 };

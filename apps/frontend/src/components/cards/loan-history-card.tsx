@@ -15,7 +15,7 @@ export default function LoanHistoryCard({ loan }: Props): React.JSX.Element {
   const game: Game | null = loan.product?.game ?? null;
   const inStock: boolean = loan.product?.available ?? false;
   const i18n = useTranslation();
-
+  console.log(loan);
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-full flex ">
       <img

@@ -17,5 +17,5 @@ export class LoanDto {
   endDate: Date;
 
   @Optional()
-  status: LoanStatus;
+  status?: LoanStatus;
 }
