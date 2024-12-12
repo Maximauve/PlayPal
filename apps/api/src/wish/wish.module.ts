@@ -5,6 +5,7 @@ import { Game, User, Wish } from '@playpal/schemas';
 
 import { RedisModule } from '@/redis/redis.module';
 import { TranslationService } from '@/translation/translation.service';
+import { UsersModule } from '@/user/user.module';
 import { WishController } from '@/wish/controller/wish.controller';
 import { WishService } from '@/wish/service/wish.service';
 
@@ -13,7 +14,8 @@ import { WishService } from '@/wish/service/wish.service';
     TypeOrmModule.forFeature([Wish]),
     TypeOrmModule.forFeature([Game]),
     TypeOrmModule.forFeature([User]),
-    forwardRef(() => RedisModule)],
+    forwardRef(() => RedisModule),
+    forwardRef(() => UsersModule)],
   controllers: [WishController],
   providers: [WishService, TranslationService],
   exports: [WishService],

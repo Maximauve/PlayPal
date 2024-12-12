@@ -4,7 +4,7 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorRespon
 import { Loan, LoanStatus, User } from "@playpal/schemas";
 
 import { AdminGuard } from "@/auth/guards/admin.guard";
-import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { UserAuthGuard } from "@/auth/guards/user-auth.guard";
 import { events } from "@/event/types/events";
 import { LoanRequest } from "@/loan/decorators/loan.decorator";
 import { LoanDto } from "@/loan/dto/loan.dto";
@@ -15,7 +15,7 @@ import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserAuthGuard)
 @ApiTags('loan')
 @ApiNotFoundResponse({ description: "Game or product not found" })
 @ApiBadRequestResponse({ description: "UUID are invalid" })
@@ -35,6 +35,14 @@ export class LoanController {
   @ApiOkResponse({ description: "Loans found successfully", type: Loan, isArray: true })
   async getAllLoan(): Promise<Loan[]> {
     return this.loanService.getAllLoan();
+  }
+
+  @Get('/waiting')
+  @UseGuards(AdminGuard)
+  @ApiOperation({ summary: "Get all loan of a product" })
+  @ApiOkResponse({ description: "Loans found successfully", type: Loan, isArray: true })
+  async getAllWaitingLoans(): Promise<Loan[]> {
+    return this.loanService.getAllWaitingLoans();
   }
 
   @Get("/:loanId")
@@ -59,10 +67,11 @@ export class LoanController {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_ALREADY_RENTED"), HttpStatus.CONFLICT);
     }
 
-    const loan = await this.loanService.create(user, product, body.endDate, LoanStatus.WAITING);
+    const loan = await this.loanService.create(user, product, body.startDate, body.endDate, LoanStatus.WAITING);
     if (!loan) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    await this.productService.assign(product, user);
     return loan;
   }
 
@@ -82,6 +91,29 @@ export class LoanController {
     return loanUpdated;
   }
 
+  @UsePipes(ValidationPipe)
+  @Put("/:loanId/decline")
+  @UseGuards(LoanGuard)
+  @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
+  @ApiOperation({ summary: "Update a loan" })
+  @ApiOkResponse({ description: "Loan updated successfully", type: Loan })
+  @ApiBadRequestResponse({ description: "UUID or Request body is invalid" })
+  async declineLoan(@LoanRequest() loan: Loan): Promise<Loan> {
+
+    await this.loanService.declineLoan(loan.id);
+    const loanUpdated = await this.loanService.getLoan(loan.id);
+    if (!loanUpdated) {
+      throw new HttpException(await this.translationsService.translate("error.LOAN_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    }
+    const product = loanUpdated.product;
+    if (!product) {
+      throw new NotFoundException(await this.translationsService.translate("error.PRODUCT_NOT_FOUND"));
+    }
+    await this.productService.unassign(product);
+
+    return loanUpdated;
+  }
+
   @Delete("/:loanId")
   @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
   @ApiOperation({ summary: "Delete a loan" })
@@ -94,7 +126,7 @@ export class LoanController {
   @Post('/return/:loanId')
   @ApiParam({ name: 'loanId', description: 'ID of loan', required: true })
   @ApiOperation({ summary: 'Returns the loans and unassigns it from the attached user' })
-  @ApiOkResponse({ description : 'The loan has been successfuly returned' })
+  @ApiOkResponse({ description: 'The loan has been successfuly returned' })
   @ApiNotFoundResponse({ description: 'Loan or attached product not found' })
   @ApiInternalServerErrorResponse({ description: 'The loan could not been updated' })
   @HttpCode(HttpStatus.OK)

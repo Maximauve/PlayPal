@@ -21,6 +21,7 @@ describe('LoanGuard', () => {
 
   const mockLoan: Loan = {
     id: validLoanId,
+    createDate: new Date(),
     product: {
       id: validProductId,
       game: {

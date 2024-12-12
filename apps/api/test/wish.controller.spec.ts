@@ -1,12 +1,13 @@
 import { TranslationService } from "@/translation/translation.service";
 import { WishGuard } from "@/wish/guards/wish.guard";
-import { Role, Game, Wish } from "@playpal/schemas";
+import { Role, Game, Wish, User } from "@playpal/schemas";
 import { WishController } from "@/wish/controller/wish.controller";
 import { WishService } from "@/wish/service/wish.service";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Repository } from "typeorm";
 import { WishDto } from "@/wish/dto/wish.dto";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { UserService } from "@/user/service/user.service";
 
 describe('WishController', () => {
     let WishGuard: WishGuard;
@@ -14,6 +15,7 @@ describe('WishController', () => {
     let mockTranslationService: Partial<TranslationService>;
     let mockWishRepository: jest.Mocked<Repository<Wish>>;
     let mockWishlistService: Partial<WishService>;
+    let mockUserService: Partial<UserService>;
     let mockGameRepository: Partial<Repository<Game>>;
 
     const validGameId = "222e4567-e89b-12d3-a456-426614174000";
@@ -68,6 +70,10 @@ describe('WishController', () => {
             deleteWish: jest.fn().mockResolvedValue(null),
         };
 
+        mockUserService = {
+            
+        };
+
         const module: TestingModule = await Test.createTestingModule({
             controllers: [WishController],
             providers: [
@@ -75,6 +81,7 @@ describe('WishController', () => {
                 { provide: getRepositoryToken(Game), useValue: mockGameRepository },
                 { provide: WishService, useValue: mockWishlistService },
                 { provide: getRepositoryToken(Wish), useValue: mockWishRepository },
+                {provide:UserService, useValue: mockUserService},
 
             ],
         }).compile();

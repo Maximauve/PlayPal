@@ -28,7 +28,7 @@ export default function AdminNavbar(): React.JSX.Element {
           to="/admin/loan"
           className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
         >
-          {i18n.t("admin.navbar.loan-list")}
+          {i18n.t("admin.navbar.loan-waiting")}
         </NavLink>
         <NavLink
           to="/admin/tag"

@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
 import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
+import { UserService } from "@/user/service/user.service";
 
 @Injectable()
 export class LoanService {
@@ -14,10 +15,9 @@ export class LoanService {
     private loanRepository: Repository<Loan>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     private readonly translationsService: TranslationService,
     private readonly productService: ProductService,
+    private readonly userService: UserService,
   ) { }
 
   async getAllLoan(): Promise<Loan[]> {
@@ -25,6 +25,15 @@ export class LoanService {
       .createQueryBuilder('loan')
       .leftJoinAndSelect("loan.user", "user")
       .leftJoinAndSelect("loan.product", "product")
+      .getMany();
+  }
+  async getAllWaitingLoans(): Promise<Loan[]> {
+    return this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect("loan.user", "user")
+      .leftJoinAndSelect("loan.product", "product")
+      .leftJoinAndSelect("product.game", "game")
+      .where("loan.status = 'WAITING'")
       .getMany();
   }
 
@@ -47,8 +56,10 @@ export class LoanService {
       .getOne();
   }
 
-  async create(user: User, product: Product, endDate: Date, status: LoanStatus): Promise<Loan | null> {
+  async create(user: User, product: Product, startDate: Date, endDate: Date, status: LoanStatus): Promise<Loan | null> {
+   
     const loan = this.loanRepository.create({
+      startDate,
       endDate,
       status,
       user,
@@ -62,6 +73,19 @@ export class LoanService {
       .createQueryBuilder()
       .update(Loan)
       .set(loanUpdatedDto)
+      .where("id = :id", { id: loanId })
+      .execute();
+    if (query.affected === 0) {
+      throw new HttpException(await this.translationsService.translate('error.LOAN_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+  }
+ 
+  async declineLoan(loanId: string): Promise<void> {
+    const loan = await this.getLoan(loanId);
+    const query = await this.loanRepository
+      .createQueryBuilder()
+      .update(Loan)
+      .set({ ... loan, status: LoanStatus.DONE })
       .where("id = :id", { id: loanId })
       .execute();
     if (query.affected === 0) {

@@ -4,6 +4,7 @@ export type { GamePayload } from './src/game/game.payload';
 export type { GameResponse } from './src/game/game.response';
 export type { CreateGamePayload } from './src/game/create-game.payload';
 export { Loan } from './src/loan/loan.entity';
+export type { LoanDto } from './src/loan/loan.dto';
 export { LoanStatus } from './src/loan/loanStatus.enum'
 export { Product } from './src/product/product.entity';
 export { State } from './src/product/state.enum';

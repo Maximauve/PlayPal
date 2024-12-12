@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
 import GameLayout from "@/components/_layout/admin/game-layout";
+import LoanLayout from "@/components/_layout/admin/loan-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
@@ -22,7 +23,15 @@ const router = createBrowserRouter([
         element: <HomePage />
       },
       {
-        path: "/user/",
+        path: "/games/:id",
+        element: <GamePage/>
+      },
+      {
+        path: "/search/",
+        element: <SearchPage/>
+      },
+      {
+        path: "user",
         element: <UserPageLayout />,
         children: [
           {
@@ -34,11 +43,24 @@ const router = createBrowserRouter([
             element: <UserHistoryPage />
           },
         ]
-      }
+      },
+      {
+        path: "search",
+        element: <SearchPage />
+      },
+      {
+        path: "game",
+        children: [
+          {
+            path: ":id",
+            element: <GamePage />
+          }
+        ]
+      },
     ]
   },
   {
-    path: "/admin/",
+    path: "/admin",
     element: (
       <AdminGuard>
         <AdminLayout/>
@@ -55,33 +77,13 @@ const router = createBrowserRouter([
       },
       {
         path: "loan",
-        element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
+        element: <LoanLayout />,
       },
       {
         path: "tag",
         element: <TagLayout />, // Remplacez par un vrai composant
       },
     ],
-  },
-  {
-    path: "/search/",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <SearchPage />
-      }
-    ]
-  },
-  {
-    path: "/games/:id",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <GamePage />
-      }
-    ]
   },
 ]);
 

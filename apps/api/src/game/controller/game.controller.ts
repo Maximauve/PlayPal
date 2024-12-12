@@ -207,7 +207,6 @@ export class GameController {
       if (error instanceof ForbiddenException) {
         throw error;
       }
-      console.error(error);
       throw new InternalServerErrorException(await this.translationsService.translate('error.SOMETHING_WENT_WRONG'));
     }
 

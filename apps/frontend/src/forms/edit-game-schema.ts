@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */ // due to zod
 import { type CreateGamePayload } from '@playpal/schemas';
 import { z } from 'zod';
 

@@ -30,8 +30,8 @@ export default function TagHeader() {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch (error) {
-      console.error("Error create tag :", error);
+    } catch  {
+
       toast.error(i18n.t("notify.create.tag.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

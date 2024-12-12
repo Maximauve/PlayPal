@@ -13,7 +13,7 @@ import {
 import { Loan, Role, User } from '@playpal/schemas';
 import { Express } from "express";
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { UserAuthGuard } from '@/auth/guards/user-auth.guard';
 import { FileUploadService } from '@/files/files.service';
 import { ParseFilePipeDocument } from '@/files/files.validator';
 import { TranslationService } from '@/translation/translation.service';
@@ -24,7 +24,7 @@ import { UserGuard } from '@/user/guards/user.guard';
 import { UserService } from '@/user/service/user.service';
 import hashPassword from '@/utils/auth.variable';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserAuthGuard)
 @ApiTags('users')
 @ApiUnauthorizedResponse({ description: "User not connected" })
 @Controller('users')
@@ -59,7 +59,6 @@ export class UserController {
     if (!userFull.loan) {
       return [];
     }
-    
     return userFull.loan;
   }
 

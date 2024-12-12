@@ -65,12 +65,11 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
           position: "top-right",
           autoClose: 3000,
         });
-      } catch (error) {
+      } catch  {
         toast.error(i18n.t("notify.register.error") as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
-        console.error(error);
       };
     } else {
       try {
@@ -80,8 +79,7 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
           position: "top-right",
           autoClose: 3000,
         });
-      } catch (error) {
-        console.error(error);
+      } catch {
         toast.error(i18n.t("notify.login.error") as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,

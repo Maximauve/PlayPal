@@ -42,16 +42,14 @@ export default function EditGameModal({ isVisible, onClose, gameData }: EditGame
           position: "top-right",
           autoClose: 3000,
         });
-      } catch (error) {
-        console.error('Erreur lors de la modification du jeu:', error);
+      } catch  {
         toast.error(i18n.t("notify.update.game.error") as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
       }
       onClose();
-    } catch (error) {
-      console.error('Failed to edit game:', error);
+    } catch {
       toast.error(i18n.t("notify.update.game.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
