@@ -8,6 +8,7 @@ import notify from "@/assets/translations/fr-FR/notify.json";
 import review from '@/assets/translations/fr-FR/review.json';
 import search from "@/assets/translations/fr-FR/search.json";
 import validation from '@/assets/translations/fr-FR/validation.json';
+import wishlist from "@/assets/translations/fr-FR/wishlist.json";
 
 const FR = {
   ...common,
@@ -19,7 +20,8 @@ const FR = {
   ...admin,
   ...review,
   ...game,
-  ...notify
+  ...notify,
+  ...wishlist
 };
 
 export default FR;

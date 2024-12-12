@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type LoanDto, type Product, type RatingDto, Role } from '@playpal/schemas';
+import { type ApiError, type Product, type RatingDto, Role } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
@@ -24,6 +24,7 @@ import useTranslation from '@/hooks/use-translation';
 import { useDeleteGameMutation, useGetGameQuery } from '@/services/game';
 import { useCreateLoanMutation } from '@/services/loan';
 import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
+import { useCreateWishMutation } from '@/services/wish';
 
 export default function GamePage(): React.JSX.Element {
   const [tabsItems, setTabsItems] = useState<TabProperties[]>([]);
@@ -40,6 +41,7 @@ export default function GamePage(): React.JSX.Element {
   const [addRating] = useAddRatingMutation();
   const [createLoan] = useCreateLoanMutation();
   const [deleteGame] = useDeleteGameMutation();
+  const [createWish] = useCreateWishMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
   const { user } = useAuth();
@@ -58,9 +60,8 @@ export default function GamePage(): React.JSX.Element {
           position: "top-right",
           autoClose: 3000,
         });
-      } catch {
-
-        toast.error(i18n.t("notify.create.rating.error") as ToastContent<string>, {
+      } catch (error) {
+        toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -118,6 +119,22 @@ export default function GamePage(): React.JSX.Element {
     }
   };
 
+  const addWish = async (id: string) => {
+    try {
+      await createWish({ gameId: id }).unwrap();
+      toast.success(i18n.t("notify.create.wish.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      console.error("Error add wish :", error);
+    }
+  };
+
   useEffect(() => {
     if (!isLoading && game) {
       setBreadcrumbItems([
@@ -149,6 +166,10 @@ export default function GamePage(): React.JSX.Element {
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (!game) {
+    navigate('/');
   }
 
   return (
@@ -235,7 +256,7 @@ export default function GamePage(): React.JSX.Element {
                 <span className="mr-1">🔗</span> {i18n.t('game.details.share')}
               </button>
               <span className="text-gray-400 font-bold">|</span>
-              <button className="flex hover:underline items-center">
+              <button className="flex hover:underline items-center" onClick={() => game && addWish(game?.id)}>
                 <span className="mr-1">❤️</span> {i18n.t('game.details.wishlist')}
               </button>
             </div>

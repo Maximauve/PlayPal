@@ -40,7 +40,9 @@ describe('ProductController', () => {
     brand: "Magilano",
     rating: [],
     tags: [],
-    rules: []
+    rules: [],
+    averageRating: 2,
+    count: []
   }
 
   const mockProduct: Product = {
@@ -50,7 +52,9 @@ describe('ProductController', () => {
     user: null,
     game: {
       id: validGameId, name: "Skyjo", description: "Un bon jeu", maxPlayers: 5, minPlayers: 2, minYear: 3, difficulty: 3, duration: "35min", brand: "Gigamic", rating: [], tags: [],
-      rules: []
+      rules: [],
+      averageRating: 2,
+      count: []
     },
     loan: []
   };

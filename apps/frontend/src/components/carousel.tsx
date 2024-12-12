@@ -1,28 +1,57 @@
 
 
-import { useState } from 'react';
+import { type Game } from '@playpal/schemas';
+import { useEffect, useState } from 'react';
 
-const images = [
-  { src: 'https://picsum.photos/id/42/600/400', alt: 'Slide 1', comment: 'Beautiful landscape' },
-  { src: 'https://picsum.photos/id/195/600/400', alt: 'Slide 2', comment: 'City skyline' },
-  { src: 'https://picsum.photos/id/635/600/400', alt: 'Slide 3', comment: 'Mountain view' },
-];
+import AllGames from '@/assets/images/all-games.png';
 
-export default function Carousel() {
+interface CarouselProps {
+  games?: Game[]
+}
+
+interface CarouselGame {
+  alt: string
+  title: string
+  image?: string
+}
+
+export default function Carousel({ games }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [carouselGames, setCarouselGames] = useState<CarouselGame[] | null>(null);
+
+  useEffect(() => {
+    if (games) {
+      const newGames: CarouselGame[] = games.map(game => ({ 
+        image: game.image,
+        title: game.name,
+        alt: game.name,
+      }));
+      setCarouselGames(newGames);
+    }
+  }, [games]);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    if (!carouselGames) {
+      return null;
+    }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselGames.length);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    if (!carouselGames) {
+      return null;
+    }
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + carouselGames.length) % carouselGames.length);
   };
+
+  if (!carouselGames) {
+    return null;
+  }
 
   return (
     <div className="relative w-full max-w-5xl mx-auto">
       <div className="relative h-96 overflow-hidden rounded-lg">
-        {images.map((image, index) => (
+        {carouselGames && carouselGames?.map((gameCarousel: CarouselGame, index: number) => (
           <div
             key={index}
             className={`absolute w-full h-full transition-opacity duration-500 ${
@@ -30,12 +59,12 @@ export default function Carousel() {
             }`}
           >
             <img
-              src={image.src}
-              alt={image.alt}
+              src={gameCarousel.image ?? AllGames}
+              alt={gameCarousel.alt}
               className="object-cover w-full h-full"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
-              <p>{image.comment}</p>
+              <p>{gameCarousel.title}</p>
             </div>
           </div>
         ))}

@@ -32,7 +32,9 @@ export class WishGuard implements CanActivate {
       },
       relations: {
         user: true,
-        game: true
+        game: {
+          rating: true
+        }
       }
     });
 

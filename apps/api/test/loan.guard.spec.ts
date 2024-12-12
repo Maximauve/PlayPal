@@ -21,7 +21,7 @@ describe('LoanGuard', () => {
 
   const mockLoan: Loan = {
     id: validLoanId,
-    createDate: new Date(),
+    startDate: new Date(),
     product: {
       id: validProductId,
       game: {
@@ -35,7 +35,9 @@ describe('LoanGuard', () => {
         duration: "35min",
         brand: "Magilano",
         tags: [],
-        rules: []
+        rules: [],
+        averageRating: 2,
+        count: []
       },
       available: true,
       user: { 
@@ -48,7 +50,6 @@ describe('LoanGuard', () => {
       },
       state: State.BROKEN
     },
-    startDate: new Date(),
     endDate: new Date(),
     user: { 
       id: "987e6543-e89b-12d3-a456-426614174002",

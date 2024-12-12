@@ -1,4 +1,4 @@
-import { type EditGamePayload, type GameWithStats } from "@playpal/schemas";
+import { type ApiError, type EditGamePayload, type Game, type Tag } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { toast, type ToastContent } from "react-toastify";
@@ -10,7 +10,7 @@ import useTranslation from "@/hooks/use-translation";
 import { useUpdateGameMutation } from "@/services/game";
 
 interface EditGameModalProps {
-  gameData: GameWithStats;
+  gameData: Game;
   isVisible: boolean;
   onClose: () => void;
 }
@@ -42,15 +42,15 @@ export default function EditGameModal({ isVisible, onClose, gameData }: EditGame
           position: "top-right",
           autoClose: 3000,
         });
-      } catch  {
-        toast.error(i18n.t("notify.update.game.error") as ToastContent<string>, {
+      } catch (error) {
+        toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
       }
       onClose();
-    } catch {
-      toast.error(i18n.t("notify.update.game.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -67,7 +67,7 @@ export default function EditGameModal({ isVisible, onClose, gameData }: EditGame
       minYear: gameData.minYear,
       duration: gameData.duration,
       brand: gameData.brand,
-      tagIds: gameData.tags.map((tag) => tag.id),
+      tagIds: gameData.tags.map((tag: Tag) => tag.id),
       image: gameData.image,
     },
     validate: withZodSchema(editGameSchema),

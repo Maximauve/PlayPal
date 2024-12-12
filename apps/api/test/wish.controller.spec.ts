@@ -45,7 +45,9 @@ describe('WishController', () => {
             duration: "35min",
             brand: "Magilano",
             tags: [],
-            rules: []
+            rules: [],
+            averageRating: 2,
+            count: []
         },
         date: new Date()
     };
@@ -107,7 +109,7 @@ describe('WishController', () => {
     });
 
     describe('createWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId };
+        const mockWishDto: WishDto = { gameId: validGameId };
 
         it('should create a wish', async () => {
             const result = await wishController.createWish(mockWishDto, mockWish.user);
@@ -117,7 +119,7 @@ describe('WishController', () => {
     });
 
     describe('updateWish', () => {
-        const mockWishDto: WishDto = { id: validWishId , gameId: validGameId};
+        const mockWishDto: WishDto = { gameId: validGameId};
 
         it('should update a wish', async () => {
             const result = await wishController.updateWish(mockWish, mockWishDto);

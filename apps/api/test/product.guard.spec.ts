@@ -30,7 +30,9 @@ describe('ProductGuard', () => {
       brand: "Magilano",
       tags: [],
       rating: [],
-      rules: []
+      rules: [],
+      averageRating: 2,
+      count: []
     },
     available: true,
     user: { 

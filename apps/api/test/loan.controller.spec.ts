@@ -40,7 +40,7 @@ describe('LoanController', () => {
     creationDate: new Date()
   };
 
-  const mockGame = {
+  const mockGame: Game = {
     id: validGameId,
     name: "Skyjo",
     description: "Un bon jeu",
@@ -52,7 +52,9 @@ describe('LoanController', () => {
     brand: "Magilano",
     rating: [],
     tags: [],
-    rules: []
+    rules: [],
+    averageRating: 2,
+    count: []
   };
 
   const mockProduct = {
@@ -188,7 +190,6 @@ describe('LoanController', () => {
         ...mockLoan,
         endDate: loanDto.endDate,
         user: mockUser,
-        createDate: new Date(),
       }
 
       jest.spyOn(mockLoanService, 'getProductAvailable').mockResolvedValue(mockProduct);

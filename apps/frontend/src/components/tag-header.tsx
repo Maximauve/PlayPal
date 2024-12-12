@@ -1,4 +1,4 @@
-import { type TagPayload } from "@playpal/schemas";
+import { type ApiError, type TagPayload } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { useCallback }  from "react";
@@ -30,9 +30,8 @@ export default function TagHeader() {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch  {
-
-      toast.error(i18n.t("notify.create.tag.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });

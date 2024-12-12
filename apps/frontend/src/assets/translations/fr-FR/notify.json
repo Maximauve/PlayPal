@@ -20,6 +20,10 @@
       "rating": {
         "success": "Votre évaluation a bien été créée",
         "error": "Un problème est survenu lors de la création de l'évaluation"
+      },
+      "wish": {
+        "success": "Votre souhait a été enregistré",
+        "error": "Un problème est survenu lors de la création de votre souhait"
       }
     },
     "delete": {
@@ -30,6 +34,10 @@
       "game": {
         "success": "Votre jeu a bien été supprimé",
         "error": "Un problème est survenu lors de la suppression du jeu"
+      },
+      "wish": {
+        "success": "Votre élement à été supprimé",
+        "error": "Un problème est survenu lors de la suppression de votre élément"
       }
     },
     "update": {

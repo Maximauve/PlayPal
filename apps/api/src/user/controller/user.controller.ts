@@ -10,7 +10,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Loan, Role, User } from '@playpal/schemas';
+import { Loan, Role, User, Wish } from '@playpal/schemas';
 import { Express } from "express";
 
 import { UserAuthGuard } from '@/auth/guards/user-auth.guard';
@@ -23,6 +23,7 @@ import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { UserGuard } from '@/user/guards/user.guard';
 import { UserService } from '@/user/service/user.service';
 import hashPassword from '@/utils/auth.variable';
+import { WishService } from '@/wish/service/wish.service';
 
 @UseGuards(UserAuthGuard)
 @ApiTags('users')
@@ -30,7 +31,7 @@ import hashPassword from '@/utils/auth.variable';
 @Controller('users')
 export class UserController {
 
-  constructor(private userService: UserService, private readonly translationService: TranslationService, private readonly fileUploadService: FileUploadService) { }
+  constructor(private userService: UserService, private readonly translationService: TranslationService, private readonly fileUploadService: FileUploadService, private readonly wishService: WishService) { }
 
   @Get("")
   @ApiOperation({ summary: 'Returns all users' })
@@ -48,7 +49,7 @@ export class UserController {
   }
 
   @Get('/me/loans')
-  @ApiOperation({ summary: 'Return my user informations' })
+  @ApiOperation({ summary: 'Return my user loans' })
   @ApiOkResponse({ description: "User's loans found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
   async getMyLoans(@CurrentUser() user: User): Promise<Loan[]> {
@@ -60,6 +61,18 @@ export class UserController {
       return [];
     }
     return userFull.loan;
+  }
+
+  @Get('/me/wish')
+  @ApiOperation({ summary: 'Return my user wish' })
+  @ApiOkResponse({ description: "User's wish found successfully", type: Wish, isArray: true })
+  @ApiNotFoundResponse({ description: "Wish not found" })
+  async getMyWish(@CurrentUser() user: User): Promise<Wish[]> {
+    const wish = await this.wishService.getAllWishesForUser(user.id);
+    if (!wish) {
+      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+    return wish;
   }
 
   @Get("/:userId")
