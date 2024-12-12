@@ -62,4 +62,4 @@ export const gameApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetGamesQuery, useGetRecommendationsQuery, useCreateGameMutation, useGetGameQuery, useGetLastQuery } = gameApi;
+export const { useGetGamesQuery, useGetRecommendationsQuery, useCreateGameMutation, useGetGameQuery, useGetLastQuery, useDeleteGameMutation, useUpdateGameMutation } = gameApi;
