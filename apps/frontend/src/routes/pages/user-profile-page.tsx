@@ -44,8 +44,7 @@ export default function UserProfilePage(): React.JSX.Element {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch (error) {
-      console.error("Error edit user", error);
+    } catch {
       toast.error(i18n.t("notify.update.user.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

@@ -18,8 +18,7 @@ export default function TagList() {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch (error) {
-      console.error("Error delete tag :", error);
+    } catch {
       toast.error(i18n.t("notify.delete.tag.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
