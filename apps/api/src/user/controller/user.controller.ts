@@ -59,7 +59,7 @@ export class UserController {
     if (!userFull.loan) {
       return [];
     }
-    
+    console.log(userFull.loan);
     return userFull.loan;
   }
 

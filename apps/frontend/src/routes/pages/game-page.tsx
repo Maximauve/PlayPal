@@ -71,7 +71,6 @@ export default function GamePage(): React.JSX.Element {
   });
 
   const loanSubmit = async (values: LoanDto) => {
-    console.log(values);
     try {
       await createLoan(values).unwrap();
       loanFormik.resetForm();
@@ -174,22 +173,6 @@ export default function GamePage(): React.JSX.Element {
             <p className="text-gray-500 mb-2">By {game?.brand}</p>
 
             <Rating rating={game?.averageRating ?? 0} nbRatings={game?.rating?.length} />
-
-            {user && user.role === Role.Admin && (
-              <div className="flex flex-row">
-                <button
-                  className="bg-black text-white px-6 py-2 rounded my-4 hover:bg-gray-800 w-1/3 mr-2"
-                  onClick={() => setIsVisible(true)}
-                >
-                  {i18n.t('game.details.edit')}
-                </button>
-                <button
-                  className="bg-red-600 text-white px-6 py-2 rounded my-4 hover:bg-red-800 w-1/2"
-                  onClick={handleDeleteGame}>
-                  {i18n.t('game.details.delete')}
-                </button>
-              </div>
-            )}
 
             {user && user.role === Role.Admin && (
               <div className="flex flex-row">

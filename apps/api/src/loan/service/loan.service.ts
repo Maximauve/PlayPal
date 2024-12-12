@@ -85,7 +85,7 @@ export class LoanService {
     const query = await this.loanRepository
       .createQueryBuilder()
       .update(Loan)
-      .set({ ... loan, status: LoanStatus.DECLINED })
+      .set({ ... loan, status: LoanStatus.DONE })
       .where("id = :id", { id: loanId })
       .execute();
     if (query.affected === 0) {

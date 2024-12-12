@@ -17,7 +17,7 @@ export const loanApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Games"],
+      invalidatesTags: ["Games", "Game"],
     }),
     acceptLoan: builder.mutation<Loan, string>({
       query: (id) => ({
