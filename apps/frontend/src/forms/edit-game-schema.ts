@@ -6,19 +6,23 @@ export const editGameSchema = z.object({
   description: z.string().min(1, 'validation.required').optional(),
   minPlayers: z.preprocess(
     (value) => (value === null ? undefined : value),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number').optional()
   ),
   maxPlayers: z.preprocess(
     (value) => (value === null ? undefined : value),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number').optional()
   ),
   difficulty: z.preprocess(
     (value) => (value === null ? undefined : value),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number').optional()
   ),
   duration: z.string().min(1, 'validation.required').optional(),
   minYear: z.preprocess(
     (value) => (value === null ? undefined : value),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     z.number({ invalid_type_error: 'validation.required' }).min(1, 'validation.min_number').optional()
   ),
   brand: z.string().min(1, 'validation.required').optional(),
