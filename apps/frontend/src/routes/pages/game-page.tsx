@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type Product, type RatingDto } from '@playpal/schemas';
+import { type Product, type RatingDto, Role } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
@@ -12,18 +12,21 @@ import DefaultImage from "@/assets/images/all-games.png";
 import Breadcrumb, { type BreadcrumbItem } from '@/components/breadcrumb';
 import ReviewForm from '@/components/form/review-form';
 import Loader from '@/components/loader';
+import EditGameModal from '@/components/modals/edit-game-modal';
 import { Rating } from '@/components/rating';
 import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
 import { Tabs } from '@/components/tabs';
 import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
+import useAuth from '@/hooks/use-auth';
 import useTranslation from '@/hooks/use-translation';
-import { useGetGameQuery } from '@/services/game';
+import { useDeleteGameMutation, useGetGameQuery } from '@/services/game';
 import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
 
 export default function GamePage(): React.JSX.Element {
   const [tabsItems, setTabsItems] = useState<TabProperties[]>([]);
   const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItem[]>([]);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const [locDate, setLocDate] = useState<DateValueType>({
     startDate: null,
     endDate: null,
@@ -33,8 +36,10 @@ export default function GamePage(): React.JSX.Element {
   const { data: game, isLoading } = useGetGameQuery(parameters.id);
   const { data: ratings } = useGetRatingsQuery({ gameId: parameters.id });
   const [addRating] = useAddRatingMutation();
+  const [deleteGame] = useDeleteGameMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
+  const { user } = useAuth();
 
   const formik = useFormik<RatingDto>({
     initialValues: {
@@ -62,6 +67,24 @@ export default function GamePage(): React.JSX.Element {
     enableReinitialize: true,
   });
 
+  // handle delete game
+  const handleDeleteGame = async () => {
+    try {
+      await deleteGame(parameters.id).unwrap();
+      toast.success(i18n.t("notify.delete.game.success") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/search");
+    } catch (error) {
+      console.error("Error delete game", error);
+      toast.error(i18n.t("notify.delete.game.error") as ToastContent<string>, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
   useEffect(() => {
     if (!isLoading && game) {
       setBreadcrumbItems([
@@ -76,6 +99,10 @@ export default function GamePage(): React.JSX.Element {
       ]);
     }
   }, [game, isLoading, navigate]);
+
+  const onClose = () => {
+    setIsVisible(false);
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -93,7 +120,7 @@ export default function GamePage(): React.JSX.Element {
             <img
               src={game?.image ?? DefaultImage}
               alt="Product"
-              className="rounded-lg shadow-md"
+              className="rounded-lg shadow-md w-full"
             />
           </div>
 
@@ -102,6 +129,22 @@ export default function GamePage(): React.JSX.Element {
             <p className="text-gray-500 mb-2">By {game?.brand}</p>
 
             <Rating rating={game?.averageRating ?? 0} nbRatings={game?.rating?.length} />
+
+            {user && user.role === Role.Admin && (
+              <div className="flex flex-row">
+                <button
+                  className="bg-black text-white px-6 py-2 rounded my-4 hover:bg-gray-800 w-1/3 mr-2"
+                  onClick={() => setIsVisible(true)}
+                >
+                  {i18n.t('game.details.edit')}
+                </button>
+                <button
+                  className="bg-red-600 text-white px-6 py-2 rounded my-4 hover:bg-red-800 w-1/2"
+                  onClick={handleDeleteGame}>
+                  {i18n.t('game.details.delete')}
+                </button>
+              </div>
+            )}
 
             <div className='flex flex-col '>
               <div className="flex items-center text-gray-500 text-sm mt-4">
@@ -182,6 +225,9 @@ export default function GamePage(): React.JSX.Element {
           </div>
         </div>
       </div>
+      {game && (
+        <EditGameModal gameData={game} isVisible={isVisible} onClose={onClose} />
+      )}
     </>
   );
 }

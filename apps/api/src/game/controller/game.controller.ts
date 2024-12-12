@@ -132,7 +132,7 @@ export class GameController {
   async update(@GameRequest() game: Game, @Body() body: GameUpdatedDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     await this.gamesService.update(game.id, body);
     const gameUpdated = await this.gamesService.findOneGame(game.id);
@@ -153,7 +153,12 @@ export class GameController {
   @ApiBadRequestResponse({ description: "UUID is invalid" })
   async delete(@GameRequest() game: Game): Promise<void> {
     if (game.image) {
-      await this.fileUploadService.deleteFile(game.image);
+      const objectKey = game.image.split('/').pop();
+      if (!objectKey) {
+        throw new HttpException('Invalid image URL', HttpStatus.BAD_REQUEST);
+      }
+
+      await this.fileUploadService.deleteFile(objectKey);
     }
     await this.gamesService.delete(game.id);
   }
