@@ -58,8 +58,8 @@ export default function GamePage(): React.JSX.Element {
           position: "top-right",
           autoClose: 3000,
         });
-      } catch (error) {
-        console.error("Error add rating", error);
+      } catch {
+
         toast.error(i18n.t("notify.create.rating.error") as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
@@ -78,8 +78,8 @@ export default function GamePage(): React.JSX.Element {
         position: 'top-right',
         autoClose: 3000,
       });
-    } catch (error) {
-      console.error('Error create loan', error);
+    } catch {
+
       toast.error(i18n.t('notify.create.loan.error') as ToastContent<string>, {
         position: 'top-right',
         autoClose: 3000,
@@ -110,8 +110,7 @@ export default function GamePage(): React.JSX.Element {
         autoClose: 3000,
       });
       navigate("/search");
-    } catch (error) {
-      console.error("Error delete game", error);
+    } catch {
       toast.error(i18n.t("notify.delete.game.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

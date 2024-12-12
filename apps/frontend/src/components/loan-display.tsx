@@ -27,11 +27,13 @@ export default function LoanDisplay({ loan }: LoanDisplayProperties): React.JSX.
       />
       <div className="p-4 flex flex-col w-full">
         <div className="flex items-start justify-between">
-          <div className="flex flex-col">
-            <h3 className="text-lg font-bold truncate text-black">{game?.name}</h3>
-            <p className="text-gray-500">{game?.brand}</p>
-            <p className="text-gray-500">{loan.user?.username}</p>
-          </div>
+          {game &&
+            <div className="flex flex-col">
+              <h3 className="text-lg font-bold truncate text-black">{game?.name}</h3>
+              <p className="text-gray-500">{game?.brand}</p>
+              <p className="text-gray-500">{loan.user?.username}</p>
+            </div>
+          }
           <div className="p-4 flex flex-col justify-center">
             <p className="text-gray-500 font-medium">{i18n.t("card.loanStartDate")} {new Date(loan.startDate).toLocaleString()}</p>
             <p className="text-gray-500 font-medium">{i18n.t("card.loanEndDate")} {new Date(loan.endDate).toLocaleString()}</p>
@@ -41,7 +43,7 @@ export default function LoanDisplay({ loan }: LoanDisplayProperties): React.JSX.
         <div className="flex justify-start relative mb-3 mt-auto pl-3">
           <NavLink className="w-1/6 bg-black p-1 mr-1 rounded-md text-center" to={`/game/${game?.id}`}>{i18n.t("card.open")}</NavLink>
           <button className="w-1/6 bg-green-700 p-1 mr-1 rounded-md" onClick={() => acceptLoan(loan.id)}>{ } Accepter</button>
-          <button className="w-1/6 bg-red-600 p-1 mr-1 rounded-md" onClick={() => declineLoan({ id :loan.id, body: loan })}>{ } Décliner</button>
+          <button className="w-1/6 bg-red-600 p-1 mr-1 rounded-md" onClick={() => declineLoan({ id: loan.id, body: loan })}>{ } Décliner</button>
         </div>
       </div>
 

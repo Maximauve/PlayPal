@@ -1,21 +1,11 @@
-
-import { useEffect } from "react";
-
-// import GameDisplay from "@/components/game-display";
 import Loader from '@/components/loader';
 import LoanDisplay from "@/components/loan-display";
-// import useTranslation from '@/hooks/use-translation';
 import { useGetWaintingLoansQuery } from '@/services/loan';
 
 export default function LoanWaitingList( ) {
-//   const i18n = useTranslation();
+
 
   const { isLoading, data } = useGetWaintingLoansQuery();
-
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <section className="">

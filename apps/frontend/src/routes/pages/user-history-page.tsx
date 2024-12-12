@@ -5,7 +5,6 @@ import { useGetUserLoansQuery } from "@/services/user";
 
 export default function UserHistoryPage(): React.JSX.Element {
   const { data } = useGetUserLoansQuery();
-  console.log(data);
   return (
     <div className="user-history-page p-6 ">
       {data && data?.map((loan) => (
