@@ -15,6 +15,7 @@ import { EventModule } from '@/event/events.module';
 import { FileUploadModule } from '@/files/files.module';
 import { FixturesModule } from '@/fixtures/fixture.module';
 import { GameModule } from '@/game/game.module';
+import { GameSubscriber } from '@/game/guards/game.subscriber';
 import { LoanModule } from '@/loan/loan.module';
 import { MailModule } from '@/mail/mail.module';
 import { ProductModule } from '@/product/product.module';
@@ -46,7 +47,8 @@ import { WishModule } from '@/wish/wish.module';
         synchronize: true,
         extra: {
           ssl: configService.get('POSTGRES_SSL') === 'true',
-        }
+        },
+        subscribers: [GameSubscriber],
       }),
       inject: [ConfigService],
     } as TypeOrmModuleAsyncOptions),

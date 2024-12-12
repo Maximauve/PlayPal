@@ -23,7 +23,6 @@ export default function TagList() {
       toast.error(i18n.t("notify.delete.tag.error") as ToastContent<string>, {
 =======
     } catch (error) {
-      console.error("Error delete tag :", error);
       toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
 >>>>>>> eb424e6 (feat(wishlist): add wishlist page and carousel)
         position: "top-right",

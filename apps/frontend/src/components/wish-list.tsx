@@ -19,7 +19,6 @@ export default function WishList() {
         autoClose: 3000,
       });
     } catch (error: unknown) {
-      console.error("Error delete wish", error);
       toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

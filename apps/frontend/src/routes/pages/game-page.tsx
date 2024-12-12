@@ -111,8 +111,8 @@ export default function GamePage(): React.JSX.Element {
         autoClose: 3000,
       });
       navigate("/search");
-    } catch {
-      toast.error(i18n.t("notify.delete.game.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -131,7 +131,6 @@ export default function GamePage(): React.JSX.Element {
         position: "top-right",
         autoClose: 3000,
       });
-      console.error("Error add wish :", error);
     }
   };
 

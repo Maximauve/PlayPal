@@ -1,5 +1,4 @@
 export { Game } from './src/game/game.entity';
-export type { GameWithStats } from './src/game/game.entity';
 export type { GamePayload } from './src/game/game.payload';
 export type { GameResponse } from './src/game/game.response';
 export type { CreateGamePayload } from './src/game/create-game.payload';

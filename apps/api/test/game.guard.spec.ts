@@ -14,7 +14,7 @@ describe('GameGuard', () => {
 
   const validGameId = "111e7890-e89b-12d3-a456-426614174000";
   const invalidGameId = "invalid-id";
-  const mockGame = {
+  const mockGame: Game = {
     id: validGameId,
     name: "Skyjo",
     description: "Un bon jeu",
