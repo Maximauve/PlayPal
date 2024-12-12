@@ -4,7 +4,7 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorRespon
 import { Loan, LoanStatus, User } from "@playpal/schemas";
 
 import { AdminGuard } from "@/auth/guards/admin.guard";
-import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { UserAuthGuard } from "@/auth/guards/user-auth.guard";
 import { events } from "@/event/types/events";
 import { LoanRequest } from "@/loan/decorators/loan.decorator";
 import { LoanDto } from "@/loan/dto/loan.dto";
@@ -15,7 +15,7 @@ import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserAuthGuard)
 @ApiTags('loan')
 @ApiNotFoundResponse({ description: "Game or product not found" })
 @ApiBadRequestResponse({ description: "UUID are invalid" })
@@ -67,7 +67,7 @@ export class LoanController {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_ALREADY_RENTED"), HttpStatus.CONFLICT);
     }
 
-    const loan = await this.loanService.create(user, product, body.endDate, LoanStatus.WAITING);
+    const loan = await this.loanService.create(user, product, body.startDate, body.endDate, LoanStatus.WAITING);
     if (!loan) {
       throw new HttpException(await this.translationsService.translate("error.PRODUCT_CANT_CREATE"), HttpStatus.INTERNAL_SERVER_ERROR);
     }

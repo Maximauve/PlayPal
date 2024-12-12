@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Us
 import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { User, Wish } from '@playpal/schemas';
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { UserAuthGuard } from '@/auth/guards/user-auth.guard';
 import { TranslationService } from '@/translation/translation.service';
 import { CurrentUser } from '@/user/decorators/currentUser.decorator';
 import { WishRequest } from '@/wish/decorators/wish.decorator';
@@ -11,7 +11,7 @@ import { WishGuard } from '@/wish/guards/wish.guard';
 import { WishService } from '@/wish/service/wish.service';
 
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserAuthGuard)
 @ApiTags('wish')
 @Controller('wish')
 export class WishController {

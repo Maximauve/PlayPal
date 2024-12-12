@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type Product, type RatingDto, Role } from '@playpal/schemas';
+import { type LoanDto, type Product, type RatingDto, Role } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';
@@ -17,10 +17,12 @@ import { Rating } from '@/components/rating';
 import { Review } from '@/components/review';
 import { type TabProperties } from '@/components/tabs';
 import { Tabs } from '@/components/tabs';
+import { createLoanInitialValues, createLoanSchema } from '@/forms/create-loan-schema';
 import { reviewInitialValues, reviewSchema } from '@/forms/review-schema';
 import useAuth from '@/hooks/use-auth';
 import useTranslation from '@/hooks/use-translation';
 import { useDeleteGameMutation, useGetGameQuery } from '@/services/game';
+import { useCreateLoanMutation } from '@/services/loan';
 import { useAddRatingMutation, useGetRatingsQuery } from '@/services/rating';
 
 export default function GamePage(): React.JSX.Element {
@@ -36,6 +38,7 @@ export default function GamePage(): React.JSX.Element {
   const { data: game, isLoading } = useGetGameQuery(parameters.id);
   const { data: ratings } = useGetRatingsQuery({ gameId: parameters.id });
   const [addRating] = useAddRatingMutation();
+  const [createLoan] = useCreateLoanMutation();
   const [deleteGame] = useDeleteGameMutation();
   const navigate = useNavigate();
   const i18n = useTranslation();
@@ -66,6 +69,38 @@ export default function GamePage(): React.JSX.Element {
     validateOnChange: true,
     enableReinitialize: true,
   });
+
+  const loanSubmit = async (values: LoanDto) => {
+    console.log(values);
+    try {
+      await createLoan(values).unwrap();
+      loanFormik.resetForm();
+      toast.success(i18n.t('notify.create.loan.success') as ToastContent<string>, {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error('Error create loan', error);
+      toast.error(i18n.t('notify.create.loan.error') as ToastContent<string>, {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const loanFormik = useFormik<LoanDto>({
+    initialValues: {
+      gameId: parameters.id,
+      startDate: createLoanInitialValues.startDate,
+      endDate: createLoanInitialValues.endDate,
+    },
+    validate: withZodSchema(createLoanSchema),
+    onSubmit: loanSubmit,
+    validateOnChange: true,
+    enableReinitialize: true,
+    validateOnMount: true,
+  });
+
 
   // handle delete game
   const handleDeleteGame = async () => {
@@ -103,6 +138,21 @@ export default function GamePage(): React.JSX.Element {
   const onClose = () => {
     setIsVisible(false);
   };
+
+  useEffect(() => {
+    if (locDate && locDate.startDate && locDate.endDate) {
+      loanFormik.setFieldValue('startDate', locDate.startDate.toISOString());
+      console.log(locDate.startDate.toISOString());
+      loanFormik.setFieldTouched('startDate', true);
+      loanFormik.setFieldValue('endDate', locDate.endDate.toISOString());
+      console.log(locDate.endDate.toISOString());
+      loanFormik.setFieldTouched('endDate', true);
+    }
+  }, [locDate]);
+
+  useEffect(() => {
+    console.log(loanFormik.values);
+  }, [loanFormik.values]);  
 
   if (isLoading) {
     return <Loader />;
@@ -146,7 +196,23 @@ export default function GamePage(): React.JSX.Element {
               </div>
             )}
 
-            <div className='flex flex-col '>
+            {user && user.role === Role.Admin && (
+              <div className="flex flex-row">
+                <button
+                  className="bg-black text-white px-6 py-2 rounded my-4 hover:bg-gray-800 w-1/3 mr-2"
+                  onClick={() => setIsVisible(true)}
+                >
+                  {i18n.t('game.details.edit')}
+                </button>
+                <button
+                  className="bg-red-600 text-white px-6 py-2 rounded my-4 hover:bg-red-800 w-1/2"
+                  onClick={handleDeleteGame}>
+                  {i18n.t('game.details.delete')}
+                </button>
+              </div>
+            )}
+
+            <div className='flex flex-col'>
               <div className="flex items-center text-gray-500 text-sm mt-4">
                 <FontAwesomeIcon icon={faUserGroup} className="text-black mr-2" />
                 <p>De {game?.minPlayers} à {game?.maxPlayers} personnes</p>
@@ -181,7 +247,10 @@ export default function GamePage(): React.JSX.Element {
               />
             </div>
 
-            <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full hover:bg-gray-800">
+            <button className="bg-black text-white px-6 py-2 rounded mb-4 w-full hover:bg-gray-800 hover:scale-105 active:scale-100 disabled:bg-gray-400 hover:disabled:scale-100"
+              type="button"
+              disabled={!loanFormik.isValid || loanFormik.isSubmitting} 
+              onClick={() => loanFormik.handleSubmit()}>
               {i18n.t('game.details.addToRental')}
             </button>
             <div className="flex items-center justify-evenly text-sm text-gray-500">
@@ -205,7 +274,7 @@ export default function GamePage(): React.JSX.Element {
           <div className="w-full md:w-1/2 p-2">
             <div className='flex flex-col gap-4 mb-5 p-5 border border-gray-400 rounded-md'>
               <h2 className='text-lg font-bold text-black'>{i18n.t('review.addReview')}</h2>
-              <ReviewForm formik={formik}/>
+              <ReviewForm formik={formik} />
               <button
                 className='btn-primary bg-black text-white w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
                 type="button"
@@ -218,7 +287,7 @@ export default function GamePage(): React.JSX.Element {
               ratings.map((rating, index) => (
                 <div key={index}>
                   <Review rating={rating} />
-                  <hr className='my-3'/>
+                  <hr className='my-3' />
                 </div>
               ))
             )}
