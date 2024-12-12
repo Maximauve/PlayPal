@@ -1,5 +1,5 @@
 
-import { type GameWithStats } from '@playpal/schemas';
+import { type Game } from '@playpal/schemas';
 import { useNavigate } from 'react-router-dom';
 
 import AllGame from "@/assets/images/all-games.png";
@@ -9,7 +9,7 @@ import { TagsContainer } from '@/components/tags-container';
 import useTranslation from '@/hooks/use-translation';
 
 interface CardProps {
-  game: GameWithStats;
+  game: Game;
   inStock?: boolean;
   onRemove?: () => void;
 }

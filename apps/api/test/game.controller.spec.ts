@@ -8,15 +8,17 @@ import { GameUpdatedDto } from '@/game/dto/gameUpdated.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Tag, Game, Role, GameResponse } from '@playpal/schemas';
+import { Game, Role, GameResponse } from '@playpal/schemas';
 import { FileUploadService } from '@/files/files.service';
 import { ProductService } from '@/product/service/product.service';
 import { RedisService } from '@/redis/service/redis.service';
+import { WishService } from '@/wish/service/wish.service';
 
 describe('GameController', () => {
   let gameController: GameController;
   let mockGameService: Partial<GameService>;
   let mockUserService: Partial<UserService>;
+  let mockWishService: Partial<WishService>;
   let mockTranslationService: Partial<TranslationService>;
   let mockFileUploadService: Partial<FileUploadService>
   let mockGameRepository: Partial<Repository<Game>>;
@@ -81,6 +83,8 @@ describe('GameController', () => {
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      getRecommendations: jest.fn(),
+      getThreeLastGames: jest.fn()
     };
 
     mockUserService = {
@@ -96,7 +100,7 @@ describe('GameController', () => {
     };
 
     mockProductService = {}
-
+    mockWishService = {}
     mockRedisService = {}
 
     const module: TestingModule = await Test.createTestingModule({
@@ -106,6 +110,7 @@ describe('GameController', () => {
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
         { provide: FileUploadService, useValue: mockFileUploadService },
+        { provide: WishService, useValue: mockWishService },
         { provide: getRepositoryToken(Game), useValue: mockGameRepository },
         { provide: ProductService, useValue: mockProductService },
         { provide: RedisService, useValue: mockRedisService },
@@ -139,6 +144,44 @@ describe('GameController', () => {
       jest.spyOn(mockGameService, 'findOneGame').mockResolvedValue(mockGames[0]);  
       const result = await gameController.getOneGame(mockGames[0]);
       expect(result).toEqual(mockGames[0]);
+    });
+  });
+
+  describe('getRecommendations', () => {
+    it('should return the most liked games with default limit', async () => {
+      const recommendedGames = [mockGames[0], mockGames[1]];
+      
+      jest.spyOn(mockGameService, 'getRecommendations').mockResolvedValue({ data: recommendedGames });
+
+      const result = await gameController.getRecommendations();
+
+      expect(result).toEqual({ data: recommendedGames });
+      expect(mockGameService.getRecommendations).toHaveBeenCalledWith(10);
+    });
+
+    it('should return the most liked games with a specified limit', async () => {
+      const limit = 5;
+      const recommendedGames = [mockGames[0]];
+
+      jest.spyOn(mockGameService, 'getRecommendations').mockResolvedValue({ data: recommendedGames });
+
+      const result = await gameController.getRecommendations(limit);
+
+      expect(result).toEqual({ data: recommendedGames });
+      expect(mockGameService.getRecommendations).toHaveBeenCalledWith(limit);
+    });
+  });
+
+  describe('getThreeLastGame', () => {
+    it('should return the three last games successfully', async () => {
+      const lastGames = [mockGames[1], mockGames[0]];
+
+      jest.spyOn(mockGameService, 'getThreeLastGames').mockResolvedValue(lastGames);
+
+      const result = await gameController.getThreeLastGame();
+
+      expect(result).toEqual(lastGames);
+      expect(mockGameService.getThreeLastGames).toHaveBeenCalled();
     });
   });
 
