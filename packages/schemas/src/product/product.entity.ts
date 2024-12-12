@@ -16,7 +16,9 @@ export class Product {
   @Column({ type: 'boolean', nullable: false })
   available: boolean;
 
-  @ManyToOne(() => Game, game => game.product)
+  @ManyToOne(() => Game, game => game.product, {
+      onDelete: 'CASCADE',
+  })
   game: Game;
 
   @ManyToOne(() => User, user => user.product, { nullable : true })

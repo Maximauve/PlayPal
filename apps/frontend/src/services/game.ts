@@ -38,14 +38,23 @@ export const gameApi = baseApi.injectEndpoints({
         method: "PUT",
         body,
       }),
-      invalidatesTags: ['Games'],
+      invalidatesTags: ['Game'],
     }),
 
     getGame: builder.query<GameWithStats, string>({
       query: (id) => `games/${id}`,
+      providesTags: ['Game']
     }),
     getRecommendations: builder.query<GameResponse, number>({
       query: (limit = 10) => `games/recommendations?limit=${limit}`,
+    }),
+
+    deleteGame: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/games/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ['Games'],
     }),
   }),
 });
@@ -56,4 +65,5 @@ export const {
   useCreateGameMutation,
   useGetGameQuery,
   useUpdateGameMutation,
+  useDeleteGameMutation,
 } = gameApi;

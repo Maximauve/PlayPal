@@ -108,28 +108,58 @@ export class GameService {
       }
     });
     if (!existingGame) {
-      throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        await this.translationService.translate('error.GAME_NOT_FOUND'),
+        HttpStatus.NOT_FOUND
+      );
     }
+  
     const { tagIds, ...gameData } = game;
-    await this.gamesRepository.update(gameId, gameData);
+  
+    // Update the fields directly on the existingGame instance
+    Object.assign(existingGame, gameData);
+  
     if (tagIds) {
       const tags = await this.tagsRepository.getByIds(tagIds);
       if (tags.length !== tagIds.length) {
-        throw new HttpException(await this.translationService.translate("error.TAGS_NOT_FOUND"), HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          await this.translationService.translate("error.TAGS_NOT_FOUND"),
+          HttpStatus.NOT_FOUND
+        );
       }
       existingGame.tags = tags;
     }
+  
+    // Save the updated entity
     await this.gamesRepository.save(existingGame);
+  
     return this.findOneGame(gameId); // have relations in response
   }
 
   async delete(gameId: string): Promise<void> {
+    const game = await this.gamesRepository.findOne({
+      where: { id: gameId },
+      relations: ['rating', 'product', 'wish', 'rules', 'tags'], // Include all related entities
+    });
+  
+    if (!game) {
+      throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+  
+    // Clear ManyToMany relations
+    if (game.tags && game.tags.length > 0) {
+      game.tags = [];
+      await this.gamesRepository.save(game);
+    }
+  
+    // Now delete the game
     const query = await this.gamesRepository
       .createQueryBuilder()
       .delete()
       .from(Game)
-      .where("id = :id", { id: gameId })
+      .where('id = :id', { id: gameId })
       .execute();
+  
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }

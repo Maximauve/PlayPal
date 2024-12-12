@@ -26,12 +26,20 @@
       "tag": {
         "success": "Votre tag a bien été supprimé",
         "error": "Un problème est survenu lors de la suppression du tag"
+      },
+      "game": {
+        "success": "Votre jeu a bien été supprimé",
+        "error": "Un problème est survenu lors de la suppression du jeu"
       }
     },
     "update": {
       "user": {
         "success": "Votre compte a bien été mis à jour",
         "error": "Un problème est survenu lors de la mise à jour de votre compte"
+      },
+      "game": {
+        "success": "Votre jeu a bien été mis à jour",
+        "error": "Un problème est survenu lors de la mise à jour du jeu"
       }
     },
     "register": {

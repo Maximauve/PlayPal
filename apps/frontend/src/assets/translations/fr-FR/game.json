@@ -7,7 +7,8 @@
             "addToRental": "Louer ce jeu",
             "share": "Partager",
             "wishlist": "Liste de souhaits",
-            "edit": "Modifier le jeu"
+            "edit": "Modifier le jeu",
+            "delete": "Supprimer le jeu"
         }
     }
 }
