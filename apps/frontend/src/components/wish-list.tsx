@@ -30,7 +30,7 @@ export default function WishList() {
     <div>
       {wishs?.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-          {wishs?.map((wish, index) => (
+          {wishs.map((wish, index) => (
             <Card key={index} game={wish.game} onRemove={() => onRemove(wish.id)}/>
           ))}
         </div>
