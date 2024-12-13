@@ -6,9 +6,11 @@
       "game-list": "Liste des jeux",
       "loan-ongoing": "Prêts en cours",
       "loan-waiting": "Demandes de prêts",
-      "tag": "Liste des tags"
+      "loan-list": "Liste des prêts",
+      "tag": "Liste des tags",
+      "product-list": "Liste des produits"
     },
-    "game" :{
+    "game": {
       "add": "Ajouter un jeu",
       "submit": "Créer le jeu",
       "edit": "Modifier le jeu"
@@ -22,7 +24,8 @@
         "difficulty": "Difficulté",
         "minYear": "Age minimum",
         "duration": "Durée d'une partie",
-        "brand": "Marque"
+        "brand": "Marque",
+        "tags": "Tags"
       }
     },
     "tag": {
