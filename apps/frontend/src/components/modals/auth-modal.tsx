@@ -65,8 +65,8 @@ export default function AuthModal({ isVisible, onClose, notClosable = false }: P
           position: "top-right",
           autoClose: 3000,
         });
-      } catch  {
-        toast.error(i18n.t("notify.register.error") as ToastContent<string>, {
+      } catch (error) {
+        toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
