@@ -25,8 +25,7 @@ export default function CreateProductModal({ isVisible, onClose }: Props) {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch (error) {
-      console.error('Erreur lors de la création du jeu:', error);
+    } catch {
       toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,

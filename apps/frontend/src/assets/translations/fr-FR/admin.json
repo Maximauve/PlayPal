@@ -15,6 +15,9 @@
       "submit": "Créer le jeu",
       "edit": "Modifier le jeu"
     },
+    "product": {
+      "add": "Ajouter un produit"
+    },
     "create": {
       "game": {
         "name": "Nom du jeu",
@@ -31,6 +34,9 @@
     "tag": {
       "title": "Ajouter un tag",
       "submit": "Créer le tag"
+    },
+    "dashboard": {
+      "title": "Tableau de bord"
     }
   }
 }
