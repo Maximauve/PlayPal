@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import useTranslation from "@/hooks/use-translation";
 
@@ -13,10 +13,11 @@ const routes = [
 
 export default function AdminNavbar(): React.JSX.Element {
   const i18n = useTranslation();
+  const navigate = useNavigate();
   return (
     <main className="col-[1/2] w-full h-full bg-background-dark rounded-2xl p-2 shadow-admin">
       <div className="flex items-center justify-center p-2 rounded-lg m-1">
-        <p> {i18n.t("admin.navbar.title")} </p>
+        <p className="text-2xl" onClick={() => navigate('/')}> {i18n.t("admin.navbar.title")} </p>
       </div>
       <div className="flex flex-col gap-1 p-2 rounded-lg m-1">
         { routes.map(route => (

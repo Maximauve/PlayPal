@@ -1,6 +1,7 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
+import DashboardLayout from "@/components/_layout/admin/dashboard-layout";
 import GameLayout from "@/components/_layout/admin/game-layout";
 import ProductLayout from "@/components/_layout/admin/product-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
@@ -47,12 +48,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
-        element: <Navigate to="/admin/dashboard" />
-      },
-      {
         path: "dashboard",
-        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
+        element: <DashboardLayout />,
       },
       {
         path: "game",
