@@ -15,7 +15,7 @@ import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 import { UserService } from "@/user/service/user.service";
 
-@UseGuards(JwtAuthGuard, GameGuard)
+@UseGuards(GameGuard)
 @ApiTags('rating')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
 @ApiNotFoundResponse({ description: "Game not found" })
@@ -43,6 +43,7 @@ export class RatingController {
     return rating;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("")
   @ApiOperation({ summary: "Create a rating" })
   @ApiOkResponse({ description: "Rating created successfully", type: Rating })
@@ -57,6 +58,7 @@ export class RatingController {
     return rating;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put("/:ratingId")
   @UseGuards(RatingGuard)
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })
@@ -73,6 +75,7 @@ export class RatingController {
     return ratingUpdated;
   }
   
+  @UseGuards(JwtAuthGuard)
   @Delete("/:ratingId")
   @UseGuards(RatingGuard)
   @ApiParam({ name: 'ratingId', description: 'ID of rating', required: true })

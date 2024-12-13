@@ -8,7 +8,9 @@ export default function MainLayout(): React.JSX.Element {
   return (
     <Fragment>
       <Navbar />
-      <Outlet />
+      <div className="flex-grow min-h-[calc(100vh-10rem)]">
+        <Outlet />
+      </div>
       <Footer />
     </Fragment>
   );
