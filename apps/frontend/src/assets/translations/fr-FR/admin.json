@@ -8,7 +8,9 @@
       "product-list": "Liste des produits",
       "loan-ongoing": "Prêts en cours",
       "loan-waiting": "Demandes de prêts",
-      "tag": "Liste des tags"
+      "tag": "Liste des tags",
+      "loan-list": "Liste des prêts",
+      "product-list": "Liste des produits"
     },
     "game": {
       "add": "Ajouter un jeu",

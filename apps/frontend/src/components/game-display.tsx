@@ -17,7 +17,7 @@ export default function GameDisplay({ games, displayMode }: GameDisplayPropertie
         <div
           key={game.id}
           className={"rounded-lg p-3 bg-background-dark text-text-light hover:shadow-[0_0_10px_0px_rgba(255,255,255,0.25)]" + (displayMode === 'card' ? ' w-52 text-center' : ' flex flex-row items-end')}
-          onClick={() => navigate(`/game/${game.id}`)}
+          onClick={() => navigate(`/games/${game.id}`)}
         >
           {displayMode !== 'list' && (
             game.image ? (
