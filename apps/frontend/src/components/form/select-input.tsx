@@ -1,6 +1,6 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { type WordingKey } from "@/context/i18n/i18n-service";
 import useTranslation from "@/hooks/use-translation";
@@ -31,10 +31,6 @@ export default function SelectInput({
   const [currentValue, setCurrentValues] = useState<typeof value>(value);
   const [isOpen, setIsOpen] = useState(false);
 
-  const valuesOptions = useMemo(() => {
-    return options.map(option => option.value);
-  }, [options]);
-
   const handleClick = (checkedItem: string) => {
     if (isMultiple) {
       if ((currentValue as string[]).includes(checkedItem)) {
@@ -49,39 +45,43 @@ export default function SelectInput({
     }
   };
 
+  useEffect(() => {
+    console.log(currentValue);
+  }, [currentValue]);
+
   const toggleSelection = () => {
     setIsOpen(prev => !prev);
   };
 
   return (
     <div className="flex flex-col items-start w-full px-5">
-      {!isMultiple && label && (
+      {label && (
         <p className="block text-sm font-medium text-gray-700">
           {i18n.t(label)}
         </p>
       )}
-      <div className="w-full">
-        <button onClick={toggleSelection}
-          className={"w-full max-w-full m-0 bg-transparent border border-gray-300 rounded-sm py-1 pl-2 flex justify-between items-center" + isOpen && ('rounded-t-md border-b-0 ')}
+      <div className="w-full relative">
+        <button type="button" onClick={toggleSelection}
+          className={"w-full max-w-full m-0 bg-transparent border border-gray-400 rounded-sm py-1 pl-2 flex flex-row justify-between items-center" + (isOpen && ('rounded-t-md border-b-0 '))}
         >
           <span>
             {isMultiple 
-              ? (label && (i18n.t(label) + (currentValue.length > 0) && ` (${currentValue.length})`))
+              ? (label && ((i18n.t(label) + ((currentValue.length > 0) ? ` (${currentValue.length})` : ''))))
               : (currentValue ?? label)
             }
           </span>
-          <FontAwesomeIcon icon={faChevronDown} width={22} height={22} color="black" className={'transition-transform duration-150' + isOpen && 'rotate-180'} />
+          <FontAwesomeIcon icon={faChevronDown} width={22} height={22} color="black" className={'transition-transform duration-150' + (isOpen && ' rotate-180')} />
         </button>
-        <div>
-          <div>
-            <ul>
-              {options.map((option) => {
+        <div className={"grid absolute top-full left-0 right-0 z-10 transition-[grid-template-rows] duration-500" + (isOpen ? ' grid-rows-[1fr] delay-75' : ' grid-rows-[0fr]')}>
+          <div className={"overflow-hidden"}>
+            <ul className={"bg-white rounded-t-none rouded-b-md py-2 px-4 border border-t-0 border-gray-400 max-h-40 overflow-y-auto"}>
+              {options.map((option, index) => {
                 let checked = false;
-                checked = isMultiple && Array.isArray(value) ? value.some(v => valuesOptions.includes(v)) : valuesOptions.includes(value as string);
+                checked = isMultiple ? (currentValue as string[]).includes(option.value) : currentValue === option.value;
                 return (
-                  <li>
+                  <li className={index === options.length ? '' : 'mb-1'} key={option.value}>
                     <label>
-                      <input type={isMultiple ? 'checkbox' : 'radio'} key={option.value} name={name} value={option.value} onChange={() => handleClick(option.value)} checked={checked} />
+                      <input className="mr-2" type={isMultiple ? 'checkbox' : 'radio'} name={name} value={option.value} onChange={() => handleClick(option.value)} checked={checked} />
                       {option.label}
                     </label>
                   </li>

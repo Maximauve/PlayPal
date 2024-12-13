@@ -62,6 +62,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
         id="tags"
         name="tags"
         label="admin.create.game.tags"
+        isMultiple
         options={
           tags?.map((tag) => ({
             value: tag.id,
@@ -75,6 +76,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
           message: formik.errors.tagIds as WordingKey,
         }}
       />
+      <div className="mt-2"></div>
       <FileInput name="image" handleFileChange={handleFileChange} formik={formik}/>
       <div className="w-full flex justify-center items-center mt-4">
         <button className="rounded-md bg-blue-600 py-1 px-3 text-white hover:scale-105 active:scale-100 disabled:bg-gray-500 flex flex-row gap-2"
