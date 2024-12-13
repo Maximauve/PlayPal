@@ -1,6 +1,5 @@
 import { type Game, type GameResponse } from "@playpal/schemas";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 import image from "@/assets/images/all-games.png";
 
@@ -10,25 +9,24 @@ interface GameDisplayProperties {
 }
 
 export default function GameDisplay({ games, displayMode }: GameDisplayProperties) : React.JSX.Element {
-  const navigate = useNavigate();
   return (
-    <div className={displayMode === "card" ? "game-card" : "game-list"} >
+    <div className={"flex gap-2" + (displayMode === 'card' ? ' flex-row flex-wrap' : ' flex-col')} >
       {games?.data && games.data.map((game: Game) => (
         <div
           key={game.id}
-          className={displayMode === "card" ? "game-card-item" : "game-list-item"}
-          onClick={() => navigate(`/games/${game.id}`)}
+          className={"rounded-lg p-3 bg-background-dark text-text-light hover:shadow-[0_0_10px_0px_rgba(255,255,255,0.25)]" + (displayMode === 'card' ? ' w-52 text-center' : ' flex flex-row items-end')}
         >
-          {game.image ? (
-            <img className={displayMode === "list" ? "hidden" : ""} src={game.image} alt={game.name} />
-          ): (
-            <img className={displayMode === "list" ? "hidden" : ""} src={image} />
-          )
-          }
-          
-          <h3 className="">{game.name}</h3>
-          {displayMode === "list" && <p className="truncate mx-1">{game.description}</p>}
-        
+          {displayMode !== 'list' && (
+            game.image ? (
+              <img className="w-full h-40 object-cover rounded-lg mb-2" src={game.image} alt={game.name} />
+            ): (
+              <img className="w-full h-40 object-cover rounded-lg mb-2" src={image} />
+            )
+          )}
+
+          <h3 className="text-lg">{game.name}</h3>
+          {displayMode === "list" && <p className="truncate mr-1 ml-4 text-sm font-light opacity-70">{game.description}</p>}
+
         </div>
       ))}
     </div>

@@ -1,3 +1,4 @@
+import { Role } from "@playpal/schemas";
 import React, { Fragment, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -47,7 +48,10 @@ export default function Navbar(): React.JSX.Element {
         <div className="px-2 pb-3 gap-3 flex flex-col items-center justify-start">
           { user ? (
             <Fragment>
-              <NavLink to="/user" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.account")}</NavLink>
+              <NavLink to="/user/profile" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.account")}</NavLink>
+              { (user.role === Role.Admin) && (
+                <NavLink to="/admin/dashboard" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.admin")}</NavLink>
+              )}
               <button className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center" onClick={handleLogout}>{i18n.t("account.logout")}</button>
             </Fragment>
           ) : (

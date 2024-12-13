@@ -6,12 +6,30 @@
       "game-list": "Liste des jeux",
       "loan-ongoing": "Prêts en cours",
       "loan-waiting": "Demandes de prêts",
-      "tag": "Liste des tags"
+      "loan-list": "Liste des prêts",
+      "tag": "Liste des tags",
+      "product-list": "Liste des produits"
     },
-    "game" :{
+    "game": {
       "add": "Ajouter un jeu",
       "submit": "Créer le jeu",
-      "edit": "Modifier le jeu"
+      "edit": "Modifier le jeu",
+      "label": "Jeu"
+    },
+    "product": {
+      "delete": {
+        "success": "Votre produit a bien été supprimé"
+      },
+      "add": "Ajouter un produit",
+      "submit": "Créer le produit",
+      "state": {
+        "NEW": "Neuf",
+        "LIKE_NEW": "Comme neuf",
+        "GOOD": "Bon état",
+        "BROKEN": "Cassé",
+        "DAMAGED": "Endommagé",
+        "FAIR": "Usé"
+      }
     },
     "create": {
       "game": {
@@ -22,12 +40,20 @@
         "difficulty": "Difficulté",
         "minYear": "Age minimum",
         "duration": "Durée d'une partie",
-        "brand": "Marque"
+        "brand": "Marque",
+        "tags": "Tags"
       }
     },
     "tag": {
       "title": "Ajouter un tag",
-      "submit": "Créer le tag"
+      "submit": "Créer le tag",
+      "label": "Tags"
+    },
+    "dashboard": {
+      "title": "Tableau de bord"
+    },
+    "state": {
+      "label": "Etat du jeu"
     }
   }
 }

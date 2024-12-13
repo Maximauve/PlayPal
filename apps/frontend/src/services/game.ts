@@ -6,7 +6,7 @@ import { baseApi } from "@/services/base";
 export const gameApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getGames: builder.query<GameResponse, GamePayload>({
-      query: ({ tags = undefined, search = undefined, page = 1, limit = 100 }) => {
+      query: ({ tags = undefined, search = undefined, page = 1, limit = undefined }) => {
         const parameters = new URLSearchParams();
         if (tags) {
           tags.forEach((tag: Tag) => parameters.append('tags', tag.name));

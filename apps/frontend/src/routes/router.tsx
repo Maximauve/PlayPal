@@ -1,8 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
+import DashboardLayout from "@/components/_layout/admin/dashboard-layout";
 import GameLayout from "@/components/_layout/admin/game-layout";
 import LoanLayout from "@/components/_layout/admin/loan-layout";
+import ProductLayout from "@/components/_layout/admin/product-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
@@ -73,8 +75,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
-        element: <div>Tableau de Bord</div>,
+        path: "dashboard",
+        element: <DashboardLayout />,
       },
       {
         path: "game",
@@ -87,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: "tag",
         element: <TagLayout />,
+      },
+      {
+        path: "products",
+        element: <ProductLayout />, // Remplacez par un vrai composant
       },
     ],
   },

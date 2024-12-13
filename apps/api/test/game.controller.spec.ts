@@ -127,10 +127,9 @@ describe('GameController', () => {
         data: mockGames,
         total: mockGames.length,
         page: 1,
-        limit: 10,
-        totalPages: 1,
+        limit: -1,
+        totalPages: -2,
       }
-
 
       jest.spyOn(mockGameService, 'getAll').mockResolvedValue(allResult);
       const result = await gameController.getAll();
