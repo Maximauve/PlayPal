@@ -62,6 +62,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
         id="tags"
         name="tags"
         label="admin.create.game.tags"
+        isMultiple
         options={
           tags?.map((tag) => ({
             value: tag.id,
