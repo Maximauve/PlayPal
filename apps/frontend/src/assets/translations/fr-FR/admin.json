@@ -5,9 +5,10 @@
       "dashboard": "Tableau de bord",
       "game-list": "Liste des jeux",
       "loan-list": "Liste des prêts",
-      "tag": "Liste des tags"
+      "tag": "Liste des tags",
+      "product-list": "Liste des produits"
     },
-    "game" :{
+    "game": {
       "add": "Ajouter un jeu",
       "sumbit": "Créer le jeu"
     },
@@ -20,7 +21,8 @@
         "difficulty": "Difficulté",
         "minYear": "Age minimum",
         "duration": "Durée d'une partie",
-        "brand": "Marque"
+        "brand": "Marque",
+        "tags": "Tags"
       }
     },
     "tag": {

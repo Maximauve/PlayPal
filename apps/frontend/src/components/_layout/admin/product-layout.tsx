@@ -1,22 +1,24 @@
 import { faGrip, faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type GamePayload } from '@playpal/schemas';
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import AdminButton from '@/components/_layout/admin/admin-button';
-import GameDisplay from "@/components/game-display";
 import Loader from '@/components/loader';
 import CreateGameModal from '@/components/modals/create-game-modal';
 import useModal from '@/hooks/use-modal';
 import useTranslation from '@/hooks/use-translation';
-import { useGetGamesQuery } from '@/services/game';
+import { useGetProductsQuery } from '@/services/product';
 
-export default function GameLayout() {
+export default function ProductLayout() {
   const i18n = useTranslation();
 
-  const { isLoading, data } = useGetGamesQuery({} as GamePayload);
+  const { isLoading, data } = useGetProductsQuery();
   const [displayMode, setDisplayMode] = useState<"card" | "list">("card");
   const { isOpen, openModal, closeModal } = useModal();
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const toggleDisplayMode = () => {
     setDisplayMode((previousMode) => (previousMode === "card" ? "list" : "card"));
@@ -33,8 +35,8 @@ export default function GameLayout() {
         </AdminButton>
         { isLoading ? (
           <Loader />
-        ) : data && data.data.length > 0 && (
-          <GameDisplay games={data} displayMode={displayMode} />
+        ) : data && data.length > 0 && (
+          <p>j'ai de la data wola</p>
         )}
       </div>
       <CreateGameModal isVisible={isOpen} onClose={closeModal} />

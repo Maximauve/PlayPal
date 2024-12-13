@@ -1,14 +1,14 @@
 import { type CreateGamePayload } from "@playpal/schemas";
 import { type useFormik } from "formik";
-import React, { useCallback, useState } from "react";
+// import React, { useCallback } from "react";
 
-import FileInput from "@/components/form/file-input";
-import NumberInput from "@/components/form/number-input";
-import SelectInput from "@/components/form/select-input";
-import TextInput from "@/components/form/text-input";
-import { type WordingKey } from "@/context/i18n/i18n-service";
-import useTranslation from "@/hooks/use-translation";
-import { useGetTagsQuery } from "@/services/tag";
+// import FileInput from "@/components/form/file-input";
+// import NumberInput from "@/components/form/number-input";
+// import SelectInput from "@/components/form/select-input";
+// import TextInput from "@/components/form/text-input";
+// import { type WordingKey } from "@/context/i18n/i18n-service";
+// import useTranslation from "@/hooks/use-translation";
+// import { useGetGamesQuery } from "@/services/game";
 
 interface CreateGameFormProps {
   formik: ReturnType<typeof useFormik<CreateGamePayload>>;
@@ -16,41 +16,29 @@ interface CreateGameFormProps {
 
 export default function CreateGameForm({ formik }: CreateGameFormProps) {
 
-  const { data: tags } = useGetTagsQuery();
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const i18n = useTranslation();
+  // const { data: games } = useGetGamesQuery({});
+  // const i18n = useTranslation();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      formik.setFieldValue('image', file);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     formik.setFieldValue('image', file);
+  //   }
+  // };
 
-  const handleSelectionChange = (newValues: string[]) => {
-    const updatedValues = selectedTags.reduce((accumulator, value) => {
-      return accumulator.includes(value)
-        ? accumulator.filter((existingValue) => existingValue !== value)
-        : [...accumulator, value];
-    }, newValues);
-    setSelectedTags(updatedValues);
-    formik.setFieldValue("tagIds", newValues);
-    formik.setFieldTouched("tagIds", true);
-  };
+  // const handleStringChange = useCallback((field: string, value: string[] | string) => {
+  //   formik.setFieldValue(field, value);
+  //   formik.setFieldTouched(field, true);
+  // }, [formik]);
 
-  const handleStringChange = useCallback((field: string, value: string[] | string) => {
-    formik.setFieldValue(field, value);
-    formik.setFieldTouched(field, true);
-  }, [formik]);
-
-  const handleNumberChange = useCallback((field: string, value: number) => {
-    formik.setFieldValue(field, value);
-    formik.setFieldTouched(field, true);
-  }, [formik]);
+  // const handleNumberChange = useCallback((field: string, value: number) => {
+  //   formik.setFieldValue(field, value);
+  //   formik.setFieldTouched(field, true);
+  // }, [formik]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <TextInput name='name' type='text' label='admin.create.game.name' onChange={(e) => handleStringChange('name', e.target.value)} error={{ isError: !!formik.touched.name && !!formik.errors.name, message: formik.errors.name as WordingKey }} />
+      {/* <TextInput name='name' type='text' label='admin.create.game.name' onChange={(e) => handleStringChange('name', e.target.value)} error={{ isError: !!formik.touched.name && !!formik.errors.name, message: formik.errors.name as WordingKey }} />
       <TextInput name='description' type='text' label='admin.create.game.description' onChange={(e) => handleStringChange('description', e.target.value)} error={{ isError: !!formik.touched.description && !!formik.errors.description, message: formik.errors.description as WordingKey }} />
       <NumberInput name='minPlayers' value={formik.values.minPlayers ?? undefined} min={1} max={99} label='admin.create.game.minPlayers' onChange={(e) => handleNumberChange('minPlayers', Number.parseInt(e.target.value, 10))} error={{ isError: !!formik.touched.minPlayers && !!formik.errors.minPlayers, message: formik.errors.minPlayers as WordingKey }} />
       <NumberInput name='maxPlayers' value={formik.values.maxPlayers ?? undefined} min={1} max={99} label='admin.create.game.maxPlayers' onChange={(e) => handleNumberChange('maxPlayers', Number.parseInt(e.target.value, 10))} error={{ isError: !!formik.touched.maxPlayers && !!formik.errors.maxPlayers, message: formik.errors.maxPlayers as WordingKey }} />
@@ -61,7 +49,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
       <SelectInput
         id="tags"
         name="tags"
-        label="admin.create.game.tags"
+        label="Tags"
         options={
           tags?.map((tag) => ({
             value: tag.id,
@@ -83,7 +71,7 @@ export default function CreateGameForm({ formik }: CreateGameFormProps) {
         >
           {i18n.t("admin.game.sumbit")}
         </button>
-      </div>
+      </div> */}
     </form>
   );
 }
