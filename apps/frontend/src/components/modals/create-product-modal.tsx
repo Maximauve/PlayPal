@@ -1,8 +1,9 @@
-import { type ProductDto } from "@playpal/schemas";
+import { type ApiError, type ProductDto } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { toast, type ToastContent } from "react-toastify";
 
+import CreateProductForm from "@/components/form/create-product-form";
 import FullModal from "@/components/modals/full-modal";
 import { createProductInitalValues, createProductSchema } from "@/forms/create-product-schema";
 import useTranslation from "@/hooks/use-translation";
@@ -14,19 +15,18 @@ interface Props {
 }
 
 export default function CreateProductModal({ isVisible, onClose }: Props) {
-
   const [ createProduct ] = useCreateProductMutation();
   const i18n = useTranslation();
 
   const handleSubmit = async (values: ProductDto) => {
     try {
       await createProduct(values).unwrap();
-      toast.success(i18n.t("notify.create.game.success") as ToastContent<string>, {
+      toast.success(i18n.t("notify.create.product.success") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
-    } catch {
-      toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -42,10 +42,11 @@ export default function CreateProductModal({ isVisible, onClose }: Props) {
     validateOnBlur: false,
   });
 
-  console.log(formik);
-
   return (
     <FullModal isVisible={isVisible} onClose={onClose} title="admin.game.add">
+      <div className="w-full">
+        <CreateProductForm formik={formik}/>
+      </div>
     </FullModal>
   );
 }

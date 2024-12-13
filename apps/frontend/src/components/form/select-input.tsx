@@ -8,7 +8,7 @@ import useTranslation from "@/hooks/use-translation";
 interface SelectProps {
   id: string;
   name: string;
-  onChange: ((value: string) => void) | ((value: string[]) => void);
+  onChange: ((field: string, newValue: string) => void) | ((value: string) => void) | ((value: string[]) => void);
   options: Array<{ label: string; value: string; description?: string }>;
   value: string[] | string;
   error?: { isError: boolean; message: WordingKey };
