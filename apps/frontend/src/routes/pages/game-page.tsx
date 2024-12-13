@@ -1,6 +1,6 @@
 import { faCakeCandles, faClock, faFireFlameCurved, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ApiError, type Product, type RatingDto, Role } from '@playpal/schemas';
+import { type ApiError, type LoanDto, type Product, type RatingDto, Role } from '@playpal/schemas';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import React, { useEffect, useState } from 'react';

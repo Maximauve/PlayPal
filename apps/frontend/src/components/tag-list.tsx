@@ -18,13 +18,8 @@ export default function TagList() {
         position: "top-right",
         autoClose: 3000,
       });
-<<<<<<< HEAD
-    } catch {
-      toast.error(i18n.t("notify.delete.tag.error") as ToastContent<string>, {
-=======
     } catch (error) {
       toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
->>>>>>> eb424e6 (feat(wishlist): add wishlist page and carousel)
         position: "top-right",
         autoClose: 3000,
       });
