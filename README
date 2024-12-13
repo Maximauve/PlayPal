@@ -1,0 +1,45 @@
+# Playpal
+
+- [Playpal](#playpal)
+	- [Préambule](#préambule)
+	- [Pré-requis](#pré-requis)
+	- [Installation](#installation)
+		- [Lancer les tests (si besoin)](#lancer-les-tests-si-besoin)
+	- [Profitez :)](#profitez-)
+
+
+## Préambule
+
+Voir le [cahier des charges](./docs/Cahier%20des%20charges.md)
+
+## Pré-requis
+
+- Docker
+- Nodejs (>= 22)
+- Yarn
+
+
+## Installation
+
+- Cloner le repository
+- Installer les dépendances : `yarn`
+- cela va copier le .env.example dans un .env avec un symlink vers apps/api/.env et apps/frontend/.env
+- coller le .env délicatement envoyé par discord
+- Lancer Docker : `yarn up`
+- Lancer l'api et le frontend :
+```bash
+# À la racine du projet
+yarn dev:api
+
+yarn dev:frontend
+```
+
+
+### Lancer les tests (si besoin)
+Commande à éxécuter à la racine du projet : 
+```bash
+yarn test:api
+
+yarn test:frontend
+```
+## Profitez :)
