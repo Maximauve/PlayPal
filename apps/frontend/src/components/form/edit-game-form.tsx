@@ -61,7 +61,7 @@ export default function EditGameForm({ formik }: EditGameFormProps) {
       <SelectInput
         id="tags"
         name="tags"
-        label="Tags"
+        label="admin.tag.label"
         options={
           tags?.map((tag) => ({
             value: tag.id,

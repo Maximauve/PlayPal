@@ -15,10 +15,23 @@
     "game": {
       "add": "Ajouter un jeu",
       "submit": "Créer le jeu",
-      "edit": "Modifier le jeu"
+      "edit": "Modifier le jeu",
+      "label": "Jeu"
     },
     "product": {
-      "add": "Ajouter un produit"
+      "delete": {
+        "success": "Votre produit a bien été supprimé"
+      },
+      "add": "Ajouter un produit",
+      "submit": "Créer le produit",
+      "state": {
+        "NEW": "Neuf",
+        "LIKE_NEW": "Comme neuf",
+        "GOOD": "Bon état",
+        "BROKEN": "Cassé",
+        "DAMAGED": "Endommagé",
+        "FAIR": "Usé"
+      }
     },
     "create": {
       "game": {
@@ -35,10 +48,14 @@
     },
     "tag": {
       "title": "Ajouter un tag",
-      "submit": "Créer le tag"
+      "submit": "Créer le tag",
+      "label": "Tags"
     },
     "dashboard": {
       "title": "Tableau de bord"
+    },
+    "state": {
+      "label": "Etat du jeu"
     }
   }
 }

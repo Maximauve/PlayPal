@@ -34,10 +34,12 @@ export class GameService {
     }
     const offset = (page - 1) * limit;
     const total = await query.getCount();
-    const games: Game[] = await query
-      .skip(offset)
-      .take(limit)
-      .getMany();
+
+    if (limit !== -1) {
+      query.skip(offset).take(limit);
+    }
+
+    const games: Game[] = await query.getMany();
 
     await Promise.all(games.map(async (game) => {
       game.tags = await this.gamesRepository

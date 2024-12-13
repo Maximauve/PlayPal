@@ -19,9 +19,10 @@ export const ProductCard = ({ product, onDelete }: ProductCardProps) => {
         alt="Product image"
       />
       
-      <div className="p-4">
+      <div className="p-4 flex flex-col justify-around">
         <h3 className="text-lg font-bold truncate text-black">{product.game.name}</h3>
         <p className="text-gray-500 text-sm">ID: {product.id}</p>
+        <div className="bg-gray-600 text-white px-2 py-1 w-fit rounded">{i18n.t(`admin.product.state.${product.state}`)}</div>
       </div>
 
       <div className="flex justify-between items-center px-4 pb-4 mt-auto">
