@@ -62,12 +62,7 @@ const router = createBrowserRouter([
       },
       {
         path: "wishlist",
-        children: [
-          {
-            path: "",
-            element: <WishlistPage />
-          }
-        ]
+        element: <WishlistPage />
       }
     ]
   },
