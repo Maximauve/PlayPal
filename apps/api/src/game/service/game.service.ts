@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game, GameWithStats, Product, Rating } from "@playpal/schemas";
+import { Game, Product } from "@playpal/schemas";
 import { type Repository } from "typeorm";
 
 import { GameDto } from "@/game/dto/game.dto";
@@ -18,7 +18,7 @@ export class GameService {
     private productRepository: Repository<Product>
   ) { }
 
-  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: GameWithStats[]; total: number }> {
+  async getAll(page: number, limit: number, tags?: string[] | string, search?: string): Promise<{ data: Game[]; total: number }> {
     const query = this.gamesRepository.createQueryBuilder('game')
       .leftJoinAndSelect('game.rating', 'rating')
       .leftJoinAndSelect('game.product', 'product')
@@ -34,23 +34,14 @@ export class GameService {
     }
     const offset = (page - 1) * limit;
     const total = await query.getCount();
-    const games: Game[] = await query
-      .skip(offset)
-      .take(limit)
-      .getMany();
 
-    const data: GameWithStats[] = games.map((game: Game) => {
-      if (game.rating && game.rating.length > 0) {
-        const averageRating = this.getAverageRating(game.rating);
-        return { ...game, averageRating };
-      } else {
-        return { ...game, averageRating: null };
-      }
-
+    if (limit !== -1) {
+      query.skip(offset).take(limit);
     }
-    );
 
-    await Promise.all(data.map(async (game) => {
+    const games: Game[] = await query.getMany();
+
+    await Promise.all(games.map(async (game) => {
       game.tags = await this.gamesRepository
         .createQueryBuilder('game')
         .relation('tags')
@@ -58,7 +49,7 @@ export class GameService {
         .loadMany();
     })); // tags are not loaded at all when they are filtered
 
-    return { data, total };
+    return { data: games, total };
   }
 
   async getRecommendations(limit: number): Promise<{ data: Game[] }> {
@@ -70,17 +61,7 @@ export class GameService {
       .limit(limit)
       .getMany();
 
-    const data: GameWithStats[] = games.map((game: Game) => {
-      if (game.rating && game.rating.length > 0) {
-        const averageRating = this.getAverageRating(game.rating);
-        return { ...game, averageRating };
-      } else {
-        return { ...game, averageRating: null };
-      }
-
-    });
-
-    return { data };
+    return { data: games };
   }
 
   async create(game: GameDto): Promise<Game | null> {
@@ -109,28 +90,54 @@ export class GameService {
       }
     });
     if (!existingGame) {
-      throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        await this.translationService.translate('error.GAME_NOT_FOUND'),
+        HttpStatus.NOT_FOUND
+      );
     }
+  
     const { tagIds, ...gameData } = game;
-    await this.gamesRepository.update(gameId, gameData);
+  
+    Object.assign(existingGame, gameData);
+  
     if (tagIds) {
       const tags = await this.tagsRepository.getByIds(tagIds);
       if (tags.length !== tagIds.length) {
-        throw new HttpException(await this.translationService.translate("error.TAGS_NOT_FOUND"), HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          await this.translationService.translate("error.TAGS_NOT_FOUND"),
+          HttpStatus.NOT_FOUND
+        );
       }
       existingGame.tags = tags;
     }
+  
     await this.gamesRepository.save(existingGame);
-    return this.findOneGame(gameId); // have relations in response
+  
+    return this.findOneGame(gameId);
   }
 
   async delete(gameId: string): Promise<void> {
+    const game = await this.gamesRepository.findOne({
+      where: { id: gameId },
+      relations: ['rating', 'product', 'wish', 'rules', 'tags'],
+    });
+  
+    if (!game) {
+      throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+
+    if (game.tags && game.tags.length > 0) {
+      game.tags = [];
+      await this.gamesRepository.save(game);
+    }
+
     const query = await this.gamesRepository
       .createQueryBuilder()
       .delete()
       .from(Game)
-      .where("id = :id", { id: gameId })
+      .where('id = :id', { id: gameId })
       .execute();
+  
     if (query.affected === 0) {
       throw new HttpException(await this.translationService.translate('error.GAME_NOT_FOUND'), HttpStatus.NOT_FOUND);
     }
@@ -161,6 +168,18 @@ export class GameService {
     };
   }
 
+  async getThreeLastGames(): Promise<Game[]> {
+    return this.gamesRepository
+      .createQueryBuilder("game")
+      .where("game.image IS NOT NULL AND game.image != ''")
+      .orderBy("game.id", "DESC")
+      .leftJoinAndSelect("game.rating", "rating")
+      .leftJoinAndSelect("game.product", "product")
+      .leftJoinAndSelect("game.tags", "tag")
+      .take(3)
+      .getMany();
+  }
+
   async findOneName(name: string): Promise<Game | null> {
     return this.gamesRepository
       .createQueryBuilder("game")
@@ -169,23 +188,6 @@ export class GameService {
       .leftJoinAndSelect("game.product", "product")
       .getOne();
   }
-
-  getAverageRating(ratings: Rating[]): number | null {
-    if (!ratings || ratings.length === 0) {
-      return null;
-    }
-    return ratings.reduce((accumulator, rating) => accumulator + rating.note, 0) / ratings.length;
-  }
-
-  async getGameWithStats(game: Game): Promise<GameWithStats> {
-    if (!game.rating || game.rating.length === 0) {
-      return { ...game, averageRating: null };
-    }
-    const averageRating = this.getAverageRating(game.rating);
-    const count = await this.getGameNotes(game.id);
-
-    return { ...game, averageRating, count: count.noteCount };
-  };
 
   async hasProductAvailable(gameId: string): Promise<boolean> {
     const query = await this.productRepository

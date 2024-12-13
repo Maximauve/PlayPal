@@ -10,6 +10,7 @@ import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { FileUploadService } from '@/files/files.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { WishService } from '@/wish/service/wish.service';
 
 describe('UserController', () => {
   let userController: UserController;
@@ -17,6 +18,7 @@ describe('UserController', () => {
   let mockTranslationService: Partial<TranslationService>;
   let mockFileUploadService: Partial<FileUploadService>;
   let mockUserRepository: Partial<Repository<User>>;
+  let mockWishService: Partial<WishService>;
 
   const mockUser: User = {
     id: 'user-id',
@@ -55,12 +57,17 @@ describe('UserController', () => {
       uploadFile: jest.fn().mockResolvedValue({ url: 'http://example.com/file.jpg' }),
     };
 
+    mockWishService = {
+      getAllWishesForUser: jest.fn()
+    }
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
         { provide: UserService, useValue: mockUserService },
         { provide: TranslationService, useValue: mockTranslationService },
         { provide: FileUploadService, useValue: mockFileUploadService },
+        { provide: WishService, useValue: mockWishService },
         { provide: getRepositoryToken(User), useValue: mockUserRepository },
       ],
     }).compile();
@@ -78,8 +85,9 @@ describe('UserController', () => {
   });
 
   describe('getMe', () => {
-    it('should return the current user', () => {
-      expect(userController.getMe(mockUser)).toEqual(mockUser);
+    it('should return the current user', async () => {
+      jest.spyOn(mockUserService, 'findOneUser').mockResolvedValue(mockUser);
+      expect(await userController.getMe(mockUser)).toEqual(mockUser);
     });
   });
 

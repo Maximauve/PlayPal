@@ -20,27 +20,43 @@
       "rating": {
         "success": "Votre évaluation a bien été créée",
         "error": "Un problème est survenu lors de la création de l'évaluation"
+      },
+      "wish": {
+        "success": "Votre souhait a été enregistré",
+        "error": "Un problème est survenu lors de la création de votre souhait"
       }
     },
     "delete": {
       "tag": {
         "success": "Votre tag a bien été supprimé",
         "error": "Un problème est survenu lors de la suppression du tag"
+      },
+      "game": {
+        "success": "Votre jeu a bien été supprimé",
+        "error": "Un problème est survenu lors de la suppression du jeu"
+      },
+      "wish": {
+        "success": "Votre élement à été supprimé",
+        "error": "Un problème est survenu lors de la suppression de votre élément"
       }
     },
     "update": {
       "user": {
         "success": "Votre compte a bien été mis à jour",
         "error": "Un problème est survenu lors de la mise à jour de votre compte"
+      },
+      "game": {
+        "success": "Votre jeu a bien été mis à jour",
+        "error": "Un problème est survenu lors de la mise à jour du jeu"
       }
     },
     "register": {
-      "success": "Votre compte a été créé, vous pouvez vous connectez",
+      "success": "Votre compte a été créé",
       "error": "Un problème est survenu lors de la création de votre compte"
     },
     "login": {
       "success": "Vous êtes connecté",
-      "error": "Un problème est survenu lors de votre connexion"
+      "error": "Identifiant invalides"
     }
   }
 }

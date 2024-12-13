@@ -14,7 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Game, GameWithStats, Product, User } from "@playpal/schemas";
+import { Game, Product, User } from "@playpal/schemas";
 import { Express } from 'express';
 
 import { AdminGuard } from '@/auth/guards/admin.guard';
@@ -47,9 +47,8 @@ export class GameController {
   @ApiOperation({ summary: "Get all games" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiOkResponse({ description: "Games found successfully", type: Game, isArray: true })
-  async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = 10, @Query('search') search?: string) {
+  async getAll(@Query('tags') tags?: string[] | string, @Query('page') page = 1, @Query('limit') limit = -1, @Query('search') search?: string) {
     const { data, total } = await this.gamesService.getAll(page, limit, tags, search);
-    
     return {
       data,
       total,
@@ -68,17 +67,25 @@ export class GameController {
     return data;
   }
 
+  @Get('/last')
+  @ApiOperation({ summary: "Get three last games" })
+  @ApiOkResponse({ description: "Game found successfully", type: Game, isArray: true })
+  @ApiUnauthorizedResponse({ description: "User not connected" })
+  @ApiNotFoundResponse({ description: "Game not found" })
+  getThreeLastGame() {
+    return this.gamesService.getThreeLastGames();
+  }
+
   @Get('/:gameId')
   @UseGuards(GameGuard)
   @ApiOperation({ summary: "Get one game" })
   @ApiParam({ name: 'gameId', description: 'Game id', required: true })
-  @ApiOkResponse({ description: "Game found successfully", type: Game })
+  @ApiOkResponse({ description: "Game found successfully" })
   @ApiUnauthorizedResponse({ description: "User not connected" })
   @ApiNotFoundResponse({ description: "Game not found" })
   @ApiBadRequestResponse({ description: "UUID is invalid" })
-  async getOneGame(@GameRequest() game: Game): Promise<GameWithStats> {
-    const data = await this.gamesService.getGameWithStats(game);
-    return data;
+  async getOneGame(@GameRequest() game: Game): Promise<Game | null> {
+    return this.gamesService.findOneGame(game.id);
   }
 
   @Get('/:gameId/notes')
@@ -132,7 +139,7 @@ export class GameController {
   async update(@GameRequest() game: Game, @Body() body: GameUpdatedDto, @UploadedFile(ParseFilePipeDocument) file?: Express.Multer.File): Promise<Game> {
     if (file) {
       const fileName = await this.fileUploadService.uploadFile(file);
-      body = { ...body, image: fileName };
+      body = { ...body, image: `${process.env.VITE_API_BASE_URL}/files/${fileName}` };
     }
     await this.gamesService.update(game.id, body);
     const gameUpdated = await this.gamesService.findOneGame(game.id);
@@ -153,7 +160,12 @@ export class GameController {
   @ApiBadRequestResponse({ description: "UUID is invalid" })
   async delete(@GameRequest() game: Game): Promise<void> {
     if (game.image) {
-      await this.fileUploadService.deleteFile(game.image);
+      const objectKey = game.image.split('/').pop();
+      if (!objectKey) {
+        throw new HttpException('Invalid image URL', HttpStatus.BAD_REQUEST);
+      }
+
+      await this.fileUploadService.deleteFile(objectKey);
     }
     await this.gamesService.delete(game.id);
   }
@@ -202,7 +214,6 @@ export class GameController {
       if (error instanceof ForbiddenException) {
         throw error;
       }
-      console.error(error);
       throw new InternalServerErrorException(await this.translationsService.translate('error.SOMETHING_WENT_WRONG'));
     }
 

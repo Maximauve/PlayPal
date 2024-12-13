@@ -46,7 +46,9 @@ describe('TagController', () => {
     brand: "Magilano",
     rating: [],
     tags: mockTags,
-    rules: []
+    rules: [],
+    averageRating: 2,
+    count: []
   };
 
   const mockUser = {

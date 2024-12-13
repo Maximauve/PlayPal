@@ -38,18 +38,33 @@ export class Game {
   @Column({ type: 'varchar', nullable: true })
   image?: string;
 
-  @OneToMany(() => Rating, rating => rating.game)
+  @OneToMany(() => Rating, rating => rating.game, {
+      cascade: true,
+      onDelete: 'CASCADE',
+  })
   rating?: Rating[];
 
-  @OneToMany(() => Product, product => product.game)
+  @OneToMany(() => Product, product => product.game, {
+      cascade: true,
+      onDelete: 'CASCADE',
+  })
   product?: Product[];
 
-  @OneToMany(() => Wish, wish => wish.game)
+  @OneToMany(() => Wish, wish => wish.game, {
+      cascade: true,
+      onDelete: 'CASCADE',
+  })
   wish?: Wish[];
 
   @ManyToMany(() => Tag, tag => tag.games)
   tags: Tag[];
 
-  @OneToMany(() => Rule, rule => rule.game)
+  @OneToMany(() => Rule, rule => rule.game, {
+      cascade: true,
+      onDelete: 'CASCADE',
+  })
   rules?: Rule[];
+
+  averageRating: number | null;
+  count: { rating: number; count: number }[];
 }

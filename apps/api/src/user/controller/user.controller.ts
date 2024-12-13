@@ -10,10 +10,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { Loan, Role, User } from '@playpal/schemas';
+import { Loan, Role, User, Wish } from '@playpal/schemas';
 import { Express } from "express";
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { UserAuthGuard } from '@/auth/guards/user-auth.guard';
 import { FileUploadService } from '@/files/files.service';
 import { ParseFilePipeDocument } from '@/files/files.validator';
 import { TranslationService } from '@/translation/translation.service';
@@ -23,14 +23,15 @@ import { UserUpdatedDto } from '@/user/dto/userUpdated';
 import { UserGuard } from '@/user/guards/user.guard';
 import { UserService } from '@/user/service/user.service';
 import hashPassword from '@/utils/auth.variable';
+import { WishService } from '@/wish/service/wish.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserAuthGuard)
 @ApiTags('users')
 @ApiUnauthorizedResponse({ description: "User not connected" })
 @Controller('users')
 export class UserController {
 
-  constructor(private userService: UserService, private readonly translationService: TranslationService, private readonly fileUploadService: FileUploadService) { }
+  constructor(private userService: UserService, private readonly translationService: TranslationService, private readonly fileUploadService: FileUploadService, private readonly wishService: WishService) { }
 
   @Get("")
   @ApiOperation({ summary: 'Returns all users' })
@@ -43,12 +44,12 @@ export class UserController {
   @ApiOperation({ summary: 'Return my user informations' })
   @ApiOkResponse({ description: "User found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
-  getMe(@CurrentUser() user: User): User {
-    return user;
+  getMe(@CurrentUser() user: User): Promise<User | null> {
+    return this.userService.findOneUser(user.id);
   }
 
   @Get('/me/loans')
-  @ApiOperation({ summary: 'Return my user informations' })
+  @ApiOperation({ summary: 'Return my user loans' })
   @ApiOkResponse({ description: "User's loans found successfully", type: User })
   @ApiNotFoundResponse({ description: "User not found" })
   async getMyLoans(@CurrentUser() user: User): Promise<Loan[]> {
@@ -59,8 +60,19 @@ export class UserController {
     if (!userFull.loan) {
       return [];
     }
-    
     return userFull.loan;
+  }
+
+  @Get('/me/wish')
+  @ApiOperation({ summary: 'Return my user wish' })
+  @ApiOkResponse({ description: "User's wish found successfully", type: Wish, isArray: true })
+  @ApiNotFoundResponse({ description: "Wish not found" })
+  async getMyWish(@CurrentUser() user: User): Promise<Wish[]> {
+    const wish = await this.wishService.getAllWishesForUser(user.id);
+    if (!wish) {
+      throw new HttpException(await this.translationService.translate('error.USER_NOT_FOUND'), HttpStatus.NOT_FOUND);
+    }
+    return wish;
   }
 
   @Get("/:userId")

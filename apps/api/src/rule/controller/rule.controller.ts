@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Us
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Game, Rule } from "@playpal/schemas";
 
-import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { UserAuthGuard } from "@/auth/guards/user-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
 import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
@@ -13,7 +13,7 @@ import { RuleGuard } from "@/rule/guards/rule.guard";
 import { RuleService } from "@/rule/service/rule.service";
 import { TranslationService } from "@/translation/translation.service";
 
-@UseGuards(JwtAuthGuard, GameGuard)
+@UseGuards(UserAuthGuard, GameGuard)
 @ApiTags('rule')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
 @ApiUnauthorizedResponse({ description: "User not connected" })

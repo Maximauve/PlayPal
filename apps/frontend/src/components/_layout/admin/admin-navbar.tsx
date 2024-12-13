@@ -1,41 +1,34 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import useTranslation from "@/hooks/use-translation";
 
+const routes = [
+  { text: 'admin.navbar.dashboard', path: '/admin/dashboard' },
+  { text: 'admin.navbar.game-list', path: '/admin/game' },
+  { text: 'admin.navbar.product-list', path: '/admin/products' },
+  { text: 'admin.navbar.loan-list', path: '/admin/loan' },
+  { text: 'admin.navbar.tag', path: '/admin/tag' },
+];
+
 export default function AdminNavbar(): React.JSX.Element {
   const i18n = useTranslation();
+  const navigate = useNavigate();
   return (
-    <main className="admin-navbar">
-      <div className="nav-logo">
-        <p> {i18n.t("admin.navbar.title")} </p>
+    <main className="col-[1/2] w-full h-full bg-background-dark rounded-2xl p-2 shadow-admin">
+      <div className="flex items-center justify-center p-2 rounded-lg m-1">
+        <p className="text-2xl" onClick={() => navigate('/')}> {i18n.t("admin.navbar.title")} </p>
       </div>
-      <div className="nav-links">
-        <NavLink
-          to="/admin/dashboard"
-          className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-          end
-        >
-          {i18n.t("admin.navbar.dashboard")}
-        </NavLink>
-        <NavLink
-          to="/admin/game"
-          className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-        >
-          {i18n.t("admin.navbar.game-list")}
-        </NavLink>
-        <NavLink
-          to="/admin/loan"
-          className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-        >
-          {i18n.t("admin.navbar.loan-list")}
-        </NavLink>
-        <NavLink
-          to="/admin/tag"
-          className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-        >
-          {i18n.t("admin.navbar.tag")}
-        </NavLink>      
+      <div className="flex flex-col gap-1 p-2 rounded-lg m-1">
+        { routes.map(route => (
+          <NavLink
+            key={route.path}
+            to={route.path}
+            className={({ isActive }) => ('p-2 rounded-lg m-2 cursor-pointer transition-colors duration-300' + (isActive ? ' bg-button-active text-text-dark' : ' bg-button-default hover:bg-button-active hover:text-text-dark'))}
+          >
+            {i18n.t(route.text)}
+          </NavLink>
+        ))}
       </div>
     </main>
   );

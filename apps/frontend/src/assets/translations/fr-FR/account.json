@@ -3,6 +3,8 @@
 		"account": "Compte",
 		"greeting": "Bonjour, %{name}",
 		"pleaseConnect": "Connectez-vous pour accéder à votre profil.",
-		"connect": "Se connecter"
+		"connect": "Se connecter",
+		"logout": "Se déconnecter",
+		"admin": "Pannel d'administration"
 	}
 }

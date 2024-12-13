@@ -38,9 +38,10 @@ export class FixturesService implements OnModuleInit {
       const savedUsers = await this.loadFixturesUsers();
       const savedTags = await this.loadFixturesTags();
       const savedGames = await this.loadFixturesGames(savedTags);
-      await this.loadFixturesRatings(savedUsers, savedGames);
+      await delay(5000); // saved games and users load for all entitys
       await this.loadFixturesRules(savedGames);
       await this.loadFixturesWish(savedUsers, savedGames);
+      await this.loadFixturesRatings(savedUsers, savedGames);
       const savedProduct = await this.loadFixturesProducts(savedUsers, savedGames);
       await this.loadFixturesLoans(savedUsers, savedProduct);
     }
@@ -198,12 +199,14 @@ export class FixturesService implements OnModuleInit {
   
     const loans = this.loanRepository.create([
       {
+        startDate: new Date(),
         endDate: futureDate1,
         product: skyjo,
         user: customer,
         status: LoanStatus.DONE
       },
       {
+        startDate: new Date(),
         endDate: futureDate2,
         product: galerapagos,
         user: customer2,
@@ -261,4 +264,8 @@ export class FixturesService implements OnModuleInit {
     const savedRules = await this.ruleRepository.save(rules);
     return savedRules;
   }
+}
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
 }

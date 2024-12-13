@@ -3,5 +3,5 @@ export interface RegisterDto {
   email: string;
   password: string;
   username: string;
-  profilePicture?: string;
+  image?: File | string;
 }

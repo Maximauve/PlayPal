@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import AdminLayout from "@/components/_layout/admin/admin-layout";
+import DashboardLayout from "@/components/_layout/admin/dashboard-layout";
 import GameLayout from "@/components/_layout/admin/game-layout";
+import LoanLayout from "@/components/_layout/admin/loan-layout";
+import ProductLayout from "@/components/_layout/admin/product-layout";
 import TagLayout from "@/components/_layout/admin/tag-layout";
 import MainLayout from "@/components/_layout/default/main-layout";
 import UserPageLayout from "@/components/_layout/user-page-layout";
@@ -11,22 +14,31 @@ import HomePage from "@/routes/pages/home-page";
 import SearchPage from "@/routes/pages/search-page";
 import UserHistoryPage from "@/routes/pages/user-history-page";
 import UserProfilePage from "@/routes/pages/user-profile-page";
+import WishlistPage from "@/routes/pages/wishlist-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout  />,
+    element: <MainLayout />,
     children: [
       {
         path: "",
         element: <HomePage />
       },
       {
-        path: "/user/",
+        path: "/games/:id",
+        element: <GamePage />
+      },
+      {
+        path: "/search/",
+        element: <SearchPage />
+      },
+      {
+        path: "user",
         element: <UserPageLayout />,
         children: [
           {
-            path: "profile",
+            path: "",
             element: <UserProfilePage />
           },
           {
@@ -34,11 +46,28 @@ const router = createBrowserRouter([
             element: <UserHistoryPage />
           },
         ]
+      },
+      {
+        path: "search",
+        element: <SearchPage />
+      },
+      {
+        path: "game",
+        children: [
+          {
+            path: ":id",
+            element: <GamePage />
+          }
+        ]
+      },
+      {
+        path: "wishlist",
+        element: <WishlistPage />
       }
     ]
   },
   {
-    path: "/admin/",
+    path: "/admin",
     element: (
       <AdminGuard>
         <AdminLayout/>
@@ -46,12 +75,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
-        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
-      },
-      {
         path: "dashboard",
-        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
+        element: <DashboardLayout />,
       },
       {
         path: "game",
@@ -59,43 +84,17 @@ const router = createBrowserRouter([
       },
       {
         path: "loan",
-        element: <div>Liste de Prêts</div>, // Remplacez par un vrai composant
+        element: <LoanLayout />,
       },
       {
         path: "tag",
-        element: <TagLayout />, // Remplacez par un vrai composant
+        element: <TagLayout />,
+      },
+      {
+        path: "products",
+        element: <ProductLayout />, // Remplacez par un vrai composant
       },
     ],
-  },
-  {
-    path: "/search/",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <SearchPage />
-      }
-    ]
-  },
-  {
-    path: "/search/",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <SearchPage />
-      }
-    ]
-  },
-  {
-    path: "/game/:id",
-    element: <MainLayout/>,
-    children: [
-      {
-        path: "",
-        element: <GamePage />
-      }
-    ]
   },
 ]);
 

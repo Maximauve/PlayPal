@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Us
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Game, Rating, User } from "@playpal/schemas";
 
-import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
+import { UserAuthGuard } from "@/auth/guards/user-auth.guard";
 import { GameRequest } from "@/game/decorators/game.decorator";
 import { GameGuard } from "@/game/guards/game.guard";
 import { GameService } from "@/game/service/game.service";
@@ -15,7 +15,7 @@ import { TranslationService } from "@/translation/translation.service";
 import { CurrentUser } from "@/user/decorators/currentUser.decorator";
 import { UserService } from "@/user/service/user.service";
 
-@UseGuards(JwtAuthGuard, GameGuard)
+@UseGuards(UserAuthGuard, GameGuard)
 @ApiTags('rating')
 @ApiParam({ name: 'gameId', description: 'ID of game', required: true })
 @ApiNotFoundResponse({ description: "Game not found" })

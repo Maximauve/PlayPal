@@ -1,4 +1,4 @@
-import { type Tag as TagType } from "@playpal/schemas";
+import { type ApiError, type Tag as TagType } from "@playpal/schemas";
 import { toast, type ToastContent } from "react-toastify";
 
 import { Tag } from "@/components/tag";
@@ -11,16 +11,15 @@ export default function TagList() {
   const [ deleteTag ] = useDeleteTagMutation();
   const i18n = useTranslation();
 
-  const removeTag = (tag: TagType) => {
+  const removeTag = async (tag: TagType) => {
     try {
-      deleteTag(tag.id).unwrap();
+      await deleteTag(tag.id).unwrap();
       toast.success(i18n.t("notify.delete.tag.success") as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
     } catch (error) {
-      console.error("Error delete tag :", error);
-      toast.error(i18n.t("notify.delete.tag.error") as ToastContent<string>, {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });

@@ -17,7 +17,7 @@ export class Rule {
   description: string;
 
   @ManyToOne(() => Game, game => game.rules, {
-    cascade: true
+      onDelete: 'CASCADE',
   })
   game: Game;
 }

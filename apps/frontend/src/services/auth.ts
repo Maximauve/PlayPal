@@ -1,4 +1,4 @@
-import { type LoginDto, type LoginResponse, type RegisterDto } from "@playpal/schemas";
+import { type LoginDto, type LoginResponse } from "@playpal/schemas";
 
 import { baseApi } from "@/services/base";
 
@@ -10,15 +10,24 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ['User']
     }),
-    register: builder.mutation<LoginResponse, RegisterDto>({
-      query: (body: RegisterDto) => ({
+    register: builder.mutation<LoginResponse, FormData>({
+      query: (body: FormData) => ({
         url: "/auth/register",
         method: "POST",
         body,
       }),
+      invalidatesTags: ['User']
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ['User']
     })
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } = authApi;

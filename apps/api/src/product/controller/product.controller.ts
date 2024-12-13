@@ -132,7 +132,6 @@ export class ProductController {
   @ApiUnauthorizedResponse({ description: 'User is not connected' })
   @ApiForbiddenResponse({ description: 'User is not admin' })
   async getLoansByProduct(@Param("productId") productId: string): Promise<Loan[]> {
-    console.log('productId :', productId);
     return this.loanService.getAllByProduct(productId); 
   }
 }

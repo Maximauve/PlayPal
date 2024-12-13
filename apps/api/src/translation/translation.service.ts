@@ -9,8 +9,7 @@ export class TranslationService {
   async translate(key: string, options?: TranslateOptions): Promise<string> {
     try {
       return await this.i18n.translate(key, options);
-    } catch (error) {
-      console.error("Translation error:", error);
+    } catch {
       throw new Error('Erreur de traduction');
     }
   }

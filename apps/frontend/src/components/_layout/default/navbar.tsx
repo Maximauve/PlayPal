@@ -1,23 +1,33 @@
+import { Role } from "@playpal/schemas";
 import React, { Fragment, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 
 import DefaultProfile from "@/assets/images/default-profile-picture.jpg";
+import HeartIcon from "@/assets/images/svg/heart.svg?react";
 import AuthModal from "@/components/modals/auth-modal";
 import Modal from "@/components/modals/modal";
 import useAuth from "@/hooks/use-auth";
 import useModal from "@/hooks/use-modal";
 import useTranslation from "@/hooks/use-translation";
+import { useLogoutMutation } from "@/services/auth";
+
 
 export default function Navbar(): React.JSX.Element {
   const { isOpen, toggleModal, closeModal } = useModal();
   const { isOpen: loginModal, closeModal: closeLoginModal, openModal: openLoginModal } = useModal();
   const i18n = useTranslation();
+  const [logout] = useLogoutMutation();
 
   const { user } = useAuth();
   const handleConnect = useCallback(() => {
     closeModal();
     openLoginModal();
   }, [openLoginModal, closeModal]);
+
+  const handleLogout = useCallback(() => {
+    closeModal();
+    logout({});
+  }, [logout]);
   
   return (
     <Fragment>
@@ -25,12 +35,12 @@ export default function Navbar(): React.JSX.Element {
         <div className="flex items-center"> 
           <NavLink to="/" className="text-white text-3xl font-bold">Playpal</NavLink>
         </div>
-        <div className="flex flex-row justify-end">
-          {/* WishList */}
-          <div></div>
-          {/* User */}
+        <div className="flex flex-row justify-end gap-2">
+          <div className="">
+            <NavLink to="/wishlist"><HeartIcon className="w-12 h-12"/></NavLink>
+          </div>
           <div className="cursor-pointer" onClick={toggleModal}>
-            <img src={user?.profilePicture ?? DefaultProfile} className="w-12 h-12 rounded-full hover:scale-105 active:scale-100" />
+            <img src={user?.image ?? DefaultProfile} className="w-12 h-12 rounded-full hover:scale-105 active:scale-100" />
           </div>
         </div>
       </nav>
@@ -38,7 +48,11 @@ export default function Navbar(): React.JSX.Element {
         <div className="px-2 pb-3 gap-3 flex flex-col items-center justify-start">
           { user ? (
             <Fragment>
-              <NavLink to="/user/profile" className="text-sm">{i18n.t("account.account")}</NavLink>
+              <NavLink to="/user/profile" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.account")}</NavLink>
+              { (user.role === Role.Admin) && (
+                <NavLink to="/admin/dashboard" className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center">{i18n.t("account.admin")}</NavLink>
+              )}
+              <button className="bg-blue-600 font-bold text-white rounded-md px-4 py-2 w-full text-center" onClick={handleLogout}>{i18n.t("account.logout")}</button>
             </Fragment>
           ) : (
             <Fragment>

@@ -29,7 +29,9 @@ describe('RuleGuard', () => {
             duration: "35min",
             brand: "Magilano",
             tags: [],
-            rules: []
+            rules: [],
+            averageRating: 2,
+            count: []
         },
         description: "Les règles sont trop cool",
         title: "Règles du jeu",

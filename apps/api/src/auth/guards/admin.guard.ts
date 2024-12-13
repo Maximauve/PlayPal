@@ -1,19 +1,21 @@
 import { ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Role } from '@playpal/schemas';
 
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { UserAuthGuard } from '@/auth/guards/user-auth.guard';
 import { TranslationService } from '@/translation/translation.service';
+import { UserService } from '@/user/service/user.service';
 import { RequestWithUser } from '@/user/types/RequestWithUser';
 
 @Injectable()
-export class AdminGuard extends JwtAuthGuard {
+export class AdminGuard extends UserAuthGuard {
   constructor(
-    private readonly translationsService: TranslationService
+    protected readonly translationsService: TranslationService,
+    protected readonly userService: UserService,
   ) {
-    super();
+    super(translationsService, userService);
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isAuthenticated = (await super.canActivate(context)) as boolean;
+    const isAuthenticated = (await super.canActivate(context));
     if (!isAuthenticated) {
       return false;
     }

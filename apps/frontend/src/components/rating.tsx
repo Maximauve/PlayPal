@@ -9,7 +9,7 @@ export const Rating = ({ rating, nbRatings }: RatingProperties) => {
 
   return (
     <div className="flex items-center space-x-1">
-      <span className={`stars value-${rating}`}>★★★★★</span>
+      <span className={`stars text-xl value-${rating}`}>★★★★★</span>
       <span className="ml-2 text-gray-600 text-sm">{rating}</span>
       {nbRatings !== undefined && (
         <span className="text-gray-600 text-sm">({nbRatings})</span>
