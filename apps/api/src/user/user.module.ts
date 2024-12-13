@@ -8,9 +8,10 @@ import { RedisModule } from "@/redis/redis.module";
 import { TranslationService } from '@/translation/translation.service';
 import { UserController } from '@/user/controller/user.controller';
 import { UserService } from '@/user/service/user.service';
+import { WishModule } from '@/wish/wish.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => RedisModule)],
+  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => RedisModule), forwardRef(() => WishModule)],
   controllers: [UserController],
   providers: [UserService, TranslationService, FileUploadService],
   exports: [UserService],

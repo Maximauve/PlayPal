@@ -24,6 +24,7 @@ export class WishService {
       .createQueryBuilder('wish')
       .leftJoinAndSelect('wish.user', 'user')
       .leftJoinAndSelect('wish.game', 'game')
+      .leftJoinAndSelect('game.rating', 'rating')
       .getMany();
   }
 
@@ -32,6 +33,7 @@ export class WishService {
       .createQueryBuilder('wish')
       .leftJoinAndSelect('wish.user', 'user')
       .leftJoinAndSelect('wish.game', 'game')
+      .leftJoinAndSelect('game.rating', 'rating')
       .where('wish.user = :userId', { userId })
       .getMany();
   }
@@ -41,6 +43,7 @@ export class WishService {
       .createQueryBuilder('wish')
       .leftJoinAndSelect('wish.user', 'user')
       .leftJoinAndSelect('wish.game', 'game')
+      .leftJoinAndSelect('game.rating', 'rating')
       .where('game.user = :gameId', { gameId })
       .getMany();
   }
@@ -50,6 +53,7 @@ export class WishService {
       .createQueryBuilder('wish')
       .leftJoinAndSelect('wish.user', 'user')
       .leftJoinAndSelect('wish.game', 'game')
+      .leftJoinAndSelect('game.rating', 'rating')
       .where('wish.id = :id', { id })
       .getOne();
   }
@@ -85,10 +89,20 @@ export class WishService {
   }
 
   async updateWish(wishId: string, wishUpdatedDto: WishUpdatedDto): Promise<void> {
+    const game = await this.gameRepository
+      .createQueryBuilder('game')
+      .where('game.id = :id', { id: wishUpdatedDto.gameId })
+      .getOne();
+    if (!game) {
+      throw new HttpException(
+        await this.translationService.translate('error.GAME_NOT_FOUND'),
+        HttpStatus.NOT_FOUND
+      );
+    }
     const query = await this.wishRepository
       .createQueryBuilder()
       .update(Wish)
-      .set(wishUpdatedDto)
+      .set(game)
       .where('id = :id', { wishId })
       .execute();
     if (query.affected === 0) {
@@ -103,7 +117,7 @@ export class WishService {
       .createQueryBuilder()
       .delete()
       .from(Wish)
-      .where('id = :id', { wishId })
+      .where('id = :id', { id: wishId })
       .execute();
     if (query.affected === 0) {
       throw new HttpException(
@@ -113,5 +127,4 @@ export class WishService {
     }
     return;
   }
-
 }

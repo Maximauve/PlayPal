@@ -64,4 +64,7 @@ export class Game {
       onDelete: 'CASCADE',
   })
   rules?: Rule[];
+
+  averageRating: number | null;
+  count: { rating: number; count: number }[];
 }

@@ -29,7 +29,9 @@ describe('RatingGuard', () => {
       duration: "35min",
       brand: "Magilano",
       tags: [],
-      rules: []
+      rules: [],
+      averageRating: 2,
+      count: []
     },
     note: 4,
     comment: "Trop cool",

@@ -1,17 +1,19 @@
 import { type Tag as TagType } from "@playpal/schemas";
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { AllCards } from "@/components/all-cards";
 import Carousel from '@/components/carousel';
 import { TagsFilter } from '@/components/tags-filter';
 import useTranslation from '@/hooks/use-translation';
-import { useGetRecommendationsQuery } from "@/services/game";
+import { useGetLastQuery, useGetRecommendationsQuery } from "@/services/game";
 
 export default function HomePage(): React.JSX.Element {
   const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
+  const { data: lastGames } = useGetLastQuery();
   const navigate = useNavigate(); 
   const i18n = useTranslation();
+
   useEffect(() => {
     document.title = "Playpal - Accueil";
   }, []);
@@ -26,9 +28,9 @@ export default function HomePage(): React.JSX.Element {
   const { data: gamesData } = useGetRecommendationsQuery(4);
 
   return (
-    <>
+    <Fragment>
       <h1 className="text-3xl font-bold text-center text-black my-4">{i18n.t('home.catchphrase')} </h1>
-      <Carousel />
+      <Carousel games={lastGames}/>
 
       <div className="w-full flex flex-col px-12 items-start bg-stone-300 mt-12">
         <h2 className="text-xl font-bold text-center text-black my-4">{i18n.t('home.tagSearch')}</h2>
@@ -42,6 +44,6 @@ export default function HomePage(): React.JSX.Element {
           <NavLink to="/search" className="text-xl px-12 text-center bg-black font-bold text-white rounded-md py-2"> <span>{i18n.t('home.allGames')}</span></NavLink>
         </div>
       </div>
-    </>
+    </Fragment>
   );
 }

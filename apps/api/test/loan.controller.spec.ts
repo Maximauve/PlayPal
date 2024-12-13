@@ -1,8 +1,6 @@
 import { Game, Loan, Product, State, Role, LoanStatus } from "@playpal/schemas";
 import { GameService } from "@/game/service/game.service";
 import { LoanController } from "@/loan/controller/loan.controller";
-import { LoanDto } from "@/loan/dto/loan.dto";
-import { LoanUpdatedDto } from "@/loan/dto/loanUpdated.dto";
 import { LoanService } from "@/loan/service/loan.service";
 import { ProductService } from "@/product/service/product.service";
 import { TranslationService } from "@/translation/translation.service";
@@ -40,7 +38,7 @@ describe('LoanController', () => {
     creationDate: new Date()
   };
 
-  const mockGame = {
+  const mockGame: Game = {
     id: validGameId,
     name: "Skyjo",
     description: "Un bon jeu",
@@ -52,7 +50,9 @@ describe('LoanController', () => {
     brand: "Magilano",
     rating: [],
     tags: [],
-    rules: []
+    rules: [],
+    averageRating: 2,
+    count: []
   };
 
   const mockProduct = {
@@ -188,7 +188,6 @@ describe('LoanController', () => {
         ...mockLoan,
         endDate: loanDto.endDate,
         user: mockUser,
-        createDate: new Date(),
       }
 
       jest.spyOn(mockLoanService, 'getProductAvailable').mockResolvedValue(mockProduct);

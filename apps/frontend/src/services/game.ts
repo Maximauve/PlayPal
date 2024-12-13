@@ -1,4 +1,4 @@
-import { type Game, type GameWithStats, type Tag } from "@playpal/schemas";
+import { type Game, type Tag } from "@playpal/schemas";
 import { type GamePayload, type GameResponse } from "@playpal/schemas";
 
 import { baseApi } from "@/services/base";
@@ -41,7 +41,7 @@ export const gameApi = baseApi.injectEndpoints({
       invalidatesTags: ['Game'],
     }),
 
-    getGame: builder.query<GameWithStats, string>({
+    getGame: builder.query<Game, string>({
       query: (id) => `games/${id}`,
       providesTags: ['Game']
     }),
@@ -56,14 +56,10 @@ export const gameApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Games'],
     }),
+    getLast: builder.query<Game[], void>({
+      query: () => "/games/last"
+    })
   }),
 });
 
-export const {
-  useGetGamesQuery,
-  useGetRecommendationsQuery,
-  useCreateGameMutation,
-  useGetGameQuery,
-  useUpdateGameMutation,
-  useDeleteGameMutation,
-} = gameApi;
+export const { useGetGamesQuery, useGetRecommendationsQuery, useCreateGameMutation, useGetGameQuery, useGetLastQuery, useDeleteGameMutation, useUpdateGameMutation } = gameApi;

@@ -56,7 +56,9 @@ describe('RatingController', () => {
         brand: "Magilano",
         rating: [],
         tags: [],
-        rules: []
+        rules: [],
+        averageRating: 2,
+        count: []
       },
       note: 4,
       comment: 'Great game!',
@@ -76,7 +78,9 @@ describe('RatingController', () => {
     minYear: 10,
     rating: [],
     tags: [],
-    rules: []
+    rules: [],
+    averageRating: 2,
+    count: []
   }
 
   const mockRating: Rating = { 

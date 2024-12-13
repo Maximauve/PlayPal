@@ -2,12 +2,14 @@ import React, { Fragment, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 
 import DefaultProfile from "@/assets/images/default-profile-picture.jpg";
+import HeartIcon from "@/assets/images/svg/heart.svg?react";
 import AuthModal from "@/components/modals/auth-modal";
 import Modal from "@/components/modals/modal";
 import useAuth from "@/hooks/use-auth";
 import useModal from "@/hooks/use-modal";
 import useTranslation from "@/hooks/use-translation";
 import { useLogoutMutation } from "@/services/auth";
+
 
 export default function Navbar(): React.JSX.Element {
   const { isOpen, toggleModal, closeModal } = useModal();
@@ -32,7 +34,10 @@ export default function Navbar(): React.JSX.Element {
         <div className="flex items-center"> 
           <NavLink to="/" className="text-white text-3xl font-bold">Playpal</NavLink>
         </div>
-        <div className="flex flex-row justify-end">
+        <div className="flex flex-row justify-end gap-2">
+          <div className="">
+            <NavLink to="/wishlist"><HeartIcon className="w-12 h-12"/></NavLink>
+          </div>
           <div className="cursor-pointer" onClick={toggleModal}>
             <img src={user?.image ?? DefaultProfile} className="w-12 h-12 rounded-full hover:scale-105 active:scale-100" />
           </div>

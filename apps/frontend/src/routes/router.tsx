@@ -12,11 +12,12 @@ import HomePage from "@/routes/pages/home-page";
 import SearchPage from "@/routes/pages/search-page";
 import UserHistoryPage from "@/routes/pages/user-history-page";
 import UserProfilePage from "@/routes/pages/user-profile-page";
+import WishlistPage from "@/routes/pages/wishlist-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout  />,
+    element: <MainLayout />,
     children: [
       {
         path: "",
@@ -24,11 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/games/:id",
-        element: <GamePage/>
+        element: <GamePage />
       },
       {
         path: "/search/",
-        element: <SearchPage/>
+        element: <SearchPage />
       },
       {
         path: "user",
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
           }
         ]
       },
+      {
+        path: "wishlist",
+        element: <WishlistPage />
+      }
     ]
   },
   {
@@ -69,7 +74,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <div>Tableau de Bord</div>, // Remplacez par un vrai composant
+        element: <div>Tableau de Bord</div>,
       },
       {
         path: "game",
@@ -81,7 +86,7 @@ const router = createBrowserRouter([
       },
       {
         path: "tag",
-        element: <TagLayout />, // Remplacez par un vrai composant
+        element: <TagLayout />,
       },
     ],
   },

@@ -29,7 +29,9 @@ describe('TagGuard', () => {
         duration: "35min",
         brand: "Magilano",
         tags: [],
-        rules: []
+        rules: [],
+        averageRating: 2,
+        count: []
       }
     ]
   };

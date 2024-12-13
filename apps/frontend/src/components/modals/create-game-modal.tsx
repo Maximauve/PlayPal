@@ -1,4 +1,4 @@
-import { type CreateGamePayload } from "@playpal/schemas";
+import { type ApiError, type CreateGamePayload } from "@playpal/schemas";
 import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { toast, type ToastContent } from "react-toastify";
@@ -41,15 +41,15 @@ export default function CreateGameModal({ isVisible, onClose }: CreateGameModalP
           position: "top-right",
           autoClose: 3000,
         });
-      } catch {
-        toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
+      } catch (error) {
+        toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
           position: "top-right",
           autoClose: 3000,
         });
       }
       onClose();
-    } catch  {
-      toast.error(i18n.t("notify.create.game.error") as ToastContent<string>, {
+    } catch (error) {
+      toast.error((error as ApiError)?.data?.message as ToastContent<string>, {
         position: "top-right",
         autoClose: 3000,
       });
