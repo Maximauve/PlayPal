@@ -1,4 +1,4 @@
-import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
+import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
@@ -26,9 +26,9 @@ export default function Footer(): React.JSX.Element {
               <div className="p-4">{i18n.t('auth.login.submit').toUpperCase()}</div>
               <div className="p-4">{i18n.t('auth.register.createAccount').toUpperCase()}</div>
               <div className="pl-8 flex justify-center items-center">
-                <div className="px-2"> <FontAwesomeIcon icon={faAddressBook} className="text-2xl" /> </div>
-                <div className="px-2"> // </div>
-                <div className="px-2"> // </div>
+                <div className="px-2"> <FontAwesomeIcon icon={faFacebook} className="text-xl" /> </div>
+                <div className="px-2"> <FontAwesomeIcon icon={faInstagram} className="text-xl" /> </div>
+                <div className="px-2"> <FontAwesomeIcon icon={faTwitter} className="text-xl" /> </div>
               </div>
             </div>
           </div>

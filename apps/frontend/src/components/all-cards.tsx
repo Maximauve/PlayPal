@@ -12,7 +12,7 @@ export const AllCards = ({ games }: AllCardsProperties ) => {
     <section className="relative flex justify-center mx-8 max-w-screen-2xl mb-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {games?.data && games.data.length > 0 ? (
-          games.data.map((game: GameWithStats) => (
+          games.data.map((game: Game) => (
             <Card key={game.id} game={game} />
           ))
         ) : (

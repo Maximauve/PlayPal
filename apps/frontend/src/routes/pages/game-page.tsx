@@ -45,6 +45,7 @@ export default function GamePage(): React.JSX.Element {
   const navigate = useNavigate();
   const i18n = useTranslation();
   const { user } = useAuth();
+  const hasUserReviewed = ratings?.some(rating => rating.user.username === user?.username);
 
   const formik = useFormik<RatingDto>({
     initialValues: {
@@ -269,17 +270,19 @@ export default function GamePage(): React.JSX.Element {
             <Tabs tabs={tabsItems} classes='bg-gray-200 w-full p-2 rounded-md text-sm' />
           </div>
           <div className="w-full md:w-1/2 p-2">
-            <div className='flex flex-col gap-4 mb-5 p-5 border border-gray-400 rounded-md'>
-              <h2 className='text-lg font-bold text-black'>{i18n.t('review.addReview')}</h2>
-              <ReviewForm formik={formik} />
-              <button
-                className='btn-primary bg-black text-white w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
-                type="button"
-                disabled={formik.isSubmitting}
-                onClick={() => formik.handleSubmit()}>
-                {i18n.t("review.submit")}
-              </button>
-            </div>
+            {!hasUserReviewed && (
+              <div className='flex flex-col gap-4 mb-5 p-5 border border-gray-400 rounded-md'>
+                <h2 className='text-lg font-bold text-black'>{i18n.t('review.addReview')}</h2>
+                <ReviewForm formik={formik} />
+                <button
+                  className='btn-primary bg-black text-white w-full rounded-md text-lg hover:scale-105 active:scale-100 disabled:bg-gray-50 px-3 py-1'
+                  type="button"
+                  disabled={formik.isSubmitting}
+                  onClick={() => formik.handleSubmit()}>
+                  {i18n.t("review.submit")}
+                </button>
+              </div>
+            )}
             {ratings && (
               ratings.map((rating, index) => (
                 <div key={index}>
